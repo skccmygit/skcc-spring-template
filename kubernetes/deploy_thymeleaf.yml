@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thymeleaf-spring
+  labels:
+    app: thymeleaf-spring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thymeleaf-spring
+  template:
+    metadata:
+      labels:
+        app: thymeleaf-spring
+    spec:
+      containers:
+        - name: thymeleaf-spring-container
+          image: passionbh/thymeleaf-spring:0.1
+          ports:
+            - containerPort: 8080

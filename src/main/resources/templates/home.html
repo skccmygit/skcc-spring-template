@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="container">
+    <div>
+        <h1>Hello Thymeleaf</h1>
+        <h2> 클라이언트에서 SSR 호출</h2>
+        <button onclick="loadIframe('/nuxt/request/app/list')">request/app/list</button>
+        <button onclick="loadIframe('/nuxt/request/app/list2')">request/app/list2</button>
+        <button onclick="loadIframe('/nuxt/request/infra/list')">request/infra/list</button>
+
+        <div>
+            <iframe id="dynamic-iframe"  scrolling="no" ></iframe>
+        </div>
+
+        <h3>Footer 영역</h3>
+    </div>
+</div> <!-- /container -->
+</body>
+</html>
+
+<script>
+
+    /**
+     * Updates the source URL of an iframe element with an appended path.
+     *
+     * This function selects an iframe element with the ID 'dynamic-iframe' and sets its 'src' attribute
+     * to a new URL formed by appending the provided `path` to a predefined base URL.
+     *
+     * @param {string} path - The path to append to the base URL when updating the iframe's source.
+     */
+    const loadIframe = function (path) {
+        const iframe = document.getElementById('dynamic-iframe');
+        // 로컬
+        // iframe.setAttribute('src', 'http://localhost:3000/request/'+path);
+        // 서버
+        iframe.setAttribute('src', path);
+    };
+
+    const iframe = document.getElementById('dynamic-iframe');
+    // 메시지를 수신하고 iframe 크기 조정
+    window.addEventListener('message', (event) => {
+        console.log("= 받은 데이터: ", event.data);
+
+        // 메시지 출처 확인 (보안)
+        if (event.origin !== 'http://localhost') {
+            console.log("출처 다름");
+            //return;
+        }
+
+        // iframe 높이 조정
+        if (event.data.type === 'resize') {
+            iframe.style.height = event.data.height + 'px';
+        }
+    });
+</script>
+
+
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        height: 100%;
+    }
+    iframe {
+        width: 100%;
+        border: none;
+    }
+</style>
