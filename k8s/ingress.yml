@@ -18,6 +18,13 @@ spec:
                 name: thymeleaf-spring-service
                 port:
                   number: 8080
+#          - path: /main()(.*)
+#            pathType: ImplementationSpecific
+#            backend:
+#              service:
+#                name: thymeleaf-spring-service
+#                port:
+#                  number: 8080
           # 그룹1을 지정된문자열로
           - path: /(nuxt)(.*)
             pathType: ImplementationSpecific
