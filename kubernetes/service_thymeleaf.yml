@@ -5,8 +5,8 @@ metadata:
   labels:
     app: thymeleaf-spring
 spec:
-  type: LoadBalancer
-  #type: ClusterIP
+#  type: LoadBalancer
+  type: ClusterIP
 #  type: NodePort
   selector:
     app: thymeleaf-spring

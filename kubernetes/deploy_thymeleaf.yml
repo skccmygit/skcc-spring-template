@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: thymeleaf-spring-container
-          image: passionbh/thymeleaf-spring:0.1
+          image: passionbh/thymeleaf-spring:v.0.2
           ports:
             - containerPort: 8080
