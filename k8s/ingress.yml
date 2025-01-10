@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sample-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1$2 # Rewrite Target 설정 (regEx 활용)
+    nginx.ingress.kubernetes.io/use-regex: "true"  # 정규식 활성화
+spec:
+  rules:
+    - host: sample.local
+      http:
+        paths:
+          # 그룹1을 빈값으로
+          - path: /()(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: thymeleaf-spring-service
+                port:
+                  number: 8080
+          # 그룹1을 지정된문자열로
+          - path: /(nuxt)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: nuxt-service
+                port:
+                  number: 3000
+
