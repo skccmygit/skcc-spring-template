@@ -26,12 +26,23 @@ class UserJpaRepositoryTest {
     @Test
     void findByEmail_로_유정정보를_찾을수_있다() throws Exception {
         //given
-        String email = "bh.moon@sk.com";
+        String email = "test1@sk.com";
         //when
         Optional<UserEntity> result = userJpaRepository.findByEmail(email);
-
+    
         //then
         assertThat(result.isPresent()).isTrue();
-
     }
+    
+    @Test
+    void findAllUser_로_모든_유저정보를_찾을수_있다() throws Exception {
+        //when
+        Iterable<UserEntity> result = userJpaRepository.findAll();
+    
+        //then
+        assertThat(result).isNotNull();
+        assertThat(result).hasSizeGreaterThan(0);
+    }
+    
+    
 }

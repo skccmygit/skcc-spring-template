@@ -10,6 +10,7 @@ import skcc.arch.domain.user.model.User;
 import skcc.arch.domain.user.dto.request.UserCreateRequestDto;
 import skcc.arch.domain.user.repository.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -48,4 +49,12 @@ public class UserService {
             throw new CustomException(ErrorCode.EXIST_ELEMENT);
         }
     }
+
+    // 전체 사용자 조회
+
+    public List<User> findAllUsers() {
+        return userRepository.findAllUsers();
+    }
+
+
 }

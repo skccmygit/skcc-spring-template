@@ -8,6 +8,7 @@ import skcc.arch.domain.user.model.User;
 import skcc.arch.domain.user.dto.request.UserCreateRequestDto;
 import skcc.arch.domain.user.repository.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -25,5 +26,14 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User save(UserCreateRequestDto userCreateRequestDto) {
         return userJpaRepository.save(new UserEntity(userCreateRequestDto)).toUserDto();
+    }
+
+    @Override
+    public List<User> findAllUsers() {
+        return userJpaRepository.findAll()
+                .stream()
+                .map(UserEntity::toUserDto)
+                .toList();
+
     }
 }

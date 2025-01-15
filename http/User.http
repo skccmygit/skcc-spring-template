@@ -18,3 +18,8 @@ Content-Type: application/json
     "email": "test2@gmail.com",
     "password": "1234"
 }
+
+
+### 전체 사용자 찾기
+GET http://localhost:8080/api/users
+Content-Type: application/json

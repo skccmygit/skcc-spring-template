@@ -49,7 +49,7 @@
             const response = await fetch('/api/users/login', {
                 method: 'POST', // HTTP POST 요청
                 headers: {
-                    'Content-Type': 'application/json' // JSON 형태로 전송
+                    'Content-Type': 'application/json', // JSON 형태로 전송
                 },
                 body: JSON.stringify(requestData) // JSON 형태로 변환
             });
@@ -57,7 +57,10 @@
             // 서버 응답 처리
             if (response.ok) {
                 const result = await response.json();
-                alert(result.message); // 성공 메시지
+                if(!result.success) {
+                    alert('Error: ' + result.error.message + ' ( ' + result.error.code + ');')
+                    return
+                }
                 window.location.href = '/home'; // 로그인 페이지로 리다이렉트
             } else {
                 const error = await response.json();
