@@ -6,9 +6,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import skcc.arch.app.exception.CustomException;
-import skcc.arch.domain.user.dto.UserDto;
-import skcc.arch.domain.user.model.UserEntity;
-import skcc.arch.domain.user.repository.UserJpaRepository;
+import skcc.arch.domain.user.model.User;
+import skcc.arch.domain.user.model.UserStatus;
+import skcc.arch.domain.user.repository.UserRepository;
 
 import java.util.Optional;
 
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 class UserServiceTest {
 
     @Mock
-    private UserJpaRepository userRepository;
+    private UserRepository userRepository;
 
     @Mock
     private PasswordEncoder passwordEncoder;
@@ -50,7 +50,7 @@ class UserServiceTest {
         String rawPassword = "1234";
         String encodedPassword = "encoded1234";
 
-        UserEntity mockUser = new UserEntity("name", email, encodedPassword);
+        User mockUser = new User(1L,email, encodedPassword, "username", UserStatus.PENDING);
         when(userRepository.findByEmail(email))
                 .thenReturn(Optional.of(mockUser));
         when(passwordEncoder.matches(rawPassword, encodedPassword))
@@ -69,14 +69,14 @@ class UserServiceTest {
         String rawPassword = "1234";
         String encodedPassword = "encoded1234";
 
-        UserEntity mockUser = new UserEntity("name", email, encodedPassword);
+        User mockUser = new User(1L,email, encodedPassword, "username", UserStatus.PENDING);
         when(userRepository.findByEmail(email))
                 .thenReturn(Optional.of(mockUser));
         when(passwordEncoder.matches(rawPassword, encodedPassword))
                 .thenReturn(true);
 
         // when
-        UserDto foundUser = userService.login(email, rawPassword);
+        User foundUser = userService.login(email, rawPassword);
 
         // then
         assertNotNull(foundUser);

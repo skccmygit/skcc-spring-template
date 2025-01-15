@@ -1,7 +1,6 @@
-package skcc.arch.domain.user.repository;
+package skcc.arch.domain.user.infrastructure.jpa;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import skcc.arch.domain.user.model.UserEntity;
 
 import java.util.Optional;
 

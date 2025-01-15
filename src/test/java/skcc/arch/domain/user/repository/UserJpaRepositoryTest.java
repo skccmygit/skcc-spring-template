@@ -7,7 +7,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import skcc.arch.domain.user.model.UserEntity;
+import skcc.arch.domain.user.infrastructure.jpa.UserEntity;
+import skcc.arch.domain.user.infrastructure.jpa.UserJpaRepository;
 
 import java.util.Optional;
 

@@ -1,11 +1,13 @@
-package skcc.arch.domain.user.model;
+package skcc.arch.domain.user.infrastructure.jpa;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import skcc.arch.domain.common.model.BaseEntity;
-import skcc.arch.domain.user.dto.UserDto;
+import skcc.arch.domain.common.infrastructure.BaseEntity;
+import skcc.arch.domain.user.dto.request.UserCreateRequestDto;
+import skcc.arch.domain.user.model.User;
+import skcc.arch.domain.user.model.UserStatus;
 
 @Entity
 @Table(name = "users")
@@ -28,11 +30,11 @@ public class UserEntity extends BaseEntity {
     private UserStatus status;
 
     // 도메인 설계에서 필요한 값들만 생성자를 통해 초기화
-    public UserEntity(String username, String email, String password) {
-        validateRequiredFields(username, email, password); // 유효성 검사
-        this.username = username;
-        this.email = email;
-        this.password = password;
+    public UserEntity(UserCreateRequestDto userCreateRequestDto) {
+        validateRequiredFields(userCreateRequestDto.getUsername(), userCreateRequestDto.getEmail(), userCreateRequestDto.getPassword()); // 유효성 검사
+        this.username = userCreateRequestDto.getUsername();
+        this.email = userCreateRequestDto.getEmail();
+        this.password = userCreateRequestDto.getPassword();
         this.status = UserStatus.PENDING;
     }
 
@@ -48,8 +50,19 @@ public class UserEntity extends BaseEntity {
         }
     }
 
-    public UserDto toUserDto() {
-        return  new UserDto(id, email, password, username, status);
+    public static UserEntity fromUserDto(User user) {
+
+        UserEntity userEntity = new UserEntity();
+        userEntity.id = user.getId();
+        userEntity.email = user.getEmail();
+        userEntity.password = user.getPassword();
+        userEntity.username = user.getUsername();
+        userEntity.status = user.getStatus();
+        return userEntity;
+    }
+
+    public User toUserDto() {
+        return  new User(id, email, password, username, status);
     }
 
 }

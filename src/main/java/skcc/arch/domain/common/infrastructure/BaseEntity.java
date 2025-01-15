@@ -1,4 +1,4 @@
-package skcc.arch.domain.common.model;
+package skcc.arch.domain.common.infrastructure;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
@@ -6,7 +6,6 @@ import jakarta.persistence.MappedSuperclass;
 
 import java.time.LocalDateTime;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;

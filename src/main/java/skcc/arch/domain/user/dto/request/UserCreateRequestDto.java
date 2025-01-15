@@ -3,7 +3,6 @@ package skcc.arch.domain.user.dto.request;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import skcc.arch.domain.user.model.UserEntity;
 
 @Getter
 @Setter
@@ -18,9 +17,5 @@ public class UserCreateRequestDto {
         this.email = email;
         this.password = password;
         this.username = username;
-    }
-
-    public UserEntity toEntity() {
-        return new UserEntity(username, email, password);
     }
 }

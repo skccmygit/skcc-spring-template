@@ -1,9 +1,8 @@
 package skcc.arch.domain.user.model;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import skcc.arch.domain.user.dto.UserDto;
 import skcc.arch.domain.user.dto.request.UserCreateRequestDto;
+import skcc.arch.domain.user.infrastructure.jpa.UserEntity;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,8 +15,14 @@ class UserEntityTest {
         String email = "email@sk.com";
         String password = "password123";
 
+        UserCreateRequestDto userCreateRequestDto = UserCreateRequestDto.builder()
+                .username(username)
+                .email(email)
+                .password(password)
+                .build();
+
         //when
-        UserEntity userEntity = new UserEntity(username, email, password);
+        UserEntity userEntity = new UserEntity(userCreateRequestDto);
 
         //then
         assertNotNull(userEntity);
@@ -32,19 +37,19 @@ class UserEntityTest {
         // Case 1: Null username
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> new UserEntity(null, "email@sk.com", "password123"));
+                () -> new UserEntity(UserCreateRequestDto.builder().username(null).email("email").password("password").build()));
         assertEquals("Username은 필수 값입니다.", exception.getMessage());
 
         // Case 2: Blank email
         exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> new UserEntity("홍길동", " ", "password123"));
+                () -> new UserEntity(UserCreateRequestDto.builder().username("name").email(null).password("password").build()));
         assertEquals("Email은 필수 값입니다.", exception.getMessage());
 
         // Case 3: Null password
         exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> new UserEntity("홍길동", "email@sk.com", null));
+                () -> new UserEntity(UserCreateRequestDto.builder().username("name").email("email").password(null).build()));
         assertEquals("Password는 필수 값입니다.", exception.getMessage());
     }
 
@@ -55,30 +60,25 @@ class UserEntityTest {
         String email = "email@sk.com";
         String password = "password123";
 
-        UserEntity userEntity = new UserEntity(username, email, password);
-
-        //when
-        UserDto userDto = userEntity.toUserDto();
-
-        //then
-        assertNotNull(userDto);
-        assertEquals(userEntity.getId(), userDto.getId());
-        assertEquals(userEntity.getEmail(), userDto.getEmail());
-        assertEquals(userEntity.getPassword(), userDto.getPassword());
-        assertEquals(userEntity.getUsername(), userDto.getUsername());
-        assertEquals(userEntity.getStatus(), userDto.getStatus());
-    }
-
-    @Test
-    void validateRequiredFields_필수값을_체크한다() throws Exception {
-        //given
         UserCreateRequestDto userCreateRequestDto = UserCreateRequestDto.builder()
-                .email("email@sk.com")
-                .username("홍길동")
+                .username(username)
+                .email(email)
+                .password(password)
                 .build();
 
-        //when, then
-        Assertions.assertThrows(IllegalArgumentException.class, userCreateRequestDto::toEntity);
+        //when
+        UserEntity userEntity = new UserEntity(userCreateRequestDto);
 
+        //when
+        User user = userEntity.toUserDto();
+
+        //then
+        assertNotNull(user);
+        assertEquals(userEntity.getId(), user.getId());
+        assertEquals(userEntity.getEmail(), user.getEmail());
+        assertEquals(userEntity.getPassword(), user.getPassword());
+        assertEquals(userEntity.getUsername(), user.getUsername());
+        assertEquals(userEntity.getStatus(), user.getStatus());
     }
+
 }
