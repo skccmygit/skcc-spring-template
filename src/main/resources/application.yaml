@@ -1,6 +1,24 @@
 spring:
   thymeleaf:
     cache: false
+# 데이터베이스
+  datasource:
+    driver-class-name: org.h2.Driver
+    username: sa
+    url: jdbc:h2:tcp://localhost/~/test
+#JPA 설정
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+#Security 기본
+  security:
+    user:
+      name: user
+      password: 1234
   devtools:
     livereload:
       enabled: true
