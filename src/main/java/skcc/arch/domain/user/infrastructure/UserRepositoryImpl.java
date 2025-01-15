@@ -1,6 +1,8 @@
 package skcc.arch.domain.user.infrastructure;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import skcc.arch.domain.user.infrastructure.jpa.UserEntity;
 import skcc.arch.domain.user.infrastructure.jpa.UserJpaRepository;
@@ -35,5 +37,11 @@ public class UserRepositoryImpl implements UserRepository {
                 .map(UserEntity::toUserDto)
                 .toList();
 
+    }
+
+    @Override
+    public Page<User> findAll(Pageable pageable) {
+        return userJpaRepository.findAll(pageable)
+                .map(UserEntity::toUserDto);
     }
 }

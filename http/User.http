@@ -21,5 +21,9 @@ Content-Type: application/json
 
 
 ### 전체 사용자 찾기
-GET http://localhost:8080/api/users
+GET http://localhost:8080/api/users/all
+Content-Type: application/json
+
+### 페이지 정보
+GET http://localhost:8080/api/users?page=1&size=1
 Content-Type: application/json

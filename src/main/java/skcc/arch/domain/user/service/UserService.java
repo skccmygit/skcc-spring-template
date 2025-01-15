@@ -2,6 +2,8 @@ package skcc.arch.domain.user.service;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import skcc.arch.app.exception.CustomException;
@@ -9,6 +11,7 @@ import skcc.arch.app.exception.ErrorCode;
 import skcc.arch.domain.user.model.User;
 import skcc.arch.domain.user.dto.request.UserCreateRequestDto;
 import skcc.arch.domain.user.repository.UserRepository;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -51,10 +54,12 @@ public class UserService {
     }
 
     // 전체 사용자 조회
-
     public List<User> findAllUsers() {
         return userRepository.findAllUsers();
     }
 
+    public Page<User> findAll(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
 
 }

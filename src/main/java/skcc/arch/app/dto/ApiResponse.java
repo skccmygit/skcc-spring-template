@@ -18,12 +18,23 @@ public class ApiResponse<T> {
     private T data;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private ExceptionDto error;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private PageInfo pageInfo;
 
     public static <T> ApiResponse<T> ok(T data){
         return ApiResponse.<T>builder()
                 .status(HttpStatus.OK)
                 .success(true)
                 .data(data)
+                .build();
+    }
+
+    public static <T> ApiResponse<T> ok(T data, PageInfo pageInfo){
+        return ApiResponse.<T>builder()
+                .status(HttpStatus.OK)
+                .success(true)
+                .data(data)
+                .pageInfo(pageInfo)
                 .build();
     }
 
@@ -34,4 +45,5 @@ public class ApiResponse<T> {
                 .error(ExceptionDto.of(e.getErrorCode()))
                 .build();
     }
+
 }
