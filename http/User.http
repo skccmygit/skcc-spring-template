@@ -4,9 +4,9 @@ Content-Type: application/json
 Accept-Language: en
 
 {
-  "email": "test2@gmail.com",
+  "email": "test3@gmail.com",
   "password": "1234",
-  "username": "테스트2"
+  "username": "테스트3"
 }
 
 ### 유저 정보 찾기
@@ -15,7 +15,7 @@ POST http://localhost:8080/api/users/login
 Content-Type: application/json
 
 {
-    "email": "test2@gmail.com",
+    "email": "test3@gmail.com",
     "password": "1234"
 }
 

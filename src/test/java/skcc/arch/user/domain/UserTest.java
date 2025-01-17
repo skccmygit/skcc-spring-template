@@ -26,6 +26,11 @@ class UserTest {
         assertThat(user.getEmail()).isEqualTo(userCreateRequest.getEmail());
         assertThat(user.getPassword()).isEqualTo(userCreateRequest.getPassword());
         assertThat(user.getStatus()).isEqualTo(UserStatus.PENDING);
+        assertThat(user.getCreatedDate()).isNotNull();
+        assertThat(user.getLastModifiedDate()).isNotNull();
+        assertThat(user.getCreatedDate()).isBeforeOrEqualTo(user.getLastModifiedDate());
+        assertThat(user.getLastModifiedDate()).isAfterOrEqualTo(user.getCreatedDate());
+        
     }
 
 
