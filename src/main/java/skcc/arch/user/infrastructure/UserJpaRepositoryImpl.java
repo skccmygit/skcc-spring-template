@@ -14,12 +14,12 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class UserRepositoryImpl implements UserRepository {
+public class UserJpaRepositoryImpl implements UserRepository {
 
     private final UserJpaRepository userJpaRepository;
 
     @Override
-    public Optional<User> getById(Long id) {
+    public Optional<User> findById(Long id) {
         return userJpaRepository.findById(id).map(UserEntity::toModel);
     }
 
@@ -35,7 +35,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public List<User> findAllUsers() {
+    public List<User> findAll() {
         return userJpaRepository.findAll()
                 .stream()
                 .map(UserEntity::toModel)

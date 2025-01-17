@@ -14,7 +14,7 @@ public class FakeUserRepository implements UserRepository {
     private final List<User> data = new ArrayList<>();
 
     @Override
-    public Optional<User> getById(Long id) {
+    public Optional<User> findById(Long id) {
         return data.stream().filter(item -> Objects.equals(item.getId(), id)).findAny();
     }
 
@@ -43,7 +43,7 @@ public class FakeUserRepository implements UserRepository {
     }
 
     @Override
-    public List<User> findAllUsers() {
+    public List<User> findAll() {
         return data.stream().toList();
     }
 

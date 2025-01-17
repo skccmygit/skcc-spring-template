@@ -6,7 +6,7 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     url: jdbc:h2:tcp://localhost/~/test
-#JPA 설정
+# JPA 설정
   jpa:
     hibernate:
       ddl-auto: update
@@ -14,7 +14,7 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
-#Security 기본
+  #Security 기본
   security:
     user:
       name: user
@@ -24,3 +24,14 @@ spring:
       enabled: true
     restart:
       enabled: true
+# MyBatis
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true # 테이블 컬럼 명이랑 DTO 필드명이랑 다를경우
+
+logging:
+  level:
+    org.mybatis: debug
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace

@@ -5,6 +5,8 @@ import lombok.Getter;
 import skcc.arch.user.domain.User;
 import skcc.arch.user.domain.UserStatus;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 public class UserResponseDto {
@@ -14,6 +16,8 @@ public class UserResponseDto {
     private String email;
     private String username;
     private UserStatus status;
+    private LocalDateTime createdDate;
+    private LocalDateTime lastModifiedDate;
 
 
     public static UserResponseDto fromUser(User user) {
@@ -22,6 +26,8 @@ public class UserResponseDto {
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .status(user.getStatus())
+                .createdDate(user.getCreatedDate())
+                .lastModifiedDate(user.getLastModifiedDate())
                 .build();
     }
 }

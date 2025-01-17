@@ -2,6 +2,7 @@ package skcc.arch.user.service;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,6 +12,7 @@ import skcc.arch.app.exception.CustomException;
 import skcc.arch.app.exception.ErrorCode;
 import skcc.arch.user.domain.User;
 import skcc.arch.user.domain.UserCreateRequest;
+import skcc.arch.user.infrastructure.UserMybatisRepositoryImpl;
 import skcc.arch.user.service.port.UserRepository;
 
 import java.util.List;
@@ -22,6 +24,7 @@ public class UserService implements skcc.arch.user.controller.port.UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
 
     // 회원가입 메서드
     @Transactional
@@ -54,7 +57,7 @@ public class UserService implements skcc.arch.user.controller.port.UserService {
 
     // 전체 사용자 조회
     public List<User> findAllUsers() {
-        return userRepository.findAllUsers();
+        return userRepository.findAll();
     }
 
     public Page<User> findAll(Pageable pageable) {
@@ -63,7 +66,7 @@ public class UserService implements skcc.arch.user.controller.port.UserService {
 
     @Override
     public User getById(Long id) {
-        return userRepository.getById(id)
+        return userRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ELEMENT));
     }
 

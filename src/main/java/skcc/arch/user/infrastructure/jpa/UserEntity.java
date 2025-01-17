@@ -12,7 +12,7 @@ import skcc.arch.user.domain.UserStatus;
 public class UserEntity extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     private String email;
@@ -41,6 +41,8 @@ public class UserEntity extends BaseEntity {
                 .password(password)
                 .username(username)
                 .status(status)
+                .createdDate(super.getCreatedDate())
+                .lastModifiedDate(super.getLastModifiedDate())
                 .build();
     }
 
