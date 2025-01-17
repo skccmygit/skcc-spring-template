@@ -1,7 +1,6 @@
 package skcc.arch.user.service;
 
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,19 +11,22 @@ import skcc.arch.app.exception.CustomException;
 import skcc.arch.app.exception.ErrorCode;
 import skcc.arch.user.domain.User;
 import skcc.arch.user.domain.UserCreateRequest;
-import skcc.arch.user.infrastructure.UserMybatisRepositoryImpl;
 import skcc.arch.user.service.port.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class UserService implements skcc.arch.user.controller.port.UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    public UserService(@Qualifier("userRepositoryJpa") UserRepository userRepository,
+            PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     // 회원가입 메서드
     @Transactional
@@ -41,7 +43,7 @@ public class UserService implements skcc.arch.user.controller.port.UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ELEMENT));
         boolean matches = passwordEncoder.matches(rawPassword, user.getPassword());
-        if(!matches) {
+        if (!matches) {
             throw new CustomException(ErrorCode.NOT_MATCHED_PASSWORD);
         }
         return user;
@@ -50,7 +52,7 @@ public class UserService implements skcc.arch.user.controller.port.UserService {
     // 이메일로 존재여부 체크
     private void checkUserExistByEmail(String email) {
         Optional<User> optionalUser = userRepository.findByEmail(email);
-        if(optionalUser.isPresent()) {
+        if (optionalUser.isPresent()) {
             throw new CustomException(ErrorCode.EXIST_ELEMENT);
         }
     }
