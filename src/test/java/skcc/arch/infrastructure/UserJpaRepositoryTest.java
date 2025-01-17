@@ -1,4 +1,4 @@
-package skcc.arch.medium;
+package skcc.arch.infrastructure;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

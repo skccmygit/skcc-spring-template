@@ -1,19 +1,11 @@
-package skcc.arch.medium;
+package skcc.arch.infrastructure;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.mockito.Mock;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Mock;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
-import org.springframework.transaction.annotation.Transactional;
 import skcc.arch.app.exception.CustomException;
 import skcc.arch.app.exception.ErrorCode;
 import skcc.arch.user.controller.port.UserService;
@@ -33,14 +25,6 @@ public class UserServiceTest {
 
     @Autowired
     private UserService userService;
-
-    @Mock
-    private PasswordEncoder passwordEncoder;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void userCreate_를_이용해_생성한다() throws Exception {
@@ -64,9 +48,6 @@ public class UserServiceTest {
         //given
         String email = "test1@sk.com";
         String rawPassword = "password";
-
-        BDDMockito.given(passwordEncoder.matches(rawPassword, "password"))
-                .willReturn(true);
 
 
         //when
