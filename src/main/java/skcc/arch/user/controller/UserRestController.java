@@ -35,11 +35,9 @@ public class UserRestController {
     }
 
     @GetMapping
-    public ApiResponse<List<UserResponseDto>> searchAllUser(
-            @RequestParam(defaultValue = "0") int page, 
-            @RequestParam(defaultValue = "10") int size) {
+    public ApiResponse<List<UserResponseDto>> searchAllUser(Pageable pageable) {
     
-        Pageable pageable = PageRequest.of(page, size);
+//        Pageable pageable = PageRequest.of(page, size);
         Page<User> result = userServiceImpl.findAll(pageable);
 
         return ApiResponse.ok(result

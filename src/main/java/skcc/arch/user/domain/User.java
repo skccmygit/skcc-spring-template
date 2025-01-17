@@ -1,9 +1,7 @@
 package skcc.arch.user.domain;
 
-import jakarta.persistence.Column;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
