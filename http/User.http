@@ -20,7 +20,11 @@ Content-Type: application/json
 }
 
 
-### 전체 사용자 찾기
+### 유저 정보 찾기
+GET http://localhost:8080/api/users/2
+Content-Type: application/json
+
+### 전체 사용자 찾기 (안씀)
 GET http://localhost:8080/api/users/all
 Content-Type: application/json
 

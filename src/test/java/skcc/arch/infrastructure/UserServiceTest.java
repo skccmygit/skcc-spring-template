@@ -3,6 +3,8 @@ package skcc.arch.infrastructure;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
@@ -12,6 +14,9 @@ import skcc.arch.user.controller.port.UserService;
 import skcc.arch.user.domain.User;
 import skcc.arch.user.domain.UserCreateRequest;
 import skcc.arch.user.domain.UserStatus;
+
+import java.awt.print.Pageable;
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -70,8 +75,46 @@ public class UserServiceTest {
         //when & then
         CustomException exception = assertThrows(CustomException.class, () -> userService.login(email, rawPassword));
         assertThat(exception.getErrorCode()).isEqualTo(ErrorCode.NOT_MATCHED_PASSWORD);
+    }
+
+    @Test
+    void ID로_사용자정보를_가져온다() throws Exception {
+        //given
+        Long id = 1L;
+
+        //when
+        User user = userService.getById(id);
+
+
+        //then
+        assertThat(user.getId()).isNotNull();
+        assertThat(user.getId()).isEqualTo(id);
+    }
+
+    @Test
+    void 전체_사용자를_조회한다() throws Exception {
+        //given
+
+        //when
+        List<User> allUsers = userService.findAllUsers();
+
+        //then
+        assertThat(allUsers.size()).isGreaterThan(0);
 
     }
-    
+
+    @Test
+    void 페이지정보를_이용하여_조회한다() throws Exception {
+        //given
+        int pageSize = 2;
+        PageRequest pageRequest = PageRequest.of(1, pageSize);
+        //when
+        Page<User> users = userService.findAll(pageRequest);
+
+        //then
+        assertThat(users.getContent().size()).isEqualTo(pageSize);
+
+    }
+
     
 }

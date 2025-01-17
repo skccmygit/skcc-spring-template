@@ -20,4 +20,8 @@ public interface UserService {
 
     Page<User> findAll(Pageable pageable);
 
+    // 아이디로 사용자 조회
+
+    User getById(Long id);
+
 }

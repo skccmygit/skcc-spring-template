@@ -19,18 +19,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UserServiceTest {
 
-    private UserServiceImpl userService;
+    private UserService userService;
     private final int TOTAL_USER_COUNT = 45;
 
     @BeforeEach
     void setUp() {
         FakeUserRepository fakeUserRepository = new FakeUserRepository();
         FakePasswordEncoder fakePasswordEncoder = new FakePasswordEncoder();
-        this.userService = new UserServiceImpl(fakeUserRepository, fakePasswordEncoder);
+        this.userService = new UserService(fakeUserRepository, fakePasswordEncoder);
 
         for (int i = 1; i <= TOTAL_USER_COUNT; i++) {
             fakeUserRepository.save(User.builder()
-                    .id((long) (i + 1))
+                    .id((long) (i))
                     .email("test"+i+"@sk.com")
                     .password(fakePasswordEncoder.encode("password"))
                     .username("홍길동"+i)
@@ -55,7 +55,20 @@ class UserServiceTest {
         assertThat(result.getId()).isNotNull();
         assertThat(result.getStatus()).isEqualTo(UserStatus.PENDING);
         assertThat(result.getPassword()).isEqualTo("ENC_password");
+    }
 
+    @Test
+    void 이미존재하는_사용자_생성시_에러발생() throws Exception {
+        //given
+        UserCreateRequest userCreateRequest = UserCreateRequest.builder()
+                .username("홍길동")
+                .email("test1@sk.com")
+                .password("password")
+                .build();
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () -> userService.create(userCreateRequest));
+        assertThat(exception.getErrorCode()).isEqualTo(ErrorCode.EXIST_ELEMENT);
     }
 
     @Test
@@ -122,6 +135,19 @@ class UserServiceTest {
         assertThat(users.getTotalElements()).isEqualTo(TOTAL_USER_COUNT);
         assertThat(users.getContent().size()).isEqualTo(pageSize);
         assertThat(users.getTotalPages()).isEqualTo(TOTAL_USER_COUNT % pageSize == 0 ? TOTAL_USER_COUNT / pageSize : TOTAL_USER_COUNT / pageSize + 1);
+
+    }
+
+    @Test
+    void ID로_사용자_조회() throws Exception {
+        //given
+        Long id = 1L;
+
+        //when
+        User user = userService.getById(id);
+
+        //then
+        assertThat(user.getId()).isEqualTo(id);
 
     }
 

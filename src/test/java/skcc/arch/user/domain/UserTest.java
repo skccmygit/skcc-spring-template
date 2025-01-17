@@ -36,8 +36,14 @@ class UserTest {
 
     @Test
     void UserCreate_필수_값이_없을_경우_에러_발생() {
-        // Case 1: Null username
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+        assertThrows(IllegalArgumentException.class,
+                () -> User.from(UserCreateRequest.builder().username(null).email("email").password("password").build()));
+        assertThrows(IllegalArgumentException.class,
+                () -> User.from(UserCreateRequest.builder().username("name").email(null).password("password").build()));
+        assertThrows(IllegalArgumentException.class,
+                () -> User.from(UserCreateRequest.builder().username("name").email("email").password(null).build()));
+
+IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> User.from(UserCreateRequest.builder().username("").email("email").password("password").build()));
 
         assertThat(exception.getMessage()).isEqualTo("Username은 필수 값입니다.");

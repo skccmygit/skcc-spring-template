@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements skcc.arch.user.controller.port.UserService {
+public class UserService implements skcc.arch.user.controller.port.UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -59,6 +59,12 @@ public class UserServiceImpl implements skcc.arch.user.controller.port.UserServi
 
     public Page<User> findAll(Pageable pageable) {
         return userRepository.findAll(pageable);
+    }
+
+    @Override
+    public User getById(Long id) {
+        return userRepository.getById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ELEMENT));
     }
 
 }

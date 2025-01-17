@@ -2,15 +2,15 @@ package skcc.arch.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import skcc.arch.app.dto.ApiResponse;
 import skcc.arch.app.dto.PageInfo;
 import skcc.arch.user.controller.response.UserResponseDto;
 import skcc.arch.user.domain.User;
 import skcc.arch.user.domain.UserCreateRequest;
-import skcc.arch.user.service.UserServiceImpl;
+import skcc.arch.user.service.UserService;
 
 import java.util.List;
 
@@ -19,26 +19,25 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserRestController {
 
-    private final UserServiceImpl userServiceImpl;
+    private final UserService userService;
 
     @PostMapping
     public ApiResponse<UserResponseDto> createUser(@RequestBody UserCreateRequest userCreateRequest) {
-        User user = userServiceImpl.create(userCreateRequest);
+        User user = userService.create(userCreateRequest);
         return ApiResponse.ok(UserResponseDto.fromUser(user));
     }
 
     // 로그인
     @PostMapping("/login")
     public ApiResponse<UserResponseDto> login(@RequestBody User loginRequest) {
-        User user = userServiceImpl.login(loginRequest.getEmail(), loginRequest.getPassword());
+        User user = userService.login(loginRequest.getEmail(), loginRequest.getPassword());
         return ApiResponse.ok(UserResponseDto.fromUser(user));
     }
 
     @GetMapping
     public ApiResponse<List<UserResponseDto>> searchAllUser(Pageable pageable) {
     
-//        Pageable pageable = PageRequest.of(page, size);
-        Page<User> result = userServiceImpl.findAll(pageable);
+        Page<User> result = userService.findAll(pageable);
 
         return ApiResponse.ok(result
                 .stream()
@@ -48,10 +47,17 @@ public class UserRestController {
 
     @GetMapping("/all")
     public ApiResponse<List<UserResponseDto>> getAllUsers() {
-        List<User> users = userServiceImpl.findAllUsers();
+        List<User> users = userService.findAllUsers();
         return ApiResponse.ok(users.stream()
                 .map(UserResponseDto::fromUser)
                 .toList());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponseDto> getById(@PathVariable long id) {
+        return ResponseEntity
+                .ok()
+                .body(UserResponseDto.fromUser(userService.getById(id)));
     }
 
 
