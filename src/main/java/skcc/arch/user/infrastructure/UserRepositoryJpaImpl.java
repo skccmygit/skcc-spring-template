@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import skcc.arch.user.domain.User;
 import skcc.arch.user.infrastructure.jpa.UserEntity;
-import skcc.arch.user.infrastructure.jpa.UserJpaRepository;
+import skcc.arch.user.infrastructure.jpa.UserRepositoryJpa;
 import skcc.arch.user.service.port.UserRepository;
 
 import java.util.List;
@@ -14,29 +14,29 @@ import java.util.Optional;
 
 @Repository( value = "userRepositoryJpa")
 @RequiredArgsConstructor
-public class UserJpaRepositoryImpl implements UserRepository {
+public class UserRepositoryJpaImpl implements UserRepository {
 
-    private final UserJpaRepository userJpaRepository;
+    private final UserRepositoryJpa userRepositoryJpa;
 
     @Override
     public Optional<User> findById(Long id) {
-        return userJpaRepository.findById(id).map(UserEntity::toModel);
+        return userRepositoryJpa.findById(id).map(UserEntity::toModel);
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return userJpaRepository.findByEmail(email)
+        return userRepositoryJpa.findByEmail(email)
                 .map(UserEntity::toModel);
     }
 
     @Override
     public User save(User user) {
-        return userJpaRepository.save(UserEntity.from(user)).toModel();
+        return userRepositoryJpa.save(UserEntity.from(user)).toModel();
     }
 
     @Override
     public List<User> findAll() {
-        return userJpaRepository.findAll()
+        return userRepositoryJpa.findAll()
                 .stream()
                 .map(UserEntity::toModel)
                 .toList();
@@ -45,7 +45,7 @@ public class UserJpaRepositoryImpl implements UserRepository {
 
     @Override
     public Page<User> findAll(Pageable pageable) {
-        return userJpaRepository.findAll(pageable)
+        return userRepositoryJpa.findAll(pageable)
                 .map(UserEntity::toModel);
     }
 }

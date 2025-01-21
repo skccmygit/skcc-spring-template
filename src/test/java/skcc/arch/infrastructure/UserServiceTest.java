@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 import skcc.arch.app.exception.CustomException;
@@ -16,7 +15,6 @@ import skcc.arch.user.domain.User;
 import skcc.arch.user.domain.UserCreateRequest;
 import skcc.arch.user.domain.UserStatus;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -38,7 +36,7 @@ public class UserServiceTest {
         //given
         UserCreateRequest userCreateRequest = UserCreateRequest.builder()
                 .username("홍길동")
-                .email("hongildong@sk.com")
+                .email("abcd@sk.com")
                 .password("password")
                 .build();
 

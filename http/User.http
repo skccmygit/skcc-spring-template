@@ -4,7 +4,7 @@ Content-Type: application/json
 Accept-Language: en
 
 {
-  "email": "jpa1@gmail.com",
+  "email": "mybatis3@gmail.com",
   "password": "1234",
   "username": "테스트4"
 }

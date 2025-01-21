@@ -32,6 +32,7 @@ dependencies {
 
     // Mybatis 디펜던시 추가
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.4'
+    implementation("com.google.guava:guava:33.4.0-jre")
 
     // Lombok
     compileOnly 'org.projectlombok:lombok'

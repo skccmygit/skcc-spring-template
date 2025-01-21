@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Mapper
-public interface UserMybatisRepository {
+public interface UserRepositoryMybatis {
 
     Optional<UserDto> findById(Long id);
     Optional<UserDto> findByEmail(String email);

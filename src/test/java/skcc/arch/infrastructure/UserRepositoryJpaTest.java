@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import skcc.arch.user.infrastructure.jpa.UserEntity;
-import skcc.arch.user.infrastructure.jpa.UserJpaRepository;
+import skcc.arch.user.infrastructure.jpa.UserRepositoryJpa;
 
 import java.util.Optional;
 
@@ -18,17 +18,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @EnableJpaAuditing
 @Sql("/sql/user-repository-test-data.sql")
-class UserJpaRepositoryTest {
+class UserRepositoryJpaTest {
 
     @Autowired
-    private UserJpaRepository userJpaRepository;
+    private UserRepositoryJpa userRepositoryJpa;
 
     @Test
     void findByEmail_로_유정정보를_찾을수_있다() throws Exception {
         //given
         String email = "test1@sk.com";
         //when
-        Optional<UserEntity> result = userJpaRepository.findByEmail(email);
+        Optional<UserEntity> result = userRepositoryJpa.findByEmail(email);
     
         //then
         assertThat(result.isPresent()).isTrue();
@@ -37,7 +37,7 @@ class UserJpaRepositoryTest {
     @Test
     void findAllUser_로_모든_유저정보를_찾을수_있다() throws Exception {
         //when
-        Iterable<UserEntity> result = userJpaRepository.findAll();
+        Iterable<UserEntity> result = userRepositoryJpa.findAll();
     
         //then
         assertThat(result).isNotNull();

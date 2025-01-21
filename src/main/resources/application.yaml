@@ -26,7 +26,7 @@ spring:
       enabled: true
 # MyBatis
 mybatis:
-  mapper-locations: classpath:mapper/*.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
   configuration:
     map-underscore-to-camel-case: true # 테이블 컬럼 명이랑 DTO 필드명이랑 다를경우
 

@@ -1,5 +1,5 @@
 insert into `users` (`id`, `email`, `password`, `username`, `status`, `created_date`, `last_modified_Date` )
-values (1, 'test1@sk.com', '$2a$10$p2DaDfIvJQcpwL/ewcHQCu7eZQkYxojo2B.WHJctRwHSXcncZkyJe', 'TEST1','ACTIVE', NOW(), NOW() ) ;
+values (100, 'test1@sk.com', '$2a$10$p2DaDfIvJQcpwL/ewcHQCu7eZQkYxojo2B.WHJctRwHSXcncZkyJe', 'TEST1','ACTIVE', NOW(), NOW() ) ;
 insert into `users` (`id`, `email`, `password`, `username`, `status`, `created_date`, `last_modified_Date` )
 values (2L, 'test2@sk.com', '$2a$10$p2DaDfIvJQcpwL/ewcHQCu7eZQkYxojo2B.WHJctRwHSXcncZkyJe', 'TEST2', 'ACTIVE', NOW(), NOW() ) ;
 insert into `users` (`id`, `email`, `password`, `username`, `status`, `created_date`, `last_modified_Date` )

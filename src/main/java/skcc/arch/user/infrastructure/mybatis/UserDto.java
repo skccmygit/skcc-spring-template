@@ -1,5 +1,6 @@
 package skcc.arch.user.infrastructure.mybatis;
 
+import jakarta.persistence.Column;
 import lombok.*;
 import skcc.arch.user.domain.User;
 import skcc.arch.user.domain.UserStatus;
