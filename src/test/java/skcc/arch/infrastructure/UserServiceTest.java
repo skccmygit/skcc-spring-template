@@ -80,7 +80,7 @@ public class UserServiceTest {
     @Test
     void ID로_사용자정보를_가져온다() throws Exception {
         //given
-        Long id = 1L;
+        Long id = 2L;
 
         //when
         User user = userService.getById(id);
