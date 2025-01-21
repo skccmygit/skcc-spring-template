@@ -23,7 +23,7 @@ spring:
     livereload:
       enabled: true
     restart:
-      enabled: true
+      enabled: false
 # MyBatis
 mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml
@@ -32,6 +32,7 @@ mybatis:
 
 logging:
   level:
+    org.springframework.security: debug
     org.mybatis: debug
     org.hibernate.SQL: debug
     org.hibernate.type: trace

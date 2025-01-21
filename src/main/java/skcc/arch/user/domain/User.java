@@ -13,16 +13,18 @@ public class User {
     private final String email;
     private final String password;
     private final String username;
+    private final Role role;
     private final UserStatus status;
     private final LocalDateTime createdDate;
     private final LocalDateTime lastModifiedDate;
 
     @Builder
-    public User(Long id, String email, String password, String username, UserStatus status, LocalDateTime createdDate, LocalDateTime lastModifiedDate) {
+    public User(Long id, String email, String password, String username, Role role, UserStatus status, LocalDateTime createdDate, LocalDateTime lastModifiedDate) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.username = username;
+        this.role = role;
         this.status = status;
         this.createdDate = createdDate;
         this.lastModifiedDate = lastModifiedDate;
@@ -41,6 +43,7 @@ public class User {
                 .email(userCreateRequest.getEmail())
                 .username(userCreateRequest.getUsername())
                 .password(userCreateRequest.getPassword())
+                .role(Role.USER)
                 .status(UserStatus.PENDING)
                 // JPA의 경우 BaseEntity에 처리
                 .createdDate(LocalDateTime.now())

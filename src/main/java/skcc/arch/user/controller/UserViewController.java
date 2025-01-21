@@ -1,6 +1,8 @@
 package skcc.arch.user.controller;
 
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -8,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class UserViewController {
 
     // 로그인 화면
-    @GetMapping({"/login","/"})
+    @GetMapping({"/login", "/"})
     public String showLoginForm() {
         return "login";
     }
@@ -22,7 +24,9 @@ public class UserViewController {
 
     // 메인 화면
     @GetMapping("/home")
-    public String showHome() {
+    public String showHome()
+    {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return "home";
     }
 }

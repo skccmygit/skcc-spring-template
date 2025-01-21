@@ -3,6 +3,7 @@ package skcc.arch.user.infrastructure.jpa;
 import jakarta.persistence.*;
 import lombok.Getter;
 import skcc.arch.common.infrastructure.jpa.BaseEntity;
+import skcc.arch.user.domain.Role;
 import skcc.arch.user.domain.User;
 import skcc.arch.user.domain.UserStatus;
 
@@ -22,6 +23,9 @@ public class UserEntity extends BaseEntity {
     private String username;
 
     @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @Enumerated(EnumType.STRING)
     private UserStatus status;
 
     public static UserEntity from(User user) {
@@ -30,6 +34,7 @@ public class UserEntity extends BaseEntity {
         userEntity.email = user.getEmail();
         userEntity.password = user.getPassword();
         userEntity.username = user.getUsername();
+        userEntity.role = user.getRole();
         userEntity.status = user.getStatus();
         return userEntity;
     }
@@ -40,6 +45,7 @@ public class UserEntity extends BaseEntity {
                 .email(email)
                 .password(password)
                 .username(username)
+                .role(role)
                 .status(status)
                 .createdDate(super.getCreatedDate())
                 .lastModifiedDate(super.getLastModifiedDate())

@@ -4,30 +4,45 @@ Content-Type: application/json
 Accept-Language: en
 
 {
-  "email": "mybatis3@gmail.com",
+  "email": "test@gmail.com",
   "password": "1234",
-  "username": "테스트4"
+  "username": "테스트"
 }
 
-### 유저 정보 찾기
+### 유저 로그인
 
 POST http://localhost:8080/api/users/login
 Content-Type: application/json
 
 {
-    "email": "test3@gmail.com",
+    "email": "test@gmail.com",
     "password": "1234"
 }
+
+### 시큐리티
+
+POST http://localhost:8080/api/users/test-user
+Content-Type: application/json
+
+{
+  "email": "test@gmail.com",
+  "password": "1234"
+}
+
 
 
 ### 유저 정보 찾기
 GET http://localhost:8080/api/users/1
 Content-Type: application/json
+Cookie: JSESSIONID=8AA3C55695AEF472D07F4665E99CD745
 
 ### 전체 사용자 찾기 (안씀)
 GET http://localhost:8080/api/users/all
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwiZW1haWwiOiJ0ZXN0QGdtYWlsLmNvbSIsInVzZXJuYW1lIjoi7YWM7Iqk7Yq4IiwiaWF0IjoxNzM3NDQ5MzU5LCJleHAiOjE3Mzc0NTExNTl9.DEz_6S9Bup8Fq5A62c9cmG1gwrnSPtx94rlwcghLN_c
 Content-Type: application/json
 
+###
+
 ### 페이지 정보
-GET http://localhost:8080/api/users?page=2&size=5
+GET http://localhost:8080/api/users?page=1&size=5
 Content-Type: application/json
