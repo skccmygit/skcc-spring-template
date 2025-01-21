@@ -45,8 +45,8 @@ public class UserService implements skcc.arch.user.controller.port.UserService {
         return userRepository.save(User.from(userCreateRequest));
     }
 
-    // 로그인 처리
-    public User login(String email, String rawPassword) {
+    // 인증
+    public String authenticate(String email, String rawPassword) {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ELEMENT));
@@ -68,9 +68,9 @@ public class UserService implements skcc.arch.user.controller.port.UserService {
         claims.put("role", user.getRole());
 
         String token = jwtUtil.generateToken(claims);
-        log.error("token : {}", token);
+        log.info("generated token : {}", token);
 
-        return user;
+        return token;
     }
 
     // 이메일로 존재여부 체크

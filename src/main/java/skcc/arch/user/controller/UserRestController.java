@@ -28,10 +28,10 @@ public class UserRestController {
     }
 
     // 로그인
-    @PostMapping("/login")
-    public ApiResponse<UserResponseDto> login(@RequestBody User loginRequest) {
-        User user = userService.login(loginRequest.getEmail(), loginRequest.getPassword());
-        return ApiResponse.ok(UserResponseDto.fromUser(user));
+    @PostMapping("/authenticate")
+    public ApiResponse<String> authenticate(@RequestBody User loginRequest) {
+        String authenticate = userService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
+        return ApiResponse.ok(authenticate);
     }
 
     @GetMapping

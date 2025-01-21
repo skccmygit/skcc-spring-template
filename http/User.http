@@ -11,7 +11,7 @@ Accept-Language: en
 
 ### 유저 로그인
 
-POST http://localhost:8080/api/users/login
+POST http://localhost:8080/api/users/authenticate
 Content-Type: application/json
 
 {
@@ -38,7 +38,7 @@ Cookie: JSESSIONID=8AA3C55695AEF472D07F4665E99CD745
 
 ### 전체 사용자 찾기 (안씀)
 GET http://localhost:8080/api/users/all
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwiZW1haWwiOiJ0ZXN0QGdtYWlsLmNvbSIsInVzZXJuYW1lIjoi7YWM7Iqk7Yq4IiwiaWF0IjoxNzM3NDQ5MzU5LCJleHAiOjE3Mzc0NTExNTl9.DEz_6S9Bup8Fq5A62c9cmG1gwrnSPtx94rlwcghLN_c
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwiZW1haWwiOiJ0ZXN0QGdtYWlsLmNvbSIsInVzZXJuYW1lIjoi7YWM7Iqk7Yq4IiwiaWF0IjoxNzM3NDQ5NzU2LCJleHAiOjE3Mzc0NTE1NTZ9.fva11FNKb0_OVbZilNArimg70hScx1DcuvQQlLTinwY
 Content-Type: application/json
 
 ###

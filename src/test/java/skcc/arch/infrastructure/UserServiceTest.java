@@ -56,7 +56,7 @@ public class UserServiceTest {
 
 
         //when
-        User user = userService.login(email, rawPassword);
+        User user = userService.authenticate(email, rawPassword);
 
 
         //then
@@ -73,7 +73,7 @@ public class UserServiceTest {
 
 
         //when & then
-        CustomException exception = assertThrows(CustomException.class, () -> userService.login(email, rawPassword));
+        CustomException exception = assertThrows(CustomException.class, () -> userService.authenticate(email, rawPassword));
         assertThat(exception.getErrorCode()).isEqualTo(ErrorCode.NOT_MATCHED_PASSWORD);
     }
 

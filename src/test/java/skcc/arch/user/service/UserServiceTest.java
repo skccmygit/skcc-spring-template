@@ -78,7 +78,7 @@ class UserServiceTest {
         String rawPassword = "password";
 
         //when
-        User loginUser = userService.login(email, rawPassword);
+        User loginUser = userService.authenticate(email, rawPassword);
 
         //then
         assertThat(loginUser.getEmail()).isEqualTo(email);
@@ -93,7 +93,7 @@ class UserServiceTest {
         String rawPassword = "passwordXXX";
 
         //when
-        CustomException exception = assertThrows(CustomException.class, () -> userService.login(email, rawPassword));
+        CustomException exception = assertThrows(CustomException.class, () -> userService.authenticate(email, rawPassword));
         assertThat(exception.getErrorCode()).isEqualTo(ErrorCode.NOT_MATCHED_PASSWORD);
 
     }
@@ -106,7 +106,7 @@ class UserServiceTest {
 
         //when
         CustomException exception =
-                assertThrows(CustomException.class, () -> userService.login(email, rawPassword));
+                assertThrows(CustomException.class, () -> userService.authenticate(email, rawPassword));
         assertThat(exception.getErrorCode()).isEqualTo(ErrorCode.NOT_FOUND_ELEMENT);
     }
 

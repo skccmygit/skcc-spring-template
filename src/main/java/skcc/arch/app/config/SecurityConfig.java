@@ -40,7 +40,7 @@ public class SecurityConfig {
                                 "/","/login", "/register",
 
                                 // API
-                                "/api/users","/api/users/login" , "/api/users/test-user",
+                                "/api/users","/api/users/authenticate" , "/api/users/test-user",
 
                                 // 정적 파일
                                 "/css/**", "/js/**", "/images/**", "/favicon.ico")
