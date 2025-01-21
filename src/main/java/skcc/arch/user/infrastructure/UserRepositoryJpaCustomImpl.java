@@ -12,9 +12,9 @@ import skcc.arch.user.service.port.UserRepository;
 import java.util.List;
 import java.util.Optional;
 
-@Repository( value = "userRepositoryJpa")
+@Repository
 @RequiredArgsConstructor
-public class UserRepositoryJpaImpl implements UserRepository {
+public class UserRepositoryJpaCustomImpl implements UserRepository {
 
     private final UserRepositoryJpa userRepositoryJpa;
 

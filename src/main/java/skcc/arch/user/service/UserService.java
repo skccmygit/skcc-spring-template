@@ -23,8 +23,8 @@ public class UserService implements skcc.arch.user.controller.port.UserService {
     private final PasswordEncoder passwordEncoder;
 
     public UserService(
-            @Qualifier("userRepositoryMybatis") UserRepository userRepository,
-//            @Qualifier("userRepositoryJpa") UserRepository userRepository,
+//            @Qualifier("userRepositoryMybatisImpl") UserRepository userRepository,
+            @Qualifier("userRepositoryJpaCustomImpl") UserRepository userRepository,
             PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;

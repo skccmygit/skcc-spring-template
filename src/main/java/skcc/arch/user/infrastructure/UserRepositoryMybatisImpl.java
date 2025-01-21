@@ -13,7 +13,7 @@ import skcc.arch.user.service.port.UserRepository;
 import java.util.List;
 import java.util.Optional;
 
-@Repository( value = "userRepositoryMybatis")
+@Repository
 @RequiredArgsConstructor
 public class UserRepositoryMybatisImpl implements UserRepository {
 
