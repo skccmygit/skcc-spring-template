@@ -10,10 +10,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
     properties:
       hibernate:
         format_sql: true
-        show_sql: true
+#        show_sql: true
   #Security 기본
   security:
     user:
@@ -35,9 +37,3 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true # 테이블 컬럼 명이랑 DTO 필드명이랑 다를경우
 
-logging:
-  level:
-    org.springframework.security: debug
-    org.mybatis: debug
-    org.hibernate.SQL: debug
-    org.hibernate.type: trace

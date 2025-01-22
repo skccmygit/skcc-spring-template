@@ -1,5 +1,6 @@
 package skcc.arch.app.config;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,8 @@ public class AppConfig {
 
     @Autowired
     private UserRepositoryJpa userRepositoryJpa;
+    @Autowired
+    private JPAQueryFactory jpaQueryFactory;
 
     @Autowired
     private UserRepositoryMybatis userRepositoryMybatis;
@@ -29,7 +32,7 @@ public class AppConfig {
      */
     @Bean
     public UserRepository userRepository() {
-        return new UserRepositoryJpaCustomImpl(userRepositoryJpa);
+        return new UserRepositoryJpaCustomImpl(userRepositoryJpa, jpaQueryFactory);
 //        return new UserRepositoryMybatisImpl(userRepositoryMybatis);
     }
 }

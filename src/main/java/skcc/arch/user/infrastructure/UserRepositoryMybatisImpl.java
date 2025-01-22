@@ -69,4 +69,9 @@ public class UserRepositoryMybatisImpl implements UserRepository {
         // 반환: Page 구현체 생성
         return new PageImpl<>(users, pageable, totalCount);
     }
+
+    @Override
+    public Page<User> findAdminUsers(Pageable pageable) {
+        return null;
+    }
 }

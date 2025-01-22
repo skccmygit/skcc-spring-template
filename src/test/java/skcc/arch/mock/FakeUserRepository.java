@@ -54,4 +54,9 @@ public class FakeUserRepository implements UserRepository {
         List<User> subList = data.subList(start, end);
         return new org.springframework.data.domain.PageImpl<>(subList, pageable, data.size());
     }
+
+    @Override
+    public Page<User> findAdminUsers(Pageable pageable) {
+        return null;
+    }
 }

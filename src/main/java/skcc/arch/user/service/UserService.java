@@ -93,4 +93,9 @@ public class UserService implements skcc.arch.user.controller.port.UserService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ELEMENT));
     }
 
+    @Override
+    public Page<User> findAdminUsers(Pageable pageable) {
+        return userRepository.findAdminUsers(pageable);
+    }
+
 }
