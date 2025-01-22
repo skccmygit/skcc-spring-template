@@ -11,8 +11,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import skcc.arch.app.filter.JwtRequestFilter;
+import skcc.arch.app.handler.CustomAccessDeniedHandler;
+import skcc.arch.app.handler.CustomAuthenticationEntryPoint;
 import skcc.arch.app.util.JwtUtil;
-import skcc.arch.user.service.MyUserDetailService;
+import skcc.arch.user.service.CustomUserDetailService;
 
 
 @Configuration
@@ -20,7 +22,9 @@ import skcc.arch.user.service.MyUserDetailService;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final MyUserDetailService myUserDetailService;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
+    private final CustomUserDetailService customUserDetailService;
     private final JwtUtil jwtUtil;
     private static final String[] AUTH_WHITELIST = {
             // FIXME - 타임리프(추후제거)
@@ -46,12 +50,20 @@ public class SecurityConfig {
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
 
                 // JWT 요청 필터를 UsernamePasswordAuthenticationFilter 전에 추가
-                .addFilterBefore(new JwtRequestFilter(myUserDetailService, jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtRequestFilter(customUserDetailService, jwtUtil), UsernamePasswordAuthenticationFilter.class)
+
+
+                .exceptionHandling((exceptionHandling) -> exceptionHandling
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler)
+                )
 
                 // 권한 규칙
                 .authorizeHttpRequests(auth -> auth
                         // 화이트리스트는 허용
                         .requestMatchers(AUTH_WHITELIST) .permitAll()
+                        // 특정영역은 ADMIN 만 허용
+                        .requestMatchers("/api/users/admin/**").hasRole("ADMIN")
                         // 나머지 요청은 인증 필요
                         .anyRequest().authenticated()
                 )

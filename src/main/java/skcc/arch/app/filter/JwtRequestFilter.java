@@ -10,7 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 import skcc.arch.app.util.JwtUtil;
-import skcc.arch.user.service.MyUserDetailService;
+import skcc.arch.user.service.CustomUserDetailService;
 
 import java.io.IOException;
 
@@ -24,7 +24,7 @@ import java.io.IOException;
  *    토큰은 "Bearer "로 시작해야 합니다.
  * 2. {@link JwtUtil#validateToken(String)}을 사용하여 토큰을 검증합니다.
  * 3. 검증된 토큰에서 {@link JwtUtil#extractUid(String)}을 사용하여 UID(사용자 식별자)를 추출합니다.
- * 4. 추출된 UID를 기반으로 {@link MyUserDetailService}에서 사용자 정보를 로드합니다.
+ * 4. 추출된 UID를 기반으로 {@link CustomUserDetailService}에서 사용자 정보를 로드합니다.
  * 5. 사용자 정보가 유효하다면, {@link UsernamePasswordAuthenticationToken}을 생성하고 
  *    이를 Security Context에 설정하여 인증과 권한 관리를 처리합니다.
  *
@@ -36,7 +36,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-    private final MyUserDetailService myUserDetailService;
+    private final CustomUserDetailService customUserDetailService;
     private final JwtUtil jwtUtil;
 
     @Override
@@ -57,7 +57,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 uid = jwtUtil.extractUid(token);
                 if (uid != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     // 4. UID(이메일)로 사용자 정보 조회
-                    UserDetails userDetails = myUserDetailService.loadUserByUsername(uid);
+                    UserDetails userDetails = customUserDetailService.loadUserByUsername(uid);
                     if (userDetails != null) {
                         // 5. Security 인증 토큰 생성
                         UsernamePasswordAuthenticationToken authToken =

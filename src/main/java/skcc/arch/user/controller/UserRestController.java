@@ -62,5 +62,14 @@ public class UserRestController {
                 .body(UserResponseDto.fromUser(userService.getById(id)));
     }
 
+    @GetMapping("/admin")
+    public ApiResponse<List<UserResponseDto>> getAdminUsers(Pageable pageable) {
+        Page<User> result = userService.findAll(pageable);
+        return ApiResponse.ok(result
+                .stream()
+                .map(UserResponseDto::fromUser)
+                .toList(), PageInfo.fromPage(result));
+    }
+
 
 }
