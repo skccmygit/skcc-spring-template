@@ -1,6 +1,5 @@
 package skcc.arch.user.service;
 
-import io.jsonwebtoken.Jwt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
@@ -8,7 +7,6 @@ import org.springframework.data.domain.PageRequest;
 import skcc.arch.app.exception.CustomException;
 import skcc.arch.app.exception.ErrorCode;
 import skcc.arch.app.util.JwtUtil;
-import skcc.arch.mock.FakeAuthenticateManager;
 import skcc.arch.mock.FakePasswordEncoder;
 import skcc.arch.mock.FakeUserRepository;
 import skcc.arch.user.domain.User;
@@ -31,10 +29,9 @@ class UserServiceTest {
     void setUp() {
         FakeUserRepository fakeUserRepository = new FakeUserRepository();
         FakePasswordEncoder fakePasswordEncoder = new FakePasswordEncoder();
-        FakeAuthenticateManager fakeAuthenticateManager = new FakeAuthenticateManager();
         jwtUtil = new JwtUtil("skcc-secret-key-skcc-secret-key-skcc-secret-key", 1800000);
 
-        this.userService = new UserService(fakeUserRepository, fakePasswordEncoder, fakeAuthenticateManager, jwtUtil);
+        this.userService = new UserService(fakeUserRepository, fakePasswordEncoder, jwtUtil);
 
         for (int i = 1; i <= TOTAL_USER_COUNT; i++) {
             fakeUserRepository.save(User.builder()
@@ -90,7 +87,7 @@ class UserServiceTest {
 
         //then
         assertThat(accessToken).isNotNull();
-        assertThat(jwtUtil.extractUserEmail(accessToken)).isEqualTo(email);
+        assertThat(jwtUtil.extractUid(accessToken)).isEqualTo(email);
         assertTrue(jwtUtil.validateToken(accessToken));
     }
 

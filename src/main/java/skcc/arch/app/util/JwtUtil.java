@@ -47,7 +47,7 @@ public class JwtUtil {
     }
 
     // 토큰에서 사용자 고유값 추출
-    public String extractUserEmail(String token) {
+    public String extractUid(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(signingKey)
                 .build()

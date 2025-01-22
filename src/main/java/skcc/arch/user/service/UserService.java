@@ -31,7 +31,6 @@ public class UserService implements skcc.arch.user.controller.port.UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
     // 회원가입 메서드
@@ -55,12 +54,6 @@ public class UserService implements skcc.arch.user.controller.port.UserService {
         if (!matches) {
             throw new CustomException(ErrorCode.NOT_MATCHED_PASSWORD);
         }
-
-        // 인증 시도
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.getEmail(),rawPassword)
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // JWT Token 생성
         Map<String, Object> claims = new HashMap<>();

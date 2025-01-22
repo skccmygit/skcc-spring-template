@@ -29,7 +29,7 @@ public class AppConfig {
      */
     @Bean
     public UserRepository userRepository() {
-//        return new UserRepositoryJpaCustomImpl(userRepositoryJpa);
-        return new UserRepositoryMybatisImpl(userRepositoryMybatis);
+        return new UserRepositoryJpaCustomImpl(userRepositoryJpa);
+//        return new UserRepositoryMybatisImpl(userRepositoryMybatis);
     }
 }
