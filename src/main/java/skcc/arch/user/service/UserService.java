@@ -9,7 +9,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +35,7 @@ public class UserService implements skcc.arch.user.controller.port.UserService {
     private final JwtUtil jwtUtil;
 
     // 회원가입 메서드
+    @Override
     @Transactional
     public User create(UserCreateRequest userCreateRequest) {
 
@@ -46,6 +46,7 @@ public class UserService implements skcc.arch.user.controller.port.UserService {
     }
 
     // 인증
+    @Override
     public String authenticate(String email, String rawPassword) {
 
         User user = userRepository.findByEmail(email)
@@ -63,6 +64,7 @@ public class UserService implements skcc.arch.user.controller.port.UserService {
 
         // JWT Token 생성
         Map<String, Object> claims = new HashMap<>();
+        claims.put("uid", user.getEmail());
         claims.put("username", user.getUsername());
         claims.put("email", user.getEmail());
         claims.put("role", user.getRole());
@@ -82,10 +84,12 @@ public class UserService implements skcc.arch.user.controller.port.UserService {
     }
 
     // 전체 사용자 조회
+    @Override
     public List<User> findAllUsers() {
         return userRepository.findAll();
     }
 
+    @Override
     public Page<User> findAll(Pageable pageable) {
         return userRepository.findAll(pageable);
     }

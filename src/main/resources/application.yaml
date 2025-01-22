@@ -24,6 +24,11 @@ spring:
       enabled: true
     restart:
       enabled: false
+# JWT
+jwt:
+  secret: skcc-secret-key-skcc-secret-key-skcc-secret-key # 최소 32바이트 이상만 권장됨
+  expiration: 1800000 # 30분
+
 # MyBatis
 mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml

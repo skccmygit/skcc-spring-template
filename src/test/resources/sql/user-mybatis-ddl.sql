@@ -5,6 +5,7 @@ create table users (
                        email varchar(255),
                        password varchar(255),
                        username varchar(255),
+                       role enum ('ADMIN', 'USER'),
                        status enum ('ACTIVE','INACTIVE','PENDING'),
                        primary key (id)
 );

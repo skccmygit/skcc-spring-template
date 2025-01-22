@@ -12,3 +12,5 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+
+#

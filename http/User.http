@@ -19,26 +19,14 @@ Content-Type: application/json
     "password": "1234"
 }
 
-### 시큐리티
-
-POST http://localhost:8080/api/users/test-user
-Content-Type: application/json
-
-{
-  "email": "test@gmail.com",
-  "password": "1234"
-}
-
-
-
 ### 유저 정보 찾기
 GET http://localhost:8080/api/users/1
 Content-Type: application/json
 Cookie: JSESSIONID=8AA3C55695AEF472D07F4665E99CD745
 
-### 전체 사용자 찾기 (안씀)
+### 전체 사용자 찾기
 GET http://localhost:8080/api/users/all
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwiZW1haWwiOiJ0ZXN0QGdtYWlsLmNvbSIsInVzZXJuYW1lIjoi7YWM7Iqk7Yq4IiwiaWF0IjoxNzM3NDQ5NzU2LCJleHAiOjE3Mzc0NTE1NTZ9.fva11FNKb0_OVbZilNArimg70hScx1DcuvQQlLTinwY
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsInVpZCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwidXNlcm5hbWUiOiLthYzsiqTtirgiLCJpYXQiOjE3Mzc1MDY4ODgsImV4cCI6MTczNzUwODY4OH0._ugep4kAlV4TliYZAxO4l8kzZTViFgRfSNqbhAo7Cyw
 Content-Type: application/json
 
 ###

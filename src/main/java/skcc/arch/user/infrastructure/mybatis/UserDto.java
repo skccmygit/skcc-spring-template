@@ -1,7 +1,7 @@
 package skcc.arch.user.infrastructure.mybatis;
 
-import jakarta.persistence.Column;
 import lombok.*;
+import skcc.arch.user.domain.UserRole;
 import skcc.arch.user.domain.User;
 import skcc.arch.user.domain.UserStatus;
 
@@ -22,6 +22,7 @@ public class UserDto {
     private String email;
     private String password;
     private String username;
+    private UserRole role;
     private UserStatus status;
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
@@ -36,6 +37,7 @@ public class UserDto {
                 .email(user.getEmail())
                 .password(user.getPassword())
                 .username(user.getUsername())
+                .role(user.getRole())
                 .status(user.getStatus())
                 .createdDate(user.getCreatedDate())
                 .lastModifiedDate(user.getLastModifiedDate())
@@ -48,6 +50,7 @@ public class UserDto {
                 .email(email)
                 .password(password)
                 .username(username)
+                .role(role)
                 .status(status)
                 .createdDate(createdDate)
                 .lastModifiedDate(lastModifiedDate)

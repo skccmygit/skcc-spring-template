@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import skcc.arch.app.dto.ApiResponse;
 import skcc.arch.app.dto.PageInfo;
+import skcc.arch.user.controller.response.Token;
 import skcc.arch.user.controller.response.UserResponseDto;
 import skcc.arch.user.domain.User;
 import skcc.arch.user.domain.UserCreateRequest;
@@ -29,9 +30,10 @@ public class UserRestController {
 
     // 로그인
     @PostMapping("/authenticate")
-    public ApiResponse<String> authenticate(@RequestBody User loginRequest) {
-        String authenticate = userService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
-        return ApiResponse.ok(authenticate);
+    public ApiResponse<Token> authenticate(@RequestBody User loginRequest) {
+        String accessToken = userService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
+        Token jwtToken = new Token(accessToken);
+        return ApiResponse.ok(jwtToken);
     }
 
     @GetMapping

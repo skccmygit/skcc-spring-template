@@ -2,7 +2,6 @@ package skcc.arch.user.domain;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -13,13 +12,13 @@ public class User {
     private final String email;
     private final String password;
     private final String username;
-    private final Role role;
+    private final UserRole role;
     private final UserStatus status;
     private final LocalDateTime createdDate;
     private final LocalDateTime lastModifiedDate;
 
     @Builder
-    public User(Long id, String email, String password, String username, Role role, UserStatus status, LocalDateTime createdDate, LocalDateTime lastModifiedDate) {
+    public User(Long id, String email, String password, String username, UserRole role, UserStatus status, LocalDateTime createdDate, LocalDateTime lastModifiedDate) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -43,7 +42,7 @@ public class User {
                 .email(userCreateRequest.getEmail())
                 .username(userCreateRequest.getUsername())
                 .password(userCreateRequest.getPassword())
-                .role(Role.USER)
+                .role(UserRole.USER)
                 .status(UserStatus.PENDING)
                 // JPA의 경우 BaseEntity에 처리
                 .createdDate(LocalDateTime.now())

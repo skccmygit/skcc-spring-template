@@ -25,12 +25,11 @@ public class AppConfig {
     }
 
     /**
-     * Jpa 또는 MyBatis 선택
-     * @return
+     * Jpa 또는 MyBatis 구현체 선택
      */
     @Bean
     public UserRepository userRepository() {
-        return new UserRepositoryJpaCustomImpl(userRepositoryJpa);
-//        return new UserRepositoryMybatisImpl(userRepositoryMybatis);
+//        return new UserRepositoryJpaCustomImpl(userRepositoryJpa);
+        return new UserRepositoryMybatisImpl(userRepositoryMybatis);
     }
 }

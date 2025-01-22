@@ -3,7 +3,7 @@ package skcc.arch.user.infrastructure.jpa;
 import jakarta.persistence.*;
 import lombok.Getter;
 import skcc.arch.common.infrastructure.jpa.BaseEntity;
-import skcc.arch.user.domain.Role;
+import skcc.arch.user.domain.UserRole;
 import skcc.arch.user.domain.User;
 import skcc.arch.user.domain.UserStatus;
 
@@ -23,7 +23,7 @@ public class UserEntity extends BaseEntity {
     private String username;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private UserRole role;
 
     @Enumerated(EnumType.STRING)
     private UserStatus status;

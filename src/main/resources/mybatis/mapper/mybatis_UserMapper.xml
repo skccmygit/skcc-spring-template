@@ -34,11 +34,12 @@
             SELECT NEXT VALUE FOR users_seq
         </selectKey>
 
-        INSERT INTO users (id, username, email, password, status, created_date, last_modified_date)
+        INSERT INTO users (id, username, email, password, role, status, created_date, last_modified_date)
         VALUES (#{id},
                 #{username},
                 #{email},
                 #{password},
+                #{role},
                 #{status},
                 #{createdDate},
                 #{lastModifiedDate}

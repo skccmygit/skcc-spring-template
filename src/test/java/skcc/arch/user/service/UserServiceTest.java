@@ -1,11 +1,14 @@
 package skcc.arch.user.service;
 
+import io.jsonwebtoken.Jwt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import skcc.arch.app.exception.CustomException;
 import skcc.arch.app.exception.ErrorCode;
+import skcc.arch.app.util.JwtUtil;
+import skcc.arch.mock.FakeAuthenticateManager;
 import skcc.arch.mock.FakePasswordEncoder;
 import skcc.arch.mock.FakeUserRepository;
 import skcc.arch.user.domain.User;
@@ -16,17 +19,22 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class UserServiceTest {
 
     private UserService userService;
     private final int TOTAL_USER_COUNT = 45;
+    private JwtUtil jwtUtil;
 
     @BeforeEach
     void setUp() {
         FakeUserRepository fakeUserRepository = new FakeUserRepository();
         FakePasswordEncoder fakePasswordEncoder = new FakePasswordEncoder();
-        this.userService = new UserService(fakeUserRepository, fakePasswordEncoder);
+        FakeAuthenticateManager fakeAuthenticateManager = new FakeAuthenticateManager();
+        jwtUtil = new JwtUtil("skcc-secret-key-skcc-secret-key-skcc-secret-key", 1800000);
+
+        this.userService = new UserService(fakeUserRepository, fakePasswordEncoder, fakeAuthenticateManager, jwtUtil);
 
         for (int i = 1; i <= TOTAL_USER_COUNT; i++) {
             fakeUserRepository.save(User.builder()
@@ -72,22 +80,22 @@ class UserServiceTest {
     }
 
     @Test
-    void 정상적인_비밀번호_로그인_시도() throws Exception {
+    void 정상적인_계정으로_토큰생성_검증() throws Exception {
         //given
         String email = "test1@sk.com";
         String rawPassword = "password";
 
         //when
-        User loginUser = userService.authenticate(email, rawPassword);
+        String accessToken = userService.authenticate(email, rawPassword);
 
         //then
-        assertThat(loginUser.getEmail()).isEqualTo(email);
-        assertThat(loginUser.getStatus()).isEqualTo(UserStatus.ACTIVE);
-
+        assertThat(accessToken).isNotNull();
+        assertThat(jwtUtil.extractUserEmail(accessToken)).isEqualTo(email);
+        assertTrue(jwtUtil.validateToken(accessToken));
     }
 
     @Test
-    void 잘못된_비밀번호_로그인_시도() throws Exception {
+    void 잘못된_정보로_로그인_시도() throws Exception {
         //given
         String email = "test1@sk.com";
         String rawPassword = "passwordXXX";

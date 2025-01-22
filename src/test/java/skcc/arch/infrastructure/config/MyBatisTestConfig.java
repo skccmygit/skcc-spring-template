@@ -1,5 +1,6 @@
 package skcc.arch.infrastructure.config;
 
+import org.apache.ibatis.logging.slf4j.Slf4jImpl;
 import org.apache.ibatis.session.Configuration;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.boot.test.context.TestConfiguration;

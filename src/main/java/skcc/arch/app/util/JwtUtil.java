@@ -1,31 +1,34 @@
 package skcc.arch.app.util;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
 import java.util.Map;
-import java.util.Objects;
 
 @Component
 public class JwtUtil {
 
-    private static final String SECRET_KEY = "my-secret-key-my-secret-key-my-secret-key"; // 최소 32바이트
-    private static final long EXPIRATION_TIME = 1000 * 60 * 30; // 30분
+    private final long expirationMillis;    //만료시간(ms)
+    private final Key signingKey;
 
-    private final Key signingKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    public JwtUtil(@Value("${jwt.secret}") String secretKey,
+                   @Value("${jwt.expiration}") long expirationMillis) {
+        this.expirationMillis = expirationMillis;
+        this.signingKey = Keys.hmacShaKeyFor(secretKey.getBytes());
+    }
 
     // 토큰 생성
     public String generateToken(Map<String, Object> claim) {
         return Jwts.builder()
-                .setSubject((String) claim.get("email"))
+                .setSubject((String) claim.get("uid"))
                 .addClaims(claim)
                 .setIssuedAt(new Date()) // 발급 시간
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME)) // 만료 시간
+                .setExpiration(new Date(System.currentTimeMillis() + expirationMillis)) // 만료 시간
                 .signWith(signingKey, SignatureAlgorithm.HS256) // 비밀키와 알고리즘으로 서명
                 .compact();
     }
@@ -43,7 +46,7 @@ public class JwtUtil {
         }
     }
 
-    // 토큰에서 사용자 이름 추출
+    // 토큰에서 사용자 고유값 추출
     public String extractUserEmail(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(signingKey)
@@ -51,15 +54,5 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
-    }
-
-    public String extractRole(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(signingKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .get("role", String.class)
-                ;
     }
 }

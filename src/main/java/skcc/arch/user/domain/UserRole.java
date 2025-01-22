@@ -1,5 +1,5 @@
 package skcc.arch.user.domain;
 
-public enum Role {
+public enum UserRole {
     ADMIN, USER
 }
