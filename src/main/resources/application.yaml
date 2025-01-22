@@ -37,3 +37,19 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true # 테이블 컬럼 명이랑 DTO 필드명이랑 다를경우
 
+## 로그설정
+logging:
+  level:
+    root: info # 전체 로그 레벨
+    skcc.arch: debug # 특정 패키지 레벨
+  file:
+    name: logs/app.log # 파일 로그 경로 지정
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %highlight(%-5level) %cyan(%logger{5}.%M) - %msg%n" # 콘솔 로그 패턴
+#    file: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n" # 파일 로그 패턴
+
+## p6spy (운영환경에서는 false로)
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
