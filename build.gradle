@@ -48,6 +48,9 @@ dependencies {
     // JPA 로그
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.10.0'
 
+    // Common Lang
+    implementation 'org.apache.commons:commons-lang3:3.14.0'
+
     // Lombok
     compileOnly 'org.projectlombok:lombok'
 

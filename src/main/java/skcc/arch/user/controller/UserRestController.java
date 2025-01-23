@@ -1,6 +1,7 @@
 package skcc.arch.user.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
+@Slf4j
 public class UserRestController {
 
     private final UserService userService;
@@ -64,6 +66,7 @@ public class UserRestController {
 
     @GetMapping("/admin")
     public ApiResponse<List<UserResponseDto>> getAdminUsers(Pageable pageable) {
+        log.info("[Controller] : {}" , pageable);
         Page<User> result = userService.findAdminUsers(pageable);
         return ApiResponse.ok(result
                 .stream()
