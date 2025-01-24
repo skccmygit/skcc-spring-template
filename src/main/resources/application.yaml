@@ -6,6 +6,7 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     url: jdbc:h2:tcp://localhost/~/test
+#    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1
 # JPA 설정
   jpa:
     hibernate:
@@ -14,7 +15,7 @@ spring:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
     properties:
       hibernate:
-        format_sql: true
+#        format_sql: true
 #        show_sql: true
   #Security 기본
   security:
@@ -53,4 +54,4 @@ logging:
 decorator:
   datasource:
     p6spy:
-      enable-logging: false
+      enable-logging: true

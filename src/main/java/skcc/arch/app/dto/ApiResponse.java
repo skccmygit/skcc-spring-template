@@ -14,7 +14,6 @@ public class ApiResponse<T> {
     @JsonIgnore
     private HttpStatus status;
     private boolean success;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private ExceptionDto error;
@@ -46,4 +45,11 @@ public class ApiResponse<T> {
                 .build();
     }
 
+    public static <T> ApiResponse<T> fail(final Exception e){
+        return ApiResponse.<T>builder()
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .success(false)
+                .error(new ExceptionDto(e))
+                .build();
+    }
 }

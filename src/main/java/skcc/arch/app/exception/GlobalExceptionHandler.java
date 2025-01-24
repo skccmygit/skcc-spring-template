@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import skcc.arch.app.dto.ApiResponse;
+import skcc.arch.app.dto.ExceptionDto;
 
 @Slf4j
 @RestControllerAdvice
@@ -28,6 +29,6 @@ public class GlobalExceptionHandler {
     // 기본 예외
     @ExceptionHandler(value = {Exception.class})
     public ApiResponse<?> handleException(Exception e) {
-        return ApiResponse.fail(new CustomException(ErrorCode.INTERNAL_SERVER_ERROR));
+        return ApiResponse.fail(e);
     }
 }
