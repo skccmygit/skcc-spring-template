@@ -82,6 +82,21 @@ public class CodeEntity extends BaseEntity {
                 .id(id)
                 .code(code)
                 .codeName(codeName)
+                .parentCodeId(parentCode == null ? null : parentCode.getId())
+                .seq(seq)
+                .description(description)
+                .delYn(delYn)
+                .createdDate(super.getCreatedDate())
+                .lastModifiedDate(super.getLastModifiedDate())
+                .build();
+    }
+
+
+    public CodeDto toDtoWithChild() {
+        return CodeDto.builder()
+                .id(id)
+                .code(code)
+                .codeName(codeName)
                 .child(child.stream().map(CodeEntity::toDto).toList())
                 .parentCodeId(parentCode == null ? null : parentCode.getId())
                 .seq(seq)

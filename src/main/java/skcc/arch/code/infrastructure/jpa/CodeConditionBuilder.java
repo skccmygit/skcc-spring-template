@@ -22,7 +22,7 @@ public abstract class CodeConditionBuilder {
         return hasText(code) ? QCodeEntity.codeEntity.code.eq(code) : null;
     }
     private static BooleanExpression codeNameLike(String codeName) {
-        return hasText(codeName) ? QCodeEntity.codeEntity.codeName.like(codeName) : null;
+        return hasText(codeName) ? QCodeEntity.codeEntity.codeName.like("%"+codeName+"%") : null;
     }
 
     private static BooleanExpression alwaysTrue() {

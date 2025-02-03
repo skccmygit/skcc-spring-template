@@ -22,25 +22,36 @@ public class CodeRestController {
     
     @PostMapping
     public ApiResponse<Code> createCode(@RequestBody CodeCreateRequest codeCreateRequest) {
-
         //TODO-CODE RESPONSE DTO 생성 필요
         return ApiResponse.ok(codeService.save(codeCreateRequest));
     }
 
+
+    // 단건 조회
     @GetMapping("/{id}")
-    public ApiResponse<CodeDto> getCode(@PathVariable Long id) {
-        return ApiResponse.ok(codeService.findByIdWithChild(id));
+    public ApiResponse<CodeDto> getCode(@PathVariable Long id
+            , @RequestParam(required = false, defaultValue = "false") boolean withChild) {
+
+        if(withChild) {
+            return ApiResponse.ok(codeService.findByIdWithChild(id));
+        }else
+            return ApiResponse.ok(codeService.findById(id));
+
     }
 
-//    @GetMapping
-//    public ApiResponse<List<Code>> getCodeList(Pageable pageable) {
-//        Page<Code> result = codeService.findAll(pageable);
-//        return ApiResponse.ok(result.getContent(), PageInfo.fromPage(result));
-//    }
-
+    // 다건 조회
     @GetMapping
-    public ApiResponse<CodeDto> getCodeWithChild(Pageable pageable, CodeSearchCondition condition) {
-        return ApiResponse.ok(codeService.findByCodeWithChild(condition));
+    public ApiResponse<List<CodeDto>> getCodeList(Pageable pageable, CodeSearchCondition condition
+            , @RequestParam(required = false, defaultValue = "false") boolean withChild) {
+
+        Page<CodeDto> result;
+        if(withChild) {
+            result = codeService.findByCodeWithChild(pageable, condition);
+        }else {
+            result = codeService.findByCode(pageable, condition);
+        }
+        return ApiResponse.ok(result.getContent(), PageInfo.fromPage(result));
+
     }
     
 }

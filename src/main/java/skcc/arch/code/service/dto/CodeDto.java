@@ -1,6 +1,6 @@
 package skcc.arch.code.service.dto;
 
-import com.querydsl.core.annotations.QueryProjection;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,6 +14,7 @@ public class CodeDto{
     private String code;
     private String codeName;
     private Long parentCodeId;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<CodeDto> child;
     private int seq;
     private String description;

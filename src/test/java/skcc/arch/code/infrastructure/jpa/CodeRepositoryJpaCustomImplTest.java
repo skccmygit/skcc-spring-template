@@ -1,11 +1,8 @@
 package skcc.arch.code.infrastructure.jpa;
 
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +10,12 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import skcc.arch.code.domain.Code;
-import skcc.arch.code.domain.CodeCreateRequest;
 import skcc.arch.code.domain.CodeSearchCondition;
 import skcc.arch.code.service.dto.CodeDto;
 import skcc.arch.code.service.dto.QCodeDto;
 import skcc.arch.common.infrastructure.jpa.JpaConfig;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static skcc.arch.code.infrastructure.jpa.QCodeEntity.codeEntity;
 
@@ -109,7 +103,7 @@ class CodeRepositoryJpaCustomImplTest {
 
 
     @Test
-    void findByCode() throws Exception {
+    void findByCondition() throws Exception {
         //given
         CodeSearchCondition condition = CodeSearchCondition.builder()
                 .code("A001")
@@ -122,6 +116,7 @@ class CodeRepositoryJpaCustomImplTest {
                         codeEntity.code,
                         codeEntity.codeName,
                         codeEntity.parentCode.id,
+                        null,
                         codeEntity.seq,
                         codeEntity.description,
                         codeEntity.delYn,
@@ -154,53 +149,4 @@ class CodeRepositoryJpaCustomImplTest {
 
     }
 
-    @Test
-    void findByCodeWithChild() {
-        //given
-        CodeSearchCondition condition = CodeSearchCondition.builder()
-                .code("A001")
-                .build();
-
-        List<CodeEntity> all = repositoryJpa.findAll();
-        log.info("all : {}", all);
-        log.info("all.size() : {}", all.size());
-
-        // 기준 엔티티 조회
-        List<CodeEntity> result = queryFactory
-                .selectFrom(codeEntity)
-                .where(codeEntity.code.eq(condition.getCode()))
-                .fetch();
-
-        // 자식 조회
-        List<CodeDto> list = result.stream()
-                .map(parent -> CodeDto.builder()
-                        .id(parent.getId())
-                        .code(parent.getCode())
-                        .codeName(parent.getCodeName())
-                        .description(parent.getDescription())
-                        .seq(parent.getSeq())
-                        .parentCodeId(parent.getParentCode() != null ? parent.getParentCode().getId() : null)
-                        .child(findChildCodes(parent.getId()))
-                        .build())
-                .toList();
-
-        log.info("list : {}", list);
-    }
-
-    private List<CodeDto> findChildCodes(Long parentId) {
-        // 자식 코드 조회
-        List<CodeDto> children = queryFactory.selectFrom(codeEntity)
-                .where(codeEntity.parentCode.id.eq(parentId))
-                .fetch()
-                .stream()
-                .map(CodeEntity::toDto)
-                .toList();
-
-        // 각 자식 코드를 기준으로 하위 계층 구조를 계속 탐색 (재귀 호출)
-        for (CodeDto child : children) {
-            child.setChild(findChildCodes(child.getId()));
-        }
-
-        return children;
-    }
 }

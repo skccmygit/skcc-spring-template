@@ -2,6 +2,7 @@ package skcc.arch.code.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import skcc.arch.app.exception.CustomException;
@@ -27,7 +28,7 @@ public class CodeServiceImpl implements CodeService {
         // 존재하는 코드인지
         checkExistCode(codeCreateRequest);
         // 부모코드가 유효한 코드인지
-        if(codeCreateRequest.getParentCodeId() != null) {
+        if (codeCreateRequest.getParentCodeId() != null) {
             checkExistParentCode(codeCreateRequest.getParentCodeId());
         }
         return codeRepository.save(Code.from(codeCreateRequest));
@@ -35,7 +36,7 @@ public class CodeServiceImpl implements CodeService {
 
 
     @Override
-    public Code findById(Long id) {
+    public CodeDto findById(Long id) {
         return codeRepository.findById(id).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_ELEMENT)
         );
@@ -49,30 +50,28 @@ public class CodeServiceImpl implements CodeService {
     }
 
     @Override
-    public Code findByCode(String code) {
-        return null;
+    public Page<CodeDto> findByCode(Pageable pageable, CodeSearchCondition condition) {
+        return codeRepository.findByCondition(pageable, condition);
     }
 
     @Override
-    public Page<Code> findAll(Pageable pageable) {
-        return codeRepository.findAll(pageable);
+    public Page<CodeDto> findByCodeWithChild(Pageable pageable, CodeSearchCondition condition) {
+        return codeRepository.findByConditionWithChild(pageable, condition);
     }
 
-    @Override
-    public CodeDto findByCodeWithChild(CodeSearchCondition condition) {
-        Optional<CodeDto> result = codeRepository.findByCodeWithChild(condition);
-        return result.orElse(null);
-    }
 
     private void checkExistCode(CodeCreateRequest codeCreateRequest) {
-        Optional<Code> code = codeRepository.findByCode(codeCreateRequest.getCode());
-        if (code.isPresent()) {
+        CodeSearchCondition condition = CodeSearchCondition.builder()
+                .code(codeCreateRequest.getCode())
+                .build();
+        Page<CodeDto> result = codeRepository.findByCondition(PageRequest.of(0, 10), condition);
+        if (!result.getContent().isEmpty()) {
             throw new CustomException(ErrorCode.EXIST_ELEMENT);
         }
     }
 
     private void checkExistParentCode(Long parentCodeId) {
-        Optional<Code> code = codeRepository.findById(parentCodeId);
+        Optional<CodeDto> code = codeRepository.findById(parentCodeId);
         if (code.isEmpty()) {
             throw new CustomException(ErrorCode.NOT_FOUND_ELEMENT);
         }

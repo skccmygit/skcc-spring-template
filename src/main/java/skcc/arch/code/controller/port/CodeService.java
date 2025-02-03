@@ -9,9 +9,8 @@ import skcc.arch.code.service.dto.CodeDto;
 
 public interface CodeService {
     Code save(CodeCreateRequest codeCreateRequest);
-    Code findById(Long id);
+    CodeDto findById(Long id);
     CodeDto findByIdWithChild(Long id);
-    Code findByCode(String code);
-    Page<Code> findAll(Pageable pageable);
-    CodeDto findByCodeWithChild(CodeSearchCondition condition);
+    Page<CodeDto> findByCode(Pageable pageable, CodeSearchCondition condition);
+    Page<CodeDto> findByCodeWithChild(Pageable pageable, CodeSearchCondition condition);
 }

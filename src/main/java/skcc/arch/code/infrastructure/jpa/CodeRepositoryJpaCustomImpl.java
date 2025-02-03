@@ -3,6 +3,7 @@ package skcc.arch.code.infrastructure.jpa;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import skcc.arch.code.domain.Code;
@@ -10,7 +11,9 @@ import skcc.arch.code.domain.CodeSearchCondition;
 import skcc.arch.code.service.dto.CodeDto;
 import skcc.arch.code.service.port.CodeRepository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static skcc.arch.code.infrastructure.jpa.QCodeEntity.codeEntity;
 
@@ -23,71 +26,67 @@ public class CodeRepositoryJpaCustomImpl implements CodeRepository {
 
     @Override
     public Code save(Code code) {
-
-        Long parentCodeId = code.getParentCodeId();
-        CodeEntity parentCodeEntity = null;
-        if(parentCodeId != null) {
-            parentCodeEntity = codeRepositoryJpa.findById(parentCodeId).orElse(null);
-        }
+        CodeEntity parentCodeEntity = getParentCodeEntity(code.getParentCodeId());
         CodeEntity savedCode = codeRepositoryJpa.save(CodeEntity.from(code, parentCodeEntity));
         return savedCode.toModel();
     }
 
     @Override
-    public Optional<Code> findById(Long id) {
+    public Optional<CodeDto> findById(Long id) {
         return codeRepositoryJpa.findById(id)
-                .map(CodeEntity::toModel);
+                .map(CodeEntity::toDto);
     }
 
     @Override
     public Optional<CodeDto> findByIdWithChild(Long id) {
-
         return Optional.ofNullable(
                 queryFactory.selectFrom(codeEntity)
-                        .leftJoin(codeEntity.child).fetchJoin() // 자식 데이터를 함께 가져옴
+                        .leftJoin(codeEntity.child).fetchJoin()
                         .where(codeEntity.id.eq(id))
                         .fetchOne()
-        ).map(CodeEntity::toDto);
+        ).map(CodeEntity::toDtoWithChild);
     }
 
     @Override
-    public Optional<Code> findByCode(String code) {
-        return codeRepositoryJpa.findByCode(code)
-                .map(CodeEntity::toModel);
+    public Page<CodeDto> findByCondition(Pageable pageable, CodeSearchCondition condition) {
+        List<CodeDto> content = getQueryResults(pageable, condition, false);
+        Long totalCount = getTotalCount(condition);
+        return new PageImpl<>(content, pageable, totalCount);
     }
 
     @Override
-    public Optional<CodeDto> findByCodeWithChild(CodeSearchCondition condition) {
-        return queryFactory
-                .selectFrom(codeEntity)
-                .leftJoin(codeEntity.child).fetchJoin() // 자식 데이터를 함께 가져옴
+    public Page<CodeDto> findByConditionWithChild(Pageable pageable, CodeSearchCondition condition) {
+        List<CodeDto> content = getQueryResults(pageable, condition, true);
+        Long totalCount = getTotalCount(condition);
+        return new PageImpl<>(content, pageable, totalCount);
+    }
+
+    private CodeEntity getParentCodeEntity(Long parentCodeId) {
+        if (parentCodeId == null) {
+            return null;
+        }
+        return codeRepositoryJpa.findById(parentCodeId).orElse(null);
+    }
+
+    private List<CodeDto> getQueryResults(Pageable pageable, CodeSearchCondition condition, boolean withChild) {
+        var query = queryFactory.selectFrom(codeEntity)
                 .where(CodeConditionBuilder.codeCondition(condition))
-                .fetch().stream()
-                .map(CodeEntity::toDto)
-                .findFirst();
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
+        if (withChild) {
+            query.leftJoin(codeEntity.child).fetchJoin();
+        }
+        return query.fetch().stream()
+                .map(withChild ? CodeEntity::toDtoWithChild : CodeEntity::toDto)
+                .collect(Collectors.toList());
     }
 
-    @Override
-    public Page<Code> findAll(Pageable pageable) {
-        return codeRepositoryJpa.findAll(pageable)
-                .map(CodeEntity::toModel);
+    private Long getTotalCount(CodeSearchCondition condition) {
+        return queryFactory
+                .select(codeEntity.count())
+                .from(codeEntity)
+                .where(CodeConditionBuilder.codeCondition(condition))
+                .fetchOne();
     }
 
-//
-//    private List<CodeDto> findChildCodes(Long parentId) {
-//        // 자식 코드 조회
-//        List<CodeDto> children = queryFactory.selectFrom(codeEntity)
-//                .where(codeEntity.parentCode.id.eq(parentId))
-//                .fetch()
-//                .stream()
-//                .map(CodeEntity::toDto)
-//                .toList();
-//
-//        // 각 자식 코드를 기준으로 하위 계층 구조를 계속 탐색 (재귀 호출)
-//        for (CodeDto child : children) {
-//            child.setChild(findChildCodes(child.getId()));
-//        }
-//
-//        return children;
-//    }
 }

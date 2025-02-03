@@ -10,9 +10,8 @@ import java.util.Optional;
 
 public interface CodeRepository {
     Code save(Code code);
-    Optional<Code> findById(Long id);
+    Optional<CodeDto> findById(Long id);
     Optional<CodeDto> findByIdWithChild(Long id);
-    Optional<Code> findByCode(String code);
-    Optional<CodeDto> findByCodeWithChild(CodeSearchCondition condition);
-    Page<Code> findAll(Pageable pageable);
+    Page<CodeDto> findByCondition(Pageable pageable, CodeSearchCondition condition);
+    Page<CodeDto> findByConditionWithChild(Pageable pageable, CodeSearchCondition condition);
 }
