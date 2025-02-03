@@ -10,9 +10,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import skcc.arch.code.domain.Code;
 import skcc.arch.code.domain.CodeSearchCondition;
-import skcc.arch.code.service.dto.CodeDto;
-import skcc.arch.code.service.dto.QCodeDto;
 import skcc.arch.common.infrastructure.jpa.JpaConfig;
 
 import java.util.List;
@@ -87,13 +86,13 @@ class CodeRepositoryJpaCustomImplTest {
                 .build();
 
         //when
-        List<CodeDto> list = queryFactory
+        List<Code> list = queryFactory
                 .selectFrom(codeEntity)
                 .leftJoin(codeEntity.child).fetchJoin() // 하위 자식식
                 .where(CodeConditionBuilder.codeCondition(condition))
                 .fetch()
                 .stream()
-                .map(CodeEntity::toDto) // 3단계부터는 개별 조회
+                .map(CodeEntity::toModel) // 3단계부터는 개별 조회
                 .toList();
 
         log.info("list : {}", list);
@@ -110,20 +109,8 @@ class CodeRepositoryJpaCustomImplTest {
                 .build();
         
         // Map the results using QCodeDto with the specified fields
-        List<CodeDto> resultEntities = queryFactory
-                .select(new QCodeDto(
-                        codeEntity.id,
-                        codeEntity.code,
-                        codeEntity.codeName,
-                        codeEntity.parentCode.id,
-                        null,
-                        codeEntity.seq,
-                        codeEntity.description,
-                        codeEntity.delYn,
-                        codeEntity.createdDate,
-                        codeEntity.lastModifiedDate
-                ))
-                .from(codeEntity)
+        List<CodeEntity> resultEntities = queryFactory
+                .selectFrom(codeEntity)
                 .leftJoin(codeEntity.child).fetchJoin() // 자식 데이터를 함께 가져옴
                 .where(CodeConditionBuilder.codeCondition(condition))
                 .fetch();

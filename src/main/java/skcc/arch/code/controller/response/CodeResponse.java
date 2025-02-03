@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;
 import skcc.arch.code.domain.Code;
-import skcc.arch.code.service.dto.CodeDto;
 
 import java.util.List;
 
@@ -29,22 +28,10 @@ public class CodeResponse {
                 .code(code.getCode())
                 .codeName(code.getCodeName())
                 .parentCodeId(code.getParentCodeId())
+                .child(code.getChild() == null ? null : code.getChild().stream().map(CodeResponse::from).toList())
                 .seq(code.getSeq())
                 .description(code.getDescription())
                 .delYn(code.isDelYn())
-                .build();
-    }
-
-    public static CodeResponse from(CodeDto codeDto) {
-        return CodeResponse.builder()
-                .id(codeDto.getId())
-                .code(codeDto.getCode())
-                .codeName(codeDto.getCodeName())
-                .parentCodeId(codeDto.getParentCodeId())
-                .child(codeDto.getChild() == null ? null : codeDto.getChild().stream().map(CodeResponse::from).toList())
-                .seq(codeDto.getSeq())
-                .description(codeDto.getDescription())
-                .delYn(codeDto.isDelYn())
                 .build();
     }
 

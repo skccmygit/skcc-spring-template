@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import skcc.arch.code.domain.Code;
 import skcc.arch.code.domain.CodeSearchCondition;
-import skcc.arch.code.service.dto.CodeDto;
 import skcc.arch.code.service.port.CodeRepository;
 
 import java.util.List;
@@ -32,33 +31,50 @@ public class CodeRepositoryJpaCustomImpl implements CodeRepository {
     }
 
     @Override
-    public Optional<CodeDto> findById(Long id) {
+    public Optional<Code> findById(Long id) {
         return codeRepositoryJpa.findById(id)
-                .map(CodeEntity::toDto);
+                .map(CodeEntity::toModel);
     }
 
     @Override
-    public Optional<CodeDto> findByIdWithChild(Long id) {
+    public Optional<Code> findByIdWithChild(Long id) {
         return Optional.ofNullable(
                 queryFactory.selectFrom(codeEntity)
                         .leftJoin(codeEntity.child).fetchJoin()
                         .where(codeEntity.id.eq(id))
                         .fetchOne()
-        ).map(CodeEntity::toDtoWithChild);
+        ).map(CodeEntity::toModelWithChild);
     }
 
     @Override
-    public Page<CodeDto> findByCondition(Pageable pageable, CodeSearchCondition condition) {
-        List<CodeDto> content = getQueryResults(pageable, condition, false);
+    public Page<Code> findByCondition(Pageable pageable, CodeSearchCondition condition) {
+        List<Code> content = getQueryResults(pageable, condition, false);
         Long totalCount = getTotalCount(condition);
         return new PageImpl<>(content, pageable, totalCount);
     }
 
     @Override
-    public Page<CodeDto> findByConditionWithChild(Pageable pageable, CodeSearchCondition condition) {
-        List<CodeDto> content = getQueryResults(pageable, condition, true);
+    public Page<Code> findByConditionWithChild(Pageable pageable, CodeSearchCondition condition) {
+        List<Code> content = getQueryResults(pageable, condition, true);
         Long totalCount = getTotalCount(condition);
         return new PageImpl<>(content, pageable, totalCount);
+    }
+
+    @Override
+    public Optional<Code> findTopByParentCodeIdOrderBySeqDesc(Long parentCodeId) {
+        return codeRepositoryJpa.findTopByParentCodeIdOrderBySeqDesc(parentCodeId).map(CodeEntity::toModel);
+    }
+
+    @Override
+    public boolean existsCodeEntityByParentCodeIdAndSeqOrderBySeqDesc(Long parentCodeId, Integer seq) {
+        return codeRepositoryJpa.existsCodeEntityByParentCodeIdAndSeqOrderBySeqDesc(parentCodeId, seq);
+    }
+
+    @Override
+    public Code update(Code code) {
+        CodeEntity codeEntity = codeRepositoryJpa.findById(code.getId()).orElse(null);
+
+        return null;
     }
 
     private CodeEntity getParentCodeEntity(Long parentCodeId) {
@@ -68,7 +84,7 @@ public class CodeRepositoryJpaCustomImpl implements CodeRepository {
         return codeRepositoryJpa.findById(parentCodeId).orElse(null);
     }
 
-    private List<CodeDto> getQueryResults(Pageable pageable, CodeSearchCondition condition, boolean withChild) {
+    private List<Code> getQueryResults(Pageable pageable, CodeSearchCondition condition, boolean withChild) {
         var query = queryFactory.selectFrom(codeEntity)
                 .where(CodeConditionBuilder.codeCondition(condition))
                 .offset(pageable.getOffset())
@@ -77,7 +93,7 @@ public class CodeRepositoryJpaCustomImpl implements CodeRepository {
             query.leftJoin(codeEntity.child).fetchJoin();
         }
         return query.fetch().stream()
-                .map(withChild ? CodeEntity::toDtoWithChild : CodeEntity::toDto)
+                .map(withChild ? CodeEntity::toModelWithChild : CodeEntity::toModel)
                 .collect(Collectors.toList());
     }
 

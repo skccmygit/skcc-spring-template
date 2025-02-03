@@ -1,16 +1,29 @@
 package skcc.arch.app.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import skcc.arch.app.dto.ApiResponse;
 import skcc.arch.app.dto.ExceptionDto;
 
+import java.util.Objects;
+
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    public ApiResponse<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        final String field = Objects.requireNonNull(e.getBindingResult().getFieldError()).getField();
+        final String message = Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage();
+        return ApiResponse.fail(HttpStatus.BAD_REQUEST, new ExceptionDto(99999, String.format("[%s] : %s", field, message )));
+
+    }
 
     // 존재하지 않는 요청에 대한 예외
     @ExceptionHandler(value = {NoHandlerFoundException.class, HttpRequestMethodNotSupportedException.class})

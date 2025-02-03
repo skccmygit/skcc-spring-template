@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 import skcc.arch.code.domain.Code;
-import skcc.arch.code.service.dto.CodeDto;
 import skcc.arch.common.infrastructure.jpa.BaseEntity;
 
 import java.util.ArrayList;
@@ -47,11 +46,6 @@ public class CodeEntity extends BaseEntity {
     @Column(nullable = false)
     private boolean delYn;
 
-//    public void addChild(CodeEntity entity) {
-//        child.add(entity);
-//        entity.setParentCode(this);
-//    }
-
     public static CodeEntity from(Code code, CodeEntity parentCode) {
         return CodeEntity.builder()
                 .id(code.getId())
@@ -77,27 +71,13 @@ public class CodeEntity extends BaseEntity {
                 .build();
     }
 
-    public CodeDto toDto() {
-        return CodeDto.builder()
+
+    public Code toModelWithChild() {
+        return Code.builder()
                 .id(id)
                 .code(code)
                 .codeName(codeName)
-                .parentCodeId(parentCode == null ? null : parentCode.getId())
-                .seq(seq)
-                .description(description)
-                .delYn(delYn)
-                .createdDate(super.getCreatedDate())
-                .lastModifiedDate(super.getLastModifiedDate())
-                .build();
-    }
-
-
-    public CodeDto toDtoWithChild() {
-        return CodeDto.builder()
-                .id(id)
-                .code(code)
-                .codeName(codeName)
-                .child(child.stream().map(CodeEntity::toDto).toList())
+                .child(child.stream().map(CodeEntity::toModel).toList())
                 .parentCodeId(parentCode == null ? null : parentCode.getId())
                 .seq(seq)
                 .description(description)

@@ -19,6 +19,7 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     // 타임리프 템플릿 엔진
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'

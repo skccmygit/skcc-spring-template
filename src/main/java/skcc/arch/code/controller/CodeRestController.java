@@ -1,5 +1,6 @@
 package skcc.arch.code.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,9 +9,10 @@ import skcc.arch.app.dto.ApiResponse;
 import skcc.arch.app.dto.PageInfo;
 import skcc.arch.code.controller.port.CodeService;
 import skcc.arch.code.controller.response.CodeResponse;
+import skcc.arch.code.domain.Code;
 import skcc.arch.code.domain.CodeCreateRequest;
 import skcc.arch.code.domain.CodeSearchCondition;
-import skcc.arch.code.service.dto.CodeDto;
+import skcc.arch.code.domain.CodeUpdateRequest;
 
 import java.util.List;
 
@@ -43,7 +45,7 @@ public class CodeRestController {
     public ApiResponse<List<CodeResponse>> getCodeList(Pageable pageable, CodeSearchCondition condition
             , @RequestParam(required = false, defaultValue = "false") boolean withChild) {
 
-        Page<CodeDto> result;
+        Page<Code> result;
         if(withChild) {
             result = codeService.findByCodeWithChild(pageable, condition);
         }else {
@@ -58,5 +60,9 @@ public class CodeRestController {
         );
 
     }
-    
+
+    @PatchMapping
+    public ApiResponse<CodeResponse> updateCode(@RequestBody @Valid CodeUpdateRequest codeUpdateRequest) {
+        return ApiResponse.ok(CodeResponse.from(codeService.update(codeUpdateRequest)));
+    }
 }

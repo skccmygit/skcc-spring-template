@@ -9,6 +9,11 @@ public class ExceptionDto {
     private final Integer code;
     private final String message;
 
+    public ExceptionDto(Integer code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
     public ExceptionDto(Exception e) {
         this.code = e.getClass().getSimpleName().hashCode();
         this.message = e.getMessage();

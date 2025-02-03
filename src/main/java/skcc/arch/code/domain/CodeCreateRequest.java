@@ -1,20 +1,17 @@
 package skcc.arch.code.domain;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Builder
-@RequiredArgsConstructor
 @ToString
 public class CodeCreateRequest {
 
     private final String code;
     private final String codeName;
     private final Long parentCodeId;
-    private final int seq;
+    @Setter
+    private int seq;
     private final String description;
 
 }
