@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import skcc.arch.app.dto.ApiResponse;
 import skcc.arch.app.dto.PageInfo;
 import skcc.arch.code.controller.port.CodeService;
-import skcc.arch.code.domain.Code;
+import skcc.arch.code.controller.response.CodeResponse;
 import skcc.arch.code.domain.CodeCreateRequest;
 import skcc.arch.code.domain.CodeSearchCondition;
 import skcc.arch.code.service.dto.CodeDto;
@@ -21,27 +21,26 @@ public class CodeRestController {
     private final CodeService codeService;
     
     @PostMapping
-    public ApiResponse<Code> createCode(@RequestBody CodeCreateRequest codeCreateRequest) {
-        //TODO-CODE RESPONSE DTO 생성 필요
-        return ApiResponse.ok(codeService.save(codeCreateRequest));
+    public ApiResponse<CodeResponse> createCode(@RequestBody CodeCreateRequest codeCreateRequest) {
+        return ApiResponse.ok(CodeResponse.from(codeService.save(codeCreateRequest)));
     }
-
 
     // 단건 조회
     @GetMapping("/{id}")
-    public ApiResponse<CodeDto> getCode(@PathVariable Long id
+    public ApiResponse<CodeResponse> getCode(@PathVariable Long id
             , @RequestParam(required = false, defaultValue = "false") boolean withChild) {
 
-        if(withChild) {
-            return ApiResponse.ok(codeService.findByIdWithChild(id));
-        }else
-            return ApiResponse.ok(codeService.findById(id));
+        if (withChild) {
+            return ApiResponse.ok(CodeResponse.from(codeService.findByIdWithChild(id)));
+        } else {
+            return ApiResponse.ok(CodeResponse.from(codeService.findById(id)));
+        }
 
     }
 
     // 다건 조회
     @GetMapping
-    public ApiResponse<List<CodeDto>> getCodeList(Pageable pageable, CodeSearchCondition condition
+    public ApiResponse<List<CodeResponse>> getCodeList(Pageable pageable, CodeSearchCondition condition
             , @RequestParam(required = false, defaultValue = "false") boolean withChild) {
 
         Page<CodeDto> result;
@@ -50,7 +49,13 @@ public class CodeRestController {
         }else {
             result = codeService.findByCode(pageable, condition);
         }
-        return ApiResponse.ok(result.getContent(), PageInfo.fromPage(result));
+        return ApiResponse.ok(
+            result.getContent()
+                  .stream()
+                  .map(CodeResponse::from)
+                  .toList(),
+            PageInfo.fromPage(result)
+        );
 
     }
     
