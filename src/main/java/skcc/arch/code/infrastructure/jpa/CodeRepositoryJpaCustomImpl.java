@@ -42,6 +42,7 @@ public class CodeRepositoryJpaCustomImpl implements CodeRepository {
                 queryFactory.selectFrom(codeEntity)
                         .leftJoin(codeEntity.child).fetchJoin()
                         .where(codeEntity.id.eq(id))
+                        .orderBy(codeEntity.seq.asc())
                         .fetchOne()
         ).map(CodeEntity::toModelWithChild);
     }
@@ -87,6 +88,7 @@ public class CodeRepositoryJpaCustomImpl implements CodeRepository {
     private List<Code> getQueryResults(Pageable pageable, CodeSearchCondition condition, boolean withChild) {
         var query = queryFactory.selectFrom(codeEntity)
                 .where(CodeConditionBuilder.codeCondition(condition))
+                .orderBy(codeEntity.seq.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
         if (withChild) {

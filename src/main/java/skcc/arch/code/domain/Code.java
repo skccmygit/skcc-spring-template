@@ -42,15 +42,33 @@ public class Code {
 
     public Code update(CodeUpdateRequest codeUpdateRequest) {
         return Code.builder()
-                .id(id)
+                .id(id) //변경되지 않은값
                 .createdDate(createdDate)
                 .code(codeUpdateRequest.getCode())
                 .codeName(codeUpdateRequest.getCodeName())
                 .parentCodeId(codeUpdateRequest.getParentCodeId())
                 .seq(codeUpdateRequest.getSeq())
                 .description(codeUpdateRequest.getDescription())
-                .lastModifiedDate(LocalDateTime.now())
                 .delYn(codeUpdateRequest.isDelYn())
+                .lastModifiedDate(LocalDateTime.now())
+                .build();
+    }
+
+    /**
+     * 순번만 변경
+     */
+    public Code changeSeq(int seq) {
+        return Code.builder()
+                .id(id)
+                .code(code)
+                .codeName(codeName)
+                .parentCodeId(parentCodeId)
+                .child(child)
+                .seq(seq)
+                .description(description)
+                .delYn(delYn)
+                .createdDate(createdDate)
+                .lastModifiedDate(lastModifiedDate)
                 .build();
     }
 

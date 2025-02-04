@@ -32,7 +32,7 @@ public class CodeEntity extends BaseEntity {
     @JoinColumn(name = "parent_code_id", referencedColumnName = "id")
     private CodeEntity parentCode; // 부모 코드
 
-    @OneToMany(mappedBy = "parentCode", cascade = CascadeType.ALL, orphanRemoval = true) // 양방향 관계
+    @OneToMany(mappedBy = "parentCode") // 양방향 관계
     @Builder.Default
     @BatchSize(size = 100)
     private List<CodeEntity> child = new ArrayList<>();
@@ -77,7 +77,11 @@ public class CodeEntity extends BaseEntity {
                 .id(id)
                 .code(code)
                 .codeName(codeName)
-                .child(child.stream().map(CodeEntity::toModel).toList())
+                // 자식 순서조정
+                .child(child.stream()
+                        .sorted((c1, c2) -> Integer.compare(c1.getSeq(), c2.getSeq()))
+                        .map(CodeEntity::toModel)
+                        .toList())
                 .parentCodeId(parentCode == null ? null : parentCode.getId())
                 .seq(seq)
                 .description(description)
