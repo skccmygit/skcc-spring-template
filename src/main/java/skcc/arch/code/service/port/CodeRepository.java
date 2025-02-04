@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import skcc.arch.code.domain.Code;
 import skcc.arch.code.domain.CodeSearchCondition;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CodeRepository {
@@ -16,4 +17,5 @@ public interface CodeRepository {
     Optional<Code> findTopByParentCodeIdOrderBySeqDesc(Long parentCodeId);
     boolean existsCodeEntityByParentCodeIdAndSeqOrderBySeqDesc(Long parentCodeId, Integer seq);
     Code update(Code code);
+    List<Code> findByParentCodeId(Long parentCodeId);
 }

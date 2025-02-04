@@ -47,9 +47,9 @@ public class CodeRestController {
 
         Page<Code> result;
         if(withChild) {
-            result = codeService.findByCodeWithChild(pageable, condition);
+            result = codeService.findByConditionWithChild(pageable, condition);
         }else {
-            result = codeService.findByCode(pageable, condition);
+            result = codeService.findByCondition(pageable, condition);
         }
         return ApiResponse.ok(
             result.getContent()

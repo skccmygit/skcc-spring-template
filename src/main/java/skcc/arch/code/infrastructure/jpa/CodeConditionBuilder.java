@@ -2,9 +2,11 @@ package skcc.arch.code.infrastructure.jpa;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import org.springframework.util.ObjectUtils;
 import skcc.arch.code.domain.CodeSearchCondition;
 
 import static org.springframework.util.StringUtils.hasText;
+import static skcc.arch.code.infrastructure.jpa.QCodeEntity.codeEntity;
 
 public abstract class CodeConditionBuilder {
 
@@ -13,19 +15,38 @@ public abstract class CodeConditionBuilder {
         if (condition == null) {
             return builder.and(alwaysTrue());
         }
+
         return builder
                 .and(codeEq(condition.getCode()))
-                .and(codeNameLike(condition.getCodeName()));
+                .and(codeNameLike(condition.getCodeName()))
+                .and(descriptionLike(condition.getDescription()))
+                .and(parentCodeEq(condition.getParentCode()))
+                .and(delYnEq(condition.getDelYn()))
+                ;
     }
 
     private static BooleanExpression codeEq(String code) {
-        return hasText(code) ? QCodeEntity.codeEntity.code.eq(code) : null;
+        return hasText(code) ? codeEntity.code.eq(code) : null;
     }
+
     private static BooleanExpression codeNameLike(String codeName) {
-        return hasText(codeName) ? QCodeEntity.codeEntity.codeName.like("%"+codeName+"%") : null;
+        return hasText(codeName) ? codeEntity.codeName.like("%" + codeName + "%") : null;
+    }
+
+    private static BooleanExpression descriptionLike(String description) {
+        return hasText(description) ? codeEntity.description.like("%" + description + "%") : null;
+    }
+
+    private static BooleanExpression parentCodeEq(CodeEntity parentCode) {
+        return ObjectUtils.isEmpty(parentCode) ? null : codeEntity.parentCode.eq(parentCode);
+    }
+
+    // DEL_YN의 경우 기본값이 FALSE
+    private static BooleanExpression delYnEq(Boolean delYn) {
+        return codeEntity.delYn.eq(Boolean.TRUE.equals(delYn));
     }
 
     private static BooleanExpression alwaysTrue() {
-        return QCodeEntity.codeEntity.isNotNull(); // 항상 참인 조건으로 설정.
+        return codeEntity.isNotNull(); // 항상 참인 조건으로 설정.
     }
 }

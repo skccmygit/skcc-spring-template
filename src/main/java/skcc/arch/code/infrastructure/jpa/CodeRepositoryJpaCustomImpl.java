@@ -71,11 +71,19 @@ public class CodeRepositoryJpaCustomImpl implements CodeRepository {
         return codeRepositoryJpa.existsCodeEntityByParentCodeIdAndSeqOrderBySeqDesc(parentCodeId, seq);
     }
 
+    /**
+     * JPA는 Update 존재하지 않지만 CodeRepository 일관성을 맞추기 위해 save랑 동일한 로직 작성
+     */
     @Override
     public Code update(Code code) {
-        CodeEntity codeEntity = codeRepositoryJpa.findById(code.getId()).orElse(null);
+        CodeEntity parentCodeEntity = getParentCodeEntity(code.getParentCodeId());
+        CodeEntity savedCode = codeRepositoryJpa.save(CodeEntity.from(code, parentCodeEntity));
+        return savedCode.toModel();
+    }
 
-        return null;
+    @Override
+    public List<Code> findByParentCodeId(Long parentCodeId) {
+        return codeRepositoryJpa.findByParentCodeId(parentCodeId).stream().map(CodeEntity::toModel).toList();
     }
 
     private CodeEntity getParentCodeEntity(Long parentCodeId) {
@@ -86,6 +94,12 @@ public class CodeRepositoryJpaCustomImpl implements CodeRepository {
     }
 
     private List<Code> getQueryResults(Pageable pageable, CodeSearchCondition condition, boolean withChild) {
+
+        if (condition.getParentCodeId() != null ) {
+            CodeEntity parentCodeEntity = codeRepositoryJpa.findById(condition.getParentCodeId()).orElse(null);
+            condition.setParentCode(parentCodeEntity);
+        }
+
         var query = queryFactory.selectFrom(codeEntity)
                 .where(CodeConditionBuilder.codeCondition(condition))
                 .orderBy(codeEntity.seq.asc())

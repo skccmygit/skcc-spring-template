@@ -11,7 +11,7 @@ public interface CodeService {
     Code save(CodeCreateRequest codeCreateRequest);
     Code findById(Long id);
     Code findByIdWithChild(Long id);
-    Page<Code> findByCode(Pageable pageable, CodeSearchCondition condition);
-    Page<Code> findByCodeWithChild(Pageable pageable, CodeSearchCondition condition);
+    Page<Code> findByCondition(Pageable pageable, CodeSearchCondition condition);
+    Page<Code> findByConditionWithChild(Pageable pageable, CodeSearchCondition condition);
     Code update(CodeUpdateRequest codeUpdateRequest);
 }

@@ -16,6 +16,7 @@ import skcc.arch.code.domain.CodeSearchCondition;
 import skcc.arch.code.domain.CodeUpdateRequest;
 import skcc.arch.code.service.port.CodeRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -89,12 +90,12 @@ public class CodeServiceImpl implements CodeService {
     }
 
     @Override
-    public Page<Code> findByCode(Pageable pageable, CodeSearchCondition condition) {
+    public Page<Code> findByCondition(Pageable pageable, CodeSearchCondition condition) {
         return codeRepository.findByCondition(pageable, condition);
     }
 
     @Override
-    public Page<Code> findByCodeWithChild(Pageable pageable, CodeSearchCondition condition) {
+    public Page<Code> findByConditionWithChild(Pageable pageable, CodeSearchCondition condition) {
         return codeRepository.findByConditionWithChild(pageable, condition);
     }
 
@@ -117,7 +118,7 @@ public class CodeServiceImpl implements CodeService {
         reorderSequence(codeUpdateRequest.getId(), codeUpdateRequest.getSeq(), codeUpdateRequest.getParentCodeId());
 
         // EntityManager 수행
-        return codeRepository.save(updateCode);
+        return codeRepository.update(updateCode);
     }
 
 
@@ -127,16 +128,15 @@ public class CodeServiceImpl implements CodeService {
             List<Code> childList;
             // ROOT 인 경우
             if (parentCodeId == null) {
-                Page<Code> root = codeRepository.findByConditionWithChild(PageRequest.of(0, 1000), CodeSearchCondition.builder().parentCodeId(parentCodeId).build());
-                childList = root.getContent();
+                childList = codeRepository.findByParentCodeId(parentCodeId);
             }
             // 부모가 있는 경우
             else {
                 Code parent = codeRepository.findByIdWithChild(parentCodeId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ELEMENT));
                 childList = parent.getChild();
             }
-            // 자식 순서 조정
-            updateSeqItems(codeId, seq, childList);
+            // 자식 순서 조정 (본인 제외)
+            updateSeqItems(seq, childList.stream().filter(c -> !c.getId().equals(codeId)).toList());
         }
 
     }
@@ -145,10 +145,10 @@ public class CodeServiceImpl implements CodeService {
      * 순번은 요청 객체가 우선적으로 점유하며
      * 중복일 경우 +1 증가하여 조정한다
      */
-    private void updateSeqItems(Long codeId, int seq, List<Code> items) {
-        // 본인보다 큰 SEQ 리스트만 필터 (본인제외)
+    private void updateSeqItems(int seq, List<Code> items) {
+        // 본인보다 큰 SEQ 리스트만 필터
         List<Code> childList = items.stream()
-                .filter(c -> c.getSeq() >= seq && !c.getId().equals(codeId))
+                .filter(c -> c.getSeq() >= seq )
                 .toList();
 
         int indexSeq = seq;
