@@ -110,7 +110,7 @@ public class CodeServiceImpl implements CodeService {
                 () -> new CustomException(ErrorCode.NOT_FOUND_ELEMENT)
         );
 
-        // 도메인 모델 업데이트 비즈니스 로직 수행
+        // 도메인 모델 업데이트 비즈니스 로직 수행 (하위->상위로 변경되었을 경우 하위객체의 순번은 조정하지 않는다)
         updateCode = updateCode.update(codeUpdateRequest);
 
         // 형제 순번 조정
@@ -141,6 +141,10 @@ public class CodeServiceImpl implements CodeService {
 
     }
 
+    /**
+     * 순번은 요청 객체가 우선적으로 점유하며
+     * 중복일 경우 +1 증가하여 조정한다
+     */
     private void updateSeqItems(Long codeId, int seq, List<Code> items) {
         // 본인보다 큰 SEQ 리스트만 필터 (본인제외)
         List<Code> childList = items.stream()
