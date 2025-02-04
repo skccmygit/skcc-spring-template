@@ -9,6 +9,7 @@
     - [X] Audit Entity (Create,Update 시)
     - [X] QueryDSL 의존성 추가
     - [X] JPA 쿼리 로그 (p6spy 적용)    
+    - [X] QueryDSL 동적 쿼리 예시 추가
   - [ ] MyBatis
     - [X] Audit 인터셉터 (Create, Update 시)
     - [ ] Count 쿼리 인터셉터 ?
@@ -47,8 +48,12 @@
     - [ ] 개발 환경 가이드
     - [ ] 개발 표준 가이드
 
+---
+## Minor 작업 리스트
+- [ ] 테스트코드
+- [ ] 테스트용 SQL 수정
 
-----
+---
 ## 시큐리티
 1. 로그인  
 1-1. JWT 토큰 생성
