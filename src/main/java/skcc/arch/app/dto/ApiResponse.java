@@ -53,6 +53,14 @@ public class ApiResponse<T> {
                 .build();
     }
 
+    public static <T> ApiResponse<T> fail(final HttpStatus httpStatus, final Exception e){
+        return ApiResponse.<T>builder()
+                .status(httpStatus)
+                .success(false)
+                .error(new ExceptionDto(e))
+                .build();
+    }
+
     public static <T> ApiResponse<T> fail(final HttpStatus httpStatus, final ExceptionDto exceptionDto ){
         return ApiResponse.<T>builder()
                 .status(httpStatus)

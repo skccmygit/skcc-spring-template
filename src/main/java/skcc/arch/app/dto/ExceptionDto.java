@@ -1,9 +1,11 @@
 package skcc.arch.app.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import skcc.arch.app.exception.ErrorCode;
 
 @Getter
+@Builder
 public class ExceptionDto {
 
     private final Integer code;
