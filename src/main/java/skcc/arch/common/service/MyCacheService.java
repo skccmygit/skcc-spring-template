@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import skcc.arch.app.cache.CacheService;
 import skcc.arch.app.cache.CaffeineCacheService;
+import skcc.arch.app.cache.RedisCacheService;
 import skcc.arch.code.domain.Code;
 import skcc.arch.code.service.port.CodeRepository;
 import skcc.arch.common.constants.CacheName;
@@ -26,23 +27,40 @@ public class MyCacheService {
     @EventListener(ApplicationReadyEvent.class)
     public void initCache() {
 
+        // 메모리(로컬)
         if(cacheService instanceof CaffeineCacheService) {
             // 초기 적재할 캐시
             initCodeCache();
             log.info("캐시 적재 완료");
         }
+        // 레디스(서버)
+        else if (cacheService instanceof RedisCacheService) {
+            // 초기로딩이 필요한지?
+            initCodeCache();
+        }
     }
 
     /*
-        캐시명.캐시KEY,값
+        캐시명.캐시 KEY,값
         캐시명은 상수값을 사용한다
      */
     public void put(String cacheNm, String key, Object value) {
-        cacheService.put(cacheNm + "." + key, value);
+        try {
+            cacheService.put(cacheNm + "." + key, value);
+        } catch (Exception e) {
+            log.error(" cache put error : {}", e.getMessage());
+        }
     }
 
     public <T> T get(String cacheNm, String key, Class<T> clazz) {
-        return cacheService.get(cacheNm + "." + key, clazz);
+        T t;
+        try {
+            t = cacheService.get(cacheNm + "." + key, clazz);
+        } catch (Exception e) {
+            log.error(" cache get error : {}", e.getMessage());
+            t = null;
+        }
+        return t;
     }
 
     /**
@@ -57,11 +75,13 @@ public class MyCacheService {
         // 최상위 부모 조회
         List<Code> parent = codeRepository.findByParentCodeId(null);
         for (Code code : parent) {
-            // 최하위 까지 조회
-            Code nodes = codeRepository.findAllLeafNodes(code.getId());
-            this.put(CacheName.CODE, code.getCode(), nodes);
+            if(this.get(CacheName.CODE, code.getCode(), Code.class) == null)
+            {
+                // 최하위 까지 조회
+                Code nodes = codeRepository.findAllLeafNodes(code.getId());
+                this.put(CacheName.CODE, code.getCode(), nodes);
+            }
         }
     }
-
 
 }
