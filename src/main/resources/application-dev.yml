@@ -1,11 +1,13 @@
 spring:
+  # 외부 설정 yml
+  config:
+    import: classpath:filePolicy-dev.yml
   data:
     redis:
       host: localhost
       port: 6379
       database: 0
       timeout: 60s
-
 my:
   cache:
     type: redis

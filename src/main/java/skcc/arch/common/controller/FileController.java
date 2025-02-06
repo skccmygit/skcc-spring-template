@@ -2,19 +2,21 @@ package skcc.arch.common.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import skcc.arch.app.dto.ApiResponse;
 import skcc.arch.app.dto.ExceptionDto;
+import skcc.arch.app.file.DownloadFile;
 import skcc.arch.app.file.FileService;
 import skcc.arch.app.file.UploadFile;
+import skcc.arch.common.controller.request.FileDownloadRequest;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 
 @Slf4j
@@ -62,6 +64,23 @@ public class FileController {
             return ApiResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR, ExceptionDto.builder().message("파일 저장 중 오류가 발생 하였습니다.").build() );
         }
         return ApiResponse.ok(storedFiles);
+    }
+
+    @PostMapping("/download")
+    public ResponseEntity<Resource> downloadFile(@RequestBody FileDownloadRequest fileDownloadRequest) throws IOException {
+
+        DownloadFile download = fileService.getDownload(fileDownloadRequest.getFilePath());
+        if (download != null) {
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + download.getFileName()+ "\"");
+            headers.add(HttpHeaders.CONTENT_TYPE, download.getMimeType()); // MIME 타입
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(download.getResource());
+        }
+        return null;
     }
 
 }

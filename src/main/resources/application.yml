@@ -1,7 +1,4 @@
 spring:
-# 외부 설정 yml
-  config:
-    import: classpath:filePolicy.yml
 # 파일
   servlet:
     multipart:

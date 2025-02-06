@@ -1,12 +1,20 @@
 package skcc.arch.app.file;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import skcc.arch.app.util.DateUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -61,7 +69,18 @@ public class FileService {
         return replaceUploadPath(policy.getUploadDir()) + "/" + filename;
     }
 
-    public static String replaceUploadPath(String uploadPath) {
+    public DownloadFile getDownload(String filePath) throws IOException {
+
+        Path path = Paths.get(filePath);
+//        InputStreamResource resource = new InputStreamResource(Files.newInputStream(path));
+        ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
+
+        String fileName = path.getFileName().toString();
+        String mimeType = Files.probeContentType(path);
+        return new DownloadFile(fileName, mimeType, resource);
+    }
+
+    private static String replaceUploadPath(String uploadPath) {
         // 날짜 치환
         Pattern pattern = Pattern.compile("(\\{date:)(\\w+)\\}");
         Matcher match = pattern.matcher(uploadPath);
