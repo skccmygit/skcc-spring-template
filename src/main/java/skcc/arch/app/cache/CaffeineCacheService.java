@@ -32,4 +32,18 @@ public class CaffeineCacheService implements CacheService {
     public void evict(String key) {
         caffeineCache.invalidate(key); // 캐시에서 삭제
     }
+
+    @Override
+    public void clearAll() {
+        caffeineCache.invalidateAll();
+    }
+
+    @Override
+    public void clearByCacheName(String cacheName) {
+        caffeineCache.getAllPresent(caffeineCache.asMap().keySet()).keySet().forEach(key -> {
+            if (key.startsWith(cacheName)) {
+                caffeineCache.invalidate(key);
+            }
+        });
+    }
 }

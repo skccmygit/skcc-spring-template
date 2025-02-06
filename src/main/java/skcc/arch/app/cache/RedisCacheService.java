@@ -4,12 +4,15 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Service
 @ConditionalOnProperty(name = "my.cache.type", havingValue = "redis")
 public class RedisCacheService implements CacheService {
 
+    public static final String CACHE_DELIMITER = ":";
+    public static final String PATTERN_ALL = "*";
     private final RedisTemplate<String, Object> redisTemplate;
 
     public RedisCacheService(RedisTemplate<String, Object> redisTemplate) {
@@ -34,5 +37,22 @@ public class RedisCacheService implements CacheService {
     @Override
     public void evict(String key) {
         redisTemplate.delete(key);
+    }
+
+    @Override
+    public void clearAll() {
+        clearKeysByPattern(PATTERN_ALL);
+    }
+
+    @Override
+    public void clearByCacheName(String cacheName) {
+        clearKeysByPattern(cacheName + CACHE_DELIMITER + PATTERN_ALL);
+    }
+
+    private void clearKeysByPattern(String pattern) {
+        Set<String> keys = redisTemplate.keys(pattern); // 특정 패턴의 키 검색
+        if (keys != null && !keys.isEmpty()) {
+            redisTemplate.delete(keys); // 해당 키 삭제
+        }
     }
 }

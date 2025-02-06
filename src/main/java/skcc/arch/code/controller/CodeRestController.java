@@ -13,7 +13,6 @@ import skcc.arch.code.domain.Code;
 import skcc.arch.code.domain.CodeCreateRequest;
 import skcc.arch.code.domain.CodeSearchCondition;
 import skcc.arch.code.domain.CodeUpdateRequest;
-import skcc.arch.common.service.MyCacheService;
 
 import java.util.List;
 
@@ -59,7 +58,6 @@ public class CodeRestController {
                   .toList(),
             PageInfo.fromPage(result)
         );
-
     }
 
     @PatchMapping
@@ -67,10 +65,10 @@ public class CodeRestController {
         return ApiResponse.ok(CodeResponse.from(codeService.update(codeUpdateRequest)));
     }
 
-    // 캐시 테스트
     @GetMapping("/cache/{parentCodeName}")
     public ApiResponse<CodeResponse> getCode(@PathVariable String parentCodeName) {
         Code result = codeService.findByCode(CodeSearchCondition.builder().code(parentCodeName).build());
         return ApiResponse.ok(CodeResponse.from(result));
     }
+
 }

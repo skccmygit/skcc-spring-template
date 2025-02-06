@@ -139,8 +139,8 @@ public class CodeServiceImpl implements CodeService {
             // 루트 요소일 경우 캐시 추가
             if (dbCode != null && dbCode.getParentCodeId() == null) {
                 myCacheService.put(CacheName.CODE, condition.getCode(), dbCode);
-                return dbCode;
             }
+            return dbCode;
         }
         return null;
     }
@@ -154,7 +154,6 @@ public class CodeServiceImpl implements CodeService {
     public Code findAllLeafNodes(Long id) {
         return codeRepository.findAllLeafNodes(id);
     }
-
 
     private void reorderSequence(Long codeId, int seq, Long parentCodeId) {
         boolean existsed = codeRepository.existsCodeEntityByParentCodeIdAndSeqOrderBySeqDesc(parentCodeId, seq);

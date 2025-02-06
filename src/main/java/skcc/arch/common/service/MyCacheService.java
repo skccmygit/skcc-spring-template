@@ -20,6 +20,7 @@ import java.util.List;
 @Slf4j
 public class MyCacheService {
 
+    public static final String DELIMITER = ":";
     private final CacheService cacheService;
     private final CodeRepository codeRepository;
 
@@ -46,7 +47,7 @@ public class MyCacheService {
      */
     public void put(String cacheNm, String key, Object value) {
         try {
-            cacheService.put(cacheNm + "." + key, value);
+            cacheService.put(cacheNm + DELIMITER + key, value);
         } catch (Exception e) {
             log.error(" cache put error : {}", e.getMessage());
         }
@@ -55,13 +56,39 @@ public class MyCacheService {
     public <T> T get(String cacheNm, String key, Class<T> clazz) {
         T t;
         try {
-            t = cacheService.get(cacheNm + "." + key, clazz);
+            t = cacheService.get(cacheNm + DELIMITER + key, clazz);
         } catch (Exception e) {
             log.error(" cache get error : {}", e.getMessage());
             t = null;
         }
         return t;
     }
+
+    public void evict(String cacheNm, String key) {
+        try {
+            cacheService.evict(cacheNm + DELIMITER + key);
+        } catch (Exception e) {
+            log.error(" cache evict error : {}", e.getMessage());
+        }
+    }
+
+    public void clearAll() {
+        try {
+            cacheService.clearAll();
+        } catch (Exception e) {
+            log.error(" cache clearAll error : {}", e.getMessage());
+        }
+    }
+
+    public void clearCacheName(String cacheName) {
+
+        try {
+            cacheService.clearByCacheName(cacheName);
+        } catch (Exception e) {
+            log.error(" cache clearCacheName error : {}", e.getMessage());
+        }
+    }
+
 
     /**
      * 비즈니스 요건에 맞게 캐시 설계
