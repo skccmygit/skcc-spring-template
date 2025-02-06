@@ -1,4 +1,12 @@
 spring:
+# 외부 설정 yml
+  config:
+    import: classpath:filePolicy.yml
+# 파일
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 105MB # 전체 요청(파일 + 데이터)의 최대 크기
   thymeleaf:
     cache: false
 # 데이터베이스
@@ -31,7 +39,6 @@ spring:
 jwt:
   secret: skcc-secret-key-skcc-secret-key-skcc-secret-key # 최소 32바이트 이상만 권장됨
   expiration: 1800000 # 30분
-
 # MyBatis
 mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml
