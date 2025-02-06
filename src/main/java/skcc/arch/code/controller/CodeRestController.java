@@ -13,6 +13,7 @@ import skcc.arch.code.domain.Code;
 import skcc.arch.code.domain.CodeCreateRequest;
 import skcc.arch.code.domain.CodeSearchCondition;
 import skcc.arch.code.domain.CodeUpdateRequest;
+import skcc.arch.common.service.MyCacheService;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/codes")
 public class CodeRestController {
+
     private final CodeService codeService;
     
     @PostMapping
@@ -37,7 +39,6 @@ public class CodeRestController {
         } else {
             return ApiResponse.ok(CodeResponse.from(codeService.findById(id)));
         }
-
     }
 
     // 다건 조회
@@ -49,7 +50,7 @@ public class CodeRestController {
         if(withChild) {
             result = codeService.findByConditionWithChild(pageable, condition);
         }else {
-            result = codeService.findByCondition(pageable, condition);
+            result = codeService.findByCode(pageable, condition);
         }
         return ApiResponse.ok(
             result.getContent()
@@ -64,5 +65,12 @@ public class CodeRestController {
     @PatchMapping
     public ApiResponse<CodeResponse> updateCode(@RequestBody @Valid CodeUpdateRequest codeUpdateRequest) {
         return ApiResponse.ok(CodeResponse.from(codeService.update(codeUpdateRequest)));
+    }
+
+    // 캐시 테스트
+    @GetMapping("/cache/{parentCodeName}")
+    public ApiResponse<CodeResponse> getCode(@PathVariable String parentCodeName) {
+        Code result = codeService.findByCode(CodeSearchCondition.builder().code(parentCodeName).build());
+        return ApiResponse.ok(CodeResponse.from(result));
     }
 }

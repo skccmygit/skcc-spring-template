@@ -1,11 +1,13 @@
 package skcc.arch.app.cache;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
 @Service
+@ConditionalOnProperty(name = "my.cache.type", havingValue = "redis")
 public class RedisCacheService implements CacheService {
 
     private final RedisTemplate<String, Object> redisTemplate;
@@ -16,7 +18,7 @@ public class RedisCacheService implements CacheService {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T getCachedValue(String key, Class<T> type) {
+    public <T> T get(String key, Class<T> type) {
         Object value = redisTemplate.opsForValue().get(key);
         if (value == null) {
             return null;
@@ -25,12 +27,12 @@ public class RedisCacheService implements CacheService {
     }
 
     @Override
-    public void putValueInCache(String key, Object value) {
+    public void put(String key, Object value) {
         redisTemplate.opsForValue().set(key, value, 10, TimeUnit.MINUTES); // TTL 10분
     }
 
     @Override
-    public void evictCache(String key) {
+    public void evict(String key) {
         redisTemplate.delete(key);
     }
 }

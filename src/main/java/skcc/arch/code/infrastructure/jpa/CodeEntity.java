@@ -80,7 +80,7 @@ public class CodeEntity extends BaseEntity {
                 // 자식 순서조정
                 .child(child.stream()
                         .sorted((c1, c2) -> Integer.compare(c1.getSeq(), c2.getSeq()))
-                        .map(CodeEntity::toModel)
+                        .map(CodeEntity::toModelWithChild)
                         .toList())
                 .parentCodeId(parentCode == null ? null : parentCode.getId())
                 .seq(seq)
@@ -90,4 +90,6 @@ public class CodeEntity extends BaseEntity {
                 .lastModifiedDate(super.getLastModifiedDate())
                 .build();
     }
+
+
 }

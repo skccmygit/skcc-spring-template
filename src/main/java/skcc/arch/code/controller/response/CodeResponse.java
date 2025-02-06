@@ -23,6 +23,7 @@ public class CodeResponse {
     private boolean delYn;
 
     public static CodeResponse from(Code code) {
+        if(code == null) return null;
         return CodeResponse.builder()
                 .id(code.getId())
                 .code(code.getCode())

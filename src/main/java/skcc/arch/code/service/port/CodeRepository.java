@@ -18,4 +18,6 @@ public interface CodeRepository {
     boolean existsCodeEntityByParentCodeIdAndSeqOrderBySeqDesc(Long parentCodeId, Integer seq);
     Code update(Code code);
     List<Code> findByParentCodeId(Long parentCodeId);
+    Code findByCode(CodeSearchCondition condition);
+    Code findAllLeafNodes(Long id);
 }

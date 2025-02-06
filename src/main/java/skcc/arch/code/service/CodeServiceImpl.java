@@ -15,8 +15,9 @@ import skcc.arch.code.domain.CodeCreateRequest;
 import skcc.arch.code.domain.CodeSearchCondition;
 import skcc.arch.code.domain.CodeUpdateRequest;
 import skcc.arch.code.service.port.CodeRepository;
+import skcc.arch.common.constants.CacheName;
+import skcc.arch.common.service.MyCacheService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +26,7 @@ import java.util.Optional;
 @Slf4j
 public class CodeServiceImpl implements CodeService {
 
+    private final MyCacheService myCacheService;
     private final CodeRepository codeRepository;
 
     @Override
@@ -90,7 +92,7 @@ public class CodeServiceImpl implements CodeService {
     }
 
     @Override
-    public Page<Code> findByCondition(Pageable pageable, CodeSearchCondition condition) {
+    public Page<Code> findByCode(Pageable pageable, CodeSearchCondition condition) {
         return codeRepository.findByCondition(pageable, condition);
     }
 
@@ -119,6 +121,38 @@ public class CodeServiceImpl implements CodeService {
 
         // EntityManager 수행
         return codeRepository.update(updateCode);
+    }
+
+    @Override
+    public Code findByCode(CodeSearchCondition condition) {
+        if (condition.getCode() != null) {
+
+            // 캐시 조회
+            Code cachedCode = myCacheService.get(CacheName.CODE, condition.getCode(), Code.class);
+            if (cachedCode != null) {
+                return cachedCode;
+            }
+
+            // DB 조회
+            Code dbCode = codeRepository.findByCode(condition);
+
+            // 루트 요소일 경우 캐시 추가
+            if (dbCode != null && dbCode.getParentCodeId() == null) {
+                myCacheService.put(CacheName.CODE, condition.getCode(), dbCode);
+                return dbCode;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<Code> findByParentIsNull() {
+        return codeRepository.findByParentCodeId(null);
+    }
+
+    @Override
+    public Code findAllLeafNodes(Long id) {
+        return codeRepository.findAllLeafNodes(id);
     }
 
 

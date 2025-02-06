@@ -1,5 +1,6 @@
 package skcc.arch.app.cache;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -9,7 +10,7 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
-@Profile({"dev", "prod"})
+@ConditionalOnProperty(name = "my.cache.type", havingValue = "redis")
 public class RedisCacheConfig {
 
     @Bean

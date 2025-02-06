@@ -11,6 +11,7 @@ import skcc.arch.code.domain.CodeSearchCondition;
 import skcc.arch.code.service.port.CodeRepository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -84,6 +85,20 @@ public class CodeRepositoryJpaCustomImpl implements CodeRepository {
     @Override
     public List<Code> findByParentCodeId(Long parentCodeId) {
         return codeRepositoryJpa.findByParentCodeId(parentCodeId).stream().map(CodeEntity::toModel).toList();
+    }
+
+    @Override
+    public Code findByCode(CodeSearchCondition condition) {
+        CodeEntity code = codeRepositoryJpa.findByCode(condition.getCode());
+        if (Objects.isNull(code)) {
+            return null;
+        }
+        return code.toModelWithChild();
+    }
+
+    @Override
+    public Code findAllLeafNodes(Long id) {
+        return codeRepositoryJpa.findById(id).orElseGet(null).toModelWithChild();
     }
 
     private CodeEntity getParentCodeEntity(Long parentCodeId) {

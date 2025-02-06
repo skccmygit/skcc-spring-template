@@ -9,4 +9,5 @@ public interface CodeRepositoryJpa extends JpaRepository<CodeEntity, Long> {
     Optional<CodeEntity> findTopByParentCodeIdOrderBySeqDesc(Long parentCodeId);
     boolean existsCodeEntityByParentCodeIdAndSeqOrderBySeqDesc(Long parentCodeId, Integer seq);
     List<CodeEntity> findByParentCodeId(Long parentCodeId);
+    CodeEntity findByCode(String code);
 }
