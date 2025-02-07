@@ -1,17 +1,15 @@
 package skcc.arch.app.file;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import skcc.arch.app.exception.CustomException;
+import skcc.arch.app.exception.ErrorCode;
 import skcc.arch.app.util.DateUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,7 +25,6 @@ import java.util.regex.Pattern;
 public class FileService {
 
     private final UploadPolicies uploadPolicies;
-
 
     public List<UploadFile> storeFiles(List<MultipartFile> multipartFiles, String policy) throws IOException {
         List<UploadFile> storeFileResult = new ArrayList<>();
@@ -69,15 +66,17 @@ public class FileService {
         return replaceUploadPath(policy.getUploadDir()) + "/" + filename;
     }
 
-    public DownloadFile getDownload(String filePath) throws IOException {
+    public DownloadFile getDownloadFileByFilepath(String filePath) {
 
         Path path = Paths.get(filePath);
-//        InputStreamResource resource = new InputStreamResource(Files.newInputStream(path));
-        ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
-
+        InputStreamResource resource = null;
+        try {
+            resource = new InputStreamResource(Files.newInputStream(path));
+        } catch (IOException e) {
+            throw new CustomException(ErrorCode.NOT_FOUND_FILE);
+        }
         String fileName = path.getFileName().toString();
-        String mimeType = Files.probeContentType(path);
-        return new DownloadFile(fileName, mimeType, resource);
+        return new DownloadFile(fileName, resource);
     }
 
     private static String replaceUploadPath(String uploadPath) {

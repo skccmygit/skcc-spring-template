@@ -14,10 +14,12 @@ public enum ErrorCode {
     NOT_FOUND_ELEMENT(10001, HttpStatus.NOT_FOUND, "error.notFoundElement"),
     EXIST_ELEMENT(10002, HttpStatus.BAD_REQUEST, "error.existElement"),
     NOT_MATCHED_PASSWORD(10003, HttpStatus.BAD_REQUEST, "error.notMatchedPassword"),
+    NOT_FOUND_FILE(10004, HttpStatus.NOT_FOUND, "error.notFoundFile"),
     NOT_FOUND_END_POINT(90001, HttpStatus.NOT_FOUND, "error.notFoundEndPoint"),
     INTERNAL_SERVER_ERROR(90002, HttpStatus.INTERNAL_SERVER_ERROR, "error.internalServerError"),
     UNAUTHORIZED(90003, HttpStatus.UNAUTHORIZED, "error.unauthorized"),
-    ACCESS_DENIED(90004, HttpStatus.FORBIDDEN, "error.accessDenied");
+    ACCESS_DENIED(90004, HttpStatus.FORBIDDEN, "error.accessDenied")
+    ;
 
     private final Integer code;
     private final HttpStatus status;

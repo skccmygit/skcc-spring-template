@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriUtils;
 import skcc.arch.app.dto.ApiResponse;
 import skcc.arch.app.dto.ExceptionDto;
 import skcc.arch.app.file.DownloadFile;
@@ -16,8 +17,12 @@ import skcc.arch.app.file.UploadFile;
 import skcc.arch.common.controller.request.FileDownloadRequest;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.List;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM_VALUE;
 
 @Slf4j
 @RestController
@@ -66,15 +71,24 @@ public class FileController {
         return ApiResponse.ok(storedFiles);
     }
 
+    /**
+     * 파일 다운로드 API
+     * @param fileDownloadRequest
+     * @return 파일 Resource
+     */
+
     @PostMapping("/download")
     public ResponseEntity<Resource> downloadFile(@RequestBody FileDownloadRequest fileDownloadRequest) throws IOException {
 
-        DownloadFile download = fileService.getDownload(fileDownloadRequest.getFilePath());
+        DownloadFile download = fileService.getDownloadFileByFilepath(fileDownloadRequest.getFilePath());
         if (download != null) {
 
+            // URL 인코딩된 한글 파일명
+            String encodedFileName = UriUtils.encode(download.getFileName(), UTF_8);
+
             HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + download.getFileName()+ "\"");
-            headers.add(HttpHeaders.CONTENT_TYPE, download.getMimeType()); // MIME 타입
+            headers.add(CONTENT_DISPOSITION, String.format("attachment; filename=%s" , encodedFileName));
+            headers.add(CONTENT_TYPE, APPLICATION_OCTET_STREAM_VALUE);
 
             return ResponseEntity.ok()
                     .headers(headers)

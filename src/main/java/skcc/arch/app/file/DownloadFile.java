@@ -7,12 +7,10 @@ import org.springframework.core.io.Resource;
 public class DownloadFile {
 
     private String fileName;
-    private String mimeType;
     private Resource resource;
 
-    public DownloadFile(String fileName, String mimeType, Resource resource) {
+    public DownloadFile(String fileName, Resource resource) {
         this.fileName = fileName;
-        this.mimeType = mimeType;
         this.resource = resource;
     }
 }
