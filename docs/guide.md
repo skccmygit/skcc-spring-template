@@ -11,6 +11,7 @@
 # [Java Spring 영속성 계층 가이드](300-persistence-guide.md)
 # [예외 처리 가이드](400-exception-guide.md) 
 # [파일 처리 가이드](500-file-guide.md)
+# [캐시 사용 가이드](600-cache-guide.md)
 # [Spring Security 가이드]
 
 # 아키텍처 구성도

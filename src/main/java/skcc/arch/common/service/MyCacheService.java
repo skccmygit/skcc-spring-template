@@ -26,18 +26,18 @@ public class MyCacheService {
 
     @Transactional
     @EventListener(ApplicationReadyEvent.class)
-    public void initCache() {
+    public void loadCacheData() {
 
         // 메모리(로컬)
         if(cacheService instanceof CaffeineCacheService) {
             // 초기 적재할 캐시
-            initCodeCache();
+            loadCodeCacheData();
             log.info("캐시 적재 완료");
         }
         // 레디스(서버)
         else if (cacheService instanceof RedisCacheService) {
             // 초기로딩이 필요한지?
-            initCodeCache();
+            loadCodeCacheData();
         }
     }
 
@@ -98,7 +98,7 @@ public class MyCacheService {
      *       KEY: 부모의 코드값
      *       VALUE: Code 모델 (최하위 요소까지 포함)
      */
-    private void initCodeCache() {
+    private void loadCodeCacheData() {
         // 최상위 부모 조회
         List<Code> parent = codeRepository.findByParentCodeId(null);
         for (Code code : parent) {
