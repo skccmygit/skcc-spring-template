@@ -41,21 +41,13 @@ public class ApiResponse<T> {
         return ApiResponse.<T>builder()
                 .status(e.getErrorCode().getStatus())
                 .success(false)
-                .error(ExceptionDto.of(e.getErrorCode()))
+                .error(new ExceptionDto(e))
                 .build();
     }
 
     public static <T> ApiResponse<T> fail(final Exception e){
         return ApiResponse.<T>builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .success(false)
-                .error(new ExceptionDto(e))
-                .build();
-    }
-
-    public static <T> ApiResponse<T> fail(final HttpStatus httpStatus, final Exception e){
-        return ApiResponse.<T>builder()
-                .status(httpStatus)
                 .success(false)
                 .error(new ExceptionDto(e))
                 .build();

@@ -18,7 +18,8 @@ public enum ErrorCode {
     NOT_FOUND_END_POINT(90001, HttpStatus.NOT_FOUND, "error.notFoundEndPoint"),
     INTERNAL_SERVER_ERROR(90002, HttpStatus.INTERNAL_SERVER_ERROR, "error.internalServerError"),
     UNAUTHORIZED(90003, HttpStatus.UNAUTHORIZED, "error.unauthorized"),
-    ACCESS_DENIED(90004, HttpStatus.FORBIDDEN, "error.accessDenied")
+    ACCESS_DENIED(90004, HttpStatus.FORBIDDEN, "error.accessDenied"),
+    INVALID_REQUEST(90005, HttpStatus.BAD_REQUEST, "error.invalidRequest"),
     ;
 
     private final Integer code;
