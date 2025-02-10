@@ -16,7 +16,6 @@ import skcc.arch.code.domain.CodeSearchCondition;
 import skcc.arch.code.domain.CodeUpdateRequest;
 import skcc.arch.code.service.port.CodeRepository;
 import skcc.arch.common.constants.CacheGroup;
-import skcc.arch.common.constants.CacheName;
 import skcc.arch.common.service.MyCacheService;
 
 import java.util.List;
