@@ -1,14 +1,14 @@
 package skcc.arch.app.exception;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public enum ErrorCode {
 
     NOT_FOUND_ELEMENT(10001, HttpStatus.NOT_FOUND, "error.notFoundElement"),
