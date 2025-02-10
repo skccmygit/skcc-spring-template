@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import skcc.arch.app.dto.ApiResponse;
+import skcc.arch.app.exception.CustomException;
+import skcc.arch.app.exception.ErrorCode;
+import skcc.arch.common.constants.CacheGroup;
 import skcc.arch.common.service.MyCacheService;
 
 @RestController
@@ -16,19 +19,25 @@ public class CacheRestController {
 
     private final MyCacheService myCacheService;
 
-    @GetMapping("/clear/{cacheName}")
-    public ApiResponse<Void> clear(@PathVariable String cacheName) {
-        if (StringUtils.isEmpty(cacheName)) {
+    @GetMapping("/clear/{cacheGroupName}")
+    public ApiResponse<Void> clear(@PathVariable String cacheGroupName) {
+        if (StringUtils.isEmpty(cacheGroupName)) {
             myCacheService.clearAll();
         } else {
-            myCacheService.clearCacheName(cacheName);
+            myCacheService.clearByCacheGroup(CacheGroup.getByName(cacheGroupName));
         }
         return ApiResponse.ok(null);
     }
 
-    @GetMapping("/evict/{cacheName}/{cacheKey}")
-    public ApiResponse<Void> evict(@PathVariable String cacheName, @PathVariable String cacheKey) {
-        myCacheService.evict(cacheName, cacheKey);
+    @GetMapping("/evict/{cacheGroupName}/{cacheKey}")
+    public ApiResponse<Void> evict(@PathVariable String cacheGroupName, @PathVariable String cacheKey) {
+
+        CacheGroup cacheGroup = CacheGroup.getByName(cacheGroupName);
+        if (cacheGroup == null) {
+            return ApiResponse.fail(new CustomException(ErrorCode.NOT_FOUND_ELEMENT));
+        }
+
+        myCacheService.evict(cacheGroup, cacheKey);
         return  ApiResponse.ok(null);
     }
 }

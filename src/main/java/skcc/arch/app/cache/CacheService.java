@@ -5,5 +5,5 @@ public interface CacheService {
     void put(String key, Object value);
     void evict(String key);
     void clearAll();
-    void clearByCacheName(String cacheName);
+    void clearByCacheGroup(String cacheGroupName);
 }

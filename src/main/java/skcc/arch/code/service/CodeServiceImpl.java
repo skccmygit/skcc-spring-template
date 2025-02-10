@@ -15,6 +15,7 @@ import skcc.arch.code.domain.CodeCreateRequest;
 import skcc.arch.code.domain.CodeSearchCondition;
 import skcc.arch.code.domain.CodeUpdateRequest;
 import skcc.arch.code.service.port.CodeRepository;
+import skcc.arch.common.constants.CacheGroup;
 import skcc.arch.common.constants.CacheName;
 import skcc.arch.common.service.MyCacheService;
 
@@ -128,7 +129,7 @@ public class CodeServiceImpl implements CodeService {
         if (condition.getCode() != null) {
 
             // 캐시 조회
-            Code cachedCode = myCacheService.get(CacheName.CODE, condition.getCode(), Code.class);
+            Code cachedCode = myCacheService.get(CacheGroup.CODE, condition.getCode(), Code.class);
             if (cachedCode != null) {
                 return cachedCode;
             }
@@ -138,7 +139,7 @@ public class CodeServiceImpl implements CodeService {
 
             // 루트 요소일 경우 캐시 추가
             if (dbCode != null && dbCode.getParentCodeId() == null) {
-                myCacheService.put(CacheName.CODE, condition.getCode(), dbCode);
+                myCacheService.put(CacheGroup.CODE, condition.getCode(), dbCode);
             }
             return dbCode;
         }
