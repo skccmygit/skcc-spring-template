@@ -1,7 +1,7 @@
 package skcc.arch.app.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,15 +13,12 @@ import skcc.arch.user.infrastructure.mybatis.UserRepositoryMybatis;
 import skcc.arch.user.service.port.UserRepository;
 
 @Configuration
+@RequiredArgsConstructor
 public class AppConfig {
 
-    @Autowired
-    private UserRepositoryJpa userRepositoryJpa;
-    @Autowired
-    private JPAQueryFactory jpaQueryFactory;
-
-    @Autowired
-    private UserRepositoryMybatis userRepositoryMybatis;
+    private final UserRepositoryJpa userRepositoryJpa;
+    private final JPAQueryFactory jpaQueryFactory;
+    private final UserRepositoryMybatis userRepositoryMybatis;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
