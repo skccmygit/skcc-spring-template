@@ -34,9 +34,9 @@ public class CaffeineCacheService implements CacheService {
     }
 
     @Override
-    public void clearByCacheName(String cacheName) {
+    public void clearByCacheGroup(String cacheGroupName) {
         caffeineCache.getAllPresent(caffeineCache.asMap().keySet()).keySet().forEach(key -> {
-            if (key.startsWith(cacheName)) {
+            if (key.startsWith(cacheGroupName)) {
                 caffeineCache.invalidate(key);
             }
         });

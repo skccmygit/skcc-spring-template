@@ -41,7 +41,7 @@ public class RedisCacheService implements CacheService {
     }
 
     @Override
-    public void clearByCacheName(String cacheName) {
+    public void clearByCacheGroup(String cacheName) {
         clearKeysByPattern(cacheName + CACHE_DELIMITER + PATTERN_ALL);
     }
 
