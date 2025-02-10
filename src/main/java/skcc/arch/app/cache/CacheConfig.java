@@ -7,20 +7,29 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
-@ConditionalOnProperty(name = "my.cache.type", havingValue = "redis")
-public class RedisCacheConfig {
+public class CacheConfig {
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(connectionFactory);
+    @ConditionalOnProperty(name = "my.cache.type", havingValue = "caffeine")
+    public CacheService caffeineCacheService() {
+        return new CaffeineCacheService();
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "my.cache.type", havingValue = "redis")
+    public CacheService redisCacheService(RedisConnectionFactory connectionFactory) {
+        return new RedisCacheService(getRedisTemplate(connectionFactory));
+    }
+
+    public RedisTemplate<String, Object> getRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(connectionFactory);
 
         // ObjectMapper에 JavaTimeModule 등록
         ObjectMapper objectMapper = new ObjectMapper();
@@ -37,13 +46,13 @@ public class RedisCacheConfig {
         GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
 
         // 키는 문자열, 값은 JSON으로 저장
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(serializer);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(serializer);
 
-        template.setHashKeySerializer(new StringRedisSerializer());
-        template.setHashValueSerializer(serializer);
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(serializer);
+        redisTemplate.afterPropertiesSet();
 
-        template.afterPropertiesSet();
-        return template;
+        return redisTemplate;
     }
 }

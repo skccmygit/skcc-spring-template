@@ -2,14 +2,9 @@ package skcc.arch.app.cache;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
-@Service
-@ConditionalOnProperty(name = "my.cache.type", havingValue = "caffeine")
 public class CaffeineCacheService implements CacheService {
 
     private final Cache<String, Object> caffeineCache = Caffeine.newBuilder()
