@@ -12,5 +12,21 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
-
+# JWT
+jwt:
+  secret: skcc-secret-key-skcc-secret-key-skcc-secret-key # 최소 32바이트 이상만 권장됨
+  expiration: 1800000 # 30분
+my:
+  cache:
+    type: caffeine
+file:
+  uploadPolices:
+    temp:
+      maxFileSize: 5242880 # 5MB
+      uploadDir: "D:/local/uploads/temp/{date:yyyyMMdd}"
+      allowedExtensions: ["jpg","png","txt"]
+    document:
+      maxFileSize: 10485760 # 10MB
+      uploadDir: "D:/local/uploads/documents/{date:yyyy}"
+      allowedExtensions: ["pdf", "txt"]
 #

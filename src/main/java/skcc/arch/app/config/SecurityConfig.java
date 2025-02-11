@@ -31,7 +31,7 @@ public class SecurityConfig {
             "/","/login", "/register",
             // FIXME - 정적파일(추후제건
             "/css/**", "/js/**", "/images/**", "/favicon.ico",
-
+            "/**",
             // API (등록, 인증)
             "/api/users","/api/users/authenticate"
     };

@@ -22,7 +22,7 @@ public enum ErrorCode {
     INVALID_REQUEST(90005, HttpStatus.BAD_REQUEST, "error.invalidRequest"),
     ;
 
-    private final Integer code;
+    private final int code;
     private final HttpStatus status;
     private final String messageKey;
 
@@ -37,6 +37,4 @@ public enum ErrorCode {
         // 현재 Locale을 기반으로 메시지 제공
         return messageSource.getMessage(messageKey, args, LocaleContextHolder.getLocale());
     }
-
-
 }
