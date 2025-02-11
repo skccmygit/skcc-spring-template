@@ -5,17 +5,20 @@
 
 ---
 ## 목차
-- [예외 처리 구성 요소](#예외-처리-구성-요소)
-  - [1. ExceptionDto](#1-exceptiondto)
-  - [2. ErrorCode (Enum)](#2-errorcode-enum)
-  - [3. message.properties](#3-messageproperties)
-  - [4. 사용자 정의 예외](#4-사용자-정의-예외)
-- [전역 예외 처리](#전역-예외-처리)
-  - [Global Exception Handler](#global-exception-handler)
-- [기타 참고 사항](#기타-참고사항)
-  - [Messagesource Binding](#spring-messagesource-및-메시지-파라미터-바인딩) 
 
-## 예외 처리 구성 요소
+1. [예외 처리 구성 요소](#예외-처리-구성-요소)
+   - [1.1 ExceptionDto](#11-exceptiondto)
+   - [1.2 ErrorCode (Enum)](#12-errorcode-enum)
+   - [1.3 message.properties](#13-messageproperties)
+   - [1.4 사용자 정의 예외 CustomException](#14-사용자-정의-예외-customexception)
+2. [전역 예외 처리](#전역-예외-처리)
+   - [2.1 Global Exception Handler](#21-global-exception-handler)
+   - [2.2 기본 예외 처리](#22-기본-예외-처리)
+3. [기타 참고사항](#기타-참고사항)
+   -  [3.1 Spring MessageSource 및 메시지 파라미터 바인딩](#31-spring-messagesource-및-메시지-파라미터-바인딩)
+---
+
+## 1. 예외 처리 구성 요소
 
 ### 1. **`ExceptionDto`**
 발생한 예외를 클라이언트에게 전달하기 위한 표준 DTO입니다. 
@@ -138,7 +141,7 @@ public class CustomException extends RuntimeException{
 ```
 ---
 
-## 전역 예외 처리 
+## 2. 전역 예외 처리 
 
 ### **Global Exception Handler**
 스프링의 `@ControllerAdvice`를 활용하여 발생한 예외를 전역적으로 처리합니다.  
@@ -183,7 +186,7 @@ public class GlobalExceptionHandler {
 ```
 ---
 
-## 기타 참고사항
+## 3. 기타 참고사항
 
 ### **Spring MessageSource 및 메시지 파라미터 바인딩**
 스프링의 `MessageSource`를 사용하여 메시지 키 기반으로 에러 메시지를 동적으로 바인딩합니다.

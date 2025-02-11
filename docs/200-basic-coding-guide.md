@@ -1,51 +1,29 @@
 # Java 기본 코딩 가이드
 > 본 코딩 가이드는 Java 코드를 작성할 때 규격성을 유지하면서 읽기 쉽고 관리하기 쉬운 코드를 작성하기 위해 기본적인 스타일과 규칙을 제공합니다.
-
+---
 ## 목차
-
-1. [Java 기본 코딩 가이드](#java-기본-코딩-가이드)
-2. [기본 스타일](#기본-스타일)
+1. [기본 스타일](#기본-스타일)
     - [라인 길이](#라인-길이)
     - [들여쓰기](#들여쓰기)
     - [공백](#공백)
-3. [Statement 작성](#statement-작성)
+2. [Statement 작성](#statement-작성)
     - [`if`문 작성](#if문-작성)
     - [`for`문 작성](#for문-작성)
-        - [향상된 `for-each` 문](#향상된-for-each-문)
-        - [다중 반복문 작성](#다중-반복문-작성)
-        - [반복문에서 조건문 사용](#반복문에서-조건문-사용)
     - [`while`문 작성](#while문-작성)
     - [`do-while`문 작성](#do-while문-작성)
-    - [제어문에서의 공통 권장 사항](#제어문에서의-공통-권장-사항)
-4. [`try-catch` 문](#try-catch-문-중요)
-    - [표준 `try-catch` 작성 규칙](#표준-try-catch-작성-규칙)
-5. [`try-with-resources` 문](#try-with-resources-문)
-    - [단일 자원 처리](#단일-자원-처리)
-    - [다중 자원 처리](#다중-자원-처리)
-    - [특징 및 사용 규칙](#특징-및-사용-규칙)
-6. [`try-catch-finally` 문](#try-catch-finally-문)
-    - [권장: `try-with-resources`로 대체](#권장-try-with-resources로-대체)
-7. [`switch`문 작성 가이드](#switch문-작성-가이드)
-    - [기본 작성 규칙](#1-switch문의-기본-작성-규칙)
-    - [`switch` 표현식(Switch Expressions)](#2-switch-표현식switch-expressions)
-        - [간단한 `switch` 표현식](#예시-간단한-switch-표현식)
-        - [블록 구문 사용](#예시-블록-구문-사용)
-    - [패턴 매칭과 `switch`](#3-패턴-매칭pattern-matching과-switch)
-        - [조건부 패턴](#예시-조건부-패턴)
-    - [가독성을 위한 스타일 가이드](#4-가독성을-위한-스타일-가이드)
-    - [전통적인 `switch`문과 표현식 비교](#5-전통적인-switch문과-표현식-비교)
-    - [권장 사용 사례](#6-권장-사용-사례)
-8. [변수 선언](#변수-선언)
+    - [`try-catch` 문](#try-catch-문)
+    - [`try-with-resources` 문](#try-with-resources-문)
+    - [`try-catch-finally` 문](#try-catch-finally-문)
+    - [`switch`문 작성 가이드](#switch문-작성-가이드)  
+3. [변수 선언](#변수-선언)
     - [상수 (`static final`)](#상수-static-final)
-9. [주석 작성](#주석-작성)
-    - [주석 스타일](#주석-스타일)
-        - [클래스/메서드 설명: Javadoc 사용](#클래스메서드-설명-javadoc-사용)
-        - [라인 설명](#라인-설명)
-        - [TODO 주석](#todo-주석)
+4. [주석 작성](#주석-작성)
+    - [클래스/메서드 설명 (Javadoc)](#클래스메서드-설명-javadoc)
+    - [라인 설명](#라인-설명)
+    - [TODO 주석](#todo-주석)
 
-
+---
 ## 기본 스타일
-
 ### 라인 길이
 
 - **모든 줄은 120자 이내**로 작성한다.
@@ -88,7 +66,6 @@
   builder.methodOne().methodTwo()
          .methodThree();
   ```
-
 ---
 
 ## Statement 작성
@@ -248,55 +225,6 @@ do {
 
 ---
 
-### 제어문에서의 공통 권장 사항
-1. **중첩된 블록 최소화**
-    - 중첩된 `if`, `for`, `while` 블록은 가독성을 떨어뜨리므로 피하라. 필요하면 로직을 **별도 메서드로 분리**하라.
-      ```java
-      // 안 좋은 방식 (중첩 조건문)
-      if (user != null) {
-          if (user.isActive()) {
-              if (user.hasPermission()) {
-                  performAction();
-              }
-          }
-      }
- 
-      // 좋은 방식 (가독성 향상)
-      if (isValidUser(user)) {
-          performAction();
-      }
- 
-      private boolean isValidUser(User user) {
-          return user != null && user.isActive() && user.hasPermission();
-      }
-      ```
-
-2. **`break`, `continue` 사용 주의**
-    - 필요한 경우 `break`와 `continue`를 사용하지만, 과도한 사용은 코드 흐름을 복잡하게 만들 수 있다.
-   ```java
-   for (String item : items) {
-       if ("skip".equals(item)) {
-           continue; // 현재 루프를 건너뜀
-       }
-       if ("stop".equals(item)) {
-           break; // 반복문을 종료
-       }
-       System.out.println(item);
-   }
-   ```
-
-3. **조건문 및 반복문 가독성 향상**
-    - 긴 조건문이나 복잡한 반복 조건은 **의미 있는 메서드**로 분리하는 것을 권장한다.
-      ```java
-      if (isEligible(user)) {
-          performAction();
-      }
- 
-      private boolean isEligible(User user) {
-          return user != null && user.isActive() && hasPermission(user);
-      }
-      ```
-
 ### `try-catch` 문 (중요)
 
 - **예외 처리**는 반드시 필요한 경우에만 작성하며, 무의미한 예외 남발을 피한다.
@@ -449,23 +377,23 @@ System.out.println(dayType);
 
 #### 예시: 블록 구문 사용
 - 여러 줄 블록으로 명확한 로직 처리 후 값 반환 시 `yield`를 사용한다.
-```java
-String dayType = switch (day) {
-    case "SATURDAY", "SUNDAY" -> {
-        System.out.println("It's the weekend!");
-        yield "Weekend";
-    }
-    case "MONDAY" -> {
-        System.out.println("Time to work.");
-        yield "Start of the work week";
-    }
-    default -> {
-        System.out.println("A regular weekday.");
-        yield "Midweek";
-    }
-};
-System.out.println(dayType);
-```
+    ```java
+    String dayType = switch (day) {
+        case "SATURDAY", "SUNDAY" -> {
+            System.out.println("It's the weekend!");
+            yield "Weekend";
+        }
+        case "MONDAY" -> {
+            System.out.println("Time to work.");
+            yield "Start of the work week";
+        }
+        default -> {
+            System.out.println("A regular weekday.");
+            yield "Midweek";
+        }
+    };
+    System.out.println(dayType);
+    ```
 
 #### 3. 패턴 매칭(Pattern Matching)과 `switch`
 Java 17부터는 **패턴 매칭**이 `switch`문에 도입되어 더욱 강력한 분기 처리가 가능해졌습니다. 이는 변수의 타입에 따라 분기하거나, 조건부 처리를 위한 추가적인 검사와 결합할 수 있습니다.
@@ -481,9 +409,8 @@ String result = switch (obj) {
 };
 System.out.println(result);
 ```
-
-#### 예시: 조건부 패턴
-조건부 패턴은 `case` 조건을 추가적으로 검사하여 더 세밀한 처리를 허용한다.
+#### 예시: 조건부 패턴  
+조건부 패턴은 `case` 조건을 추가적으로 검사하여 더 세밀한 처리를 허용한다.  
 ```java
 int result = switch (number) {
     case 0 -> 0; // Base case
@@ -494,19 +421,19 @@ int result = switch (number) {
 ```
 
 #### 4. 가독성을 위한 스타일 가이드
-1. **단순한 `case`들은 화살표(`->`) 표현식 사용**을 권장한다.
-    - 단일 행 처리가 적합한 경우 사용.
-   ```java
-   String result = switch (value) {
+1. **단순한 `case`들은 화살표(`->`) 표현식 사용**을 권장한다.  
+  단일 행 처리가 적합한 경우 사용.
+    ```java
+    String result = switch (value) {
        case 1 -> "One";
        case 2, 3 -> "Two or Three";
        default -> "Other";
-   };
-   ```
-
+    };
+    ```
+  
 2. **다중 조건을 처리하는 경우 `블록 처리`와 주석 사용**.
-   ```java
-   String result = switch (grade) {
+    ```java
+    String result = switch (grade) {
        case "A" -> {
            // Excellent
            System.out.println("Great job!");
@@ -525,8 +452,8 @@ int result = switch (number) {
            System.out.println("Failed.");
            yield "Failed";
        }
-   };
-   ```
+    };
+    ```
 
 3. `default` 절은 빠짐없이 작성하되, 반드시 **예외 처리**나 기본값을 제공한다.
 
@@ -546,14 +473,13 @@ int result = switch (number) {
 
 #### 6. 권장 사용 사례
 1. **값 반환이 필요한 경우**: 가능한 경우 `switch` 표현식을 통해 값 반환 및 간결한 구문을 작성한다.
-   ```java
-   String status = switch (orderStatus) {
-       case "PENDING" -> "Order is pending";
-       case "COMPLETED" -> "Order completed";
-       default -> "Unknown status";
-   };
-   ```
-
+    ```java
+    String status = switch (orderStatus) {
+        case "PENDING" -> "Order is pending";
+        case "COMPLETED" -> "Order completed";
+        default -> "Unknown status";
+    };
+    ```
 2. **패턴 기반 분기 처리**: 다양한 조건 및 타입을 처리해야 할 경우 `switch` 패턴을 적용한다.
    ```java
    String description = switch (object) {
@@ -629,5 +555,3 @@ int result = switch (number) {
       // TODO: Implement exception handling for null values
       ```
 ---
-
-## 로그
