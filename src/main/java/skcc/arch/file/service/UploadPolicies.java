@@ -1,6 +1,5 @@
-package skcc.arch.app.file;
+package skcc.arch.file.service;
 
-import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +23,7 @@ public class UploadPolicies {
         private long maxFileSize; // 파일 크기 제한
         private String uploadDir; // 업로드 디렉토리
         private String[] allowedExtensions; // 허용 확장자
+        private boolean saveDb;
     }
 
 }

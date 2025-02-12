@@ -1,4 +1,4 @@
-package skcc.arch.common.controller;
+package skcc.arch.file.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,10 +11,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriUtils;
 import skcc.arch.app.dto.ApiResponse;
 import skcc.arch.app.dto.ExceptionDto;
-import skcc.arch.app.file.DownloadFile;
-import skcc.arch.app.file.FileService;
-import skcc.arch.app.file.UploadFile;
-import skcc.arch.common.controller.request.FileDownloadRequest;
+import skcc.arch.file.controller.port.FileServicePort;
+import skcc.arch.file.controller.response.FileDownloadResponse;
+import skcc.arch.file.domain.FileModel;
+import skcc.arch.file.controller.request.FileDownloadRequest;
+import skcc.arch.file.controller.response.FileUploadResponse;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,7 +30,8 @@ import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM_VALUE;
 @RequiredArgsConstructor
 @RequestMapping("/api/files")
 public class FileController {
-    private final FileService fileService;
+
+    private final FileServicePort fileServicePort;
 
     /**
      * 단일 파일 업로드 API
@@ -38,17 +40,17 @@ public class FileController {
      * @return 업로드된 파일 정보
      */
     @PostMapping("/upload")
-    public ApiResponse<?> uploadFile(
+    public ApiResponse<FileUploadResponse> uploadFile(
             @RequestParam("file") MultipartFile file,
             @RequestParam("policyKey") String policyKey) {
 
-        UploadFile storeFile = null;
         try {
-            storeFile = fileService.storeFile(file, policyKey);
+            FileModel uploadedFileModel = fileServicePort.storeFile(file, policyKey);
+
+            return ApiResponse.ok(FileUploadResponse.from(uploadedFileModel));
         } catch (IOException e) {
             return ApiResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR, ExceptionDto.builder().message("파일 저장 중 오류가 발생 하였습니다.").build() );
         }
-        return ApiResponse.ok(storeFile);
     }
 
     /**
@@ -58,33 +60,31 @@ public class FileController {
      * @return 업로드된 파일들의 정보
      */
     @PostMapping("/upload/multiple")
-    public ApiResponse<?> uploadMultipleFiles(
+    public ApiResponse<List<FileUploadResponse>> uploadMultipleFiles(
             @RequestParam("files") List<MultipartFile> files,
             @RequestParam("policyKey") String policyKey) {
 
-        List<UploadFile> storedFiles = null;
         try {
-            storedFiles = fileService.storeFiles(files, policyKey);
+            List<FileModel> uploadFileModels = fileServicePort.storeFiles(files, policyKey);
+            return ApiResponse.ok(uploadFileModels.stream().map(FileUploadResponse::from).toList());
         } catch (IOException e) {
             return ApiResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR, ExceptionDto.builder().message("파일 저장 중 오류가 발생 하였습니다.").build() );
         }
-        return ApiResponse.ok(storedFiles);
     }
 
     /**
      * 파일 다운로드 API
-     * @param fileDownloadRequest
+     * @param fileDownloadRequest 파일다운로드 요청 객체
      * @return 파일 Resource
      */
 
     @PostMapping("/download")
-    public ResponseEntity<Resource> downloadFile(@RequestBody FileDownloadRequest fileDownloadRequest) throws IOException {
+    public ResponseEntity<Resource> downloadFile(@RequestBody FileDownloadRequest fileDownloadRequest) {
 
-        DownloadFile download = fileService.getDownloadFileByFilepath(fileDownloadRequest.getFilePath());
-        if (download != null) {
-
+        FileDownloadResponse fileDownloadResponse = fileServicePort.getFileDownload(fileDownloadRequest);
+        if (fileDownloadResponse != null) {
             // URL 인코딩된 한글 파일명
-            String encodedFileName = UriUtils.encode(download.getFileName(), UTF_8);
+            String encodedFileName = UriUtils.encode(fileDownloadResponse.fileName(), UTF_8);
 
             HttpHeaders headers = new HttpHeaders();
             headers.add(CONTENT_DISPOSITION, String.format("attachment; filename=%s" , encodedFileName));
@@ -92,7 +92,7 @@ public class FileController {
 
             return ResponseEntity.ok()
                     .headers(headers)
-                    .body(download.getResource());
+                    .body(fileDownloadResponse.resource());
         }
         return null;
     }
