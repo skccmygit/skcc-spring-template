@@ -59,7 +59,6 @@ public class FileService implements FileServicePort {
         }
     }
 
-
     /**
      * 다건 파일 저장
      */
@@ -73,12 +72,16 @@ public class FileService implements FileServicePort {
         return storeFileModelResult;
     }
 
+
+    /**
+     * 파일 다운로드
+     */
     public FileDownloadResponse getFileDownload(FileDownloadRequest request) {
 
-        if(request.getFilePath() != null) {
-            return getDownloadFileByFilepath(request.getFilePath());
-        } else if(request.getId() != 0) {
-            return getDownloadFileByFileId(request.getId());
+        if(request.filePath() != null) {
+            return getDownloadFileByFilepath(request.filePath());
+        } else if(request.id() != 0) {
+            return getDownloadFileByFileId(request.id());
         }
         return null;
     }

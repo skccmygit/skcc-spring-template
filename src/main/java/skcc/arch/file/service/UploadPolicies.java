@@ -12,7 +12,6 @@ import java.util.Map;
 @Setter
 @Configuration
 @ConfigurationProperties(prefix = "file")
-@Slf4j
 public class UploadPolicies {
 
     private Map<String, UploadPolicy> uploadPolices; // Key: 정책 이름, Value: 특정 정책
