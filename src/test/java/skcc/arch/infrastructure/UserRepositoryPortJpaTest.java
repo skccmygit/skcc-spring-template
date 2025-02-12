@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @EnableJpaAuditing
 @Sql("/sql/user-repository-test-data.sql")
-class UserRepositoryJpaTest {
+class UserRepositoryPortJpaTest {
 
     @Autowired
     private UserRepositoryJpa userRepositoryJpa;

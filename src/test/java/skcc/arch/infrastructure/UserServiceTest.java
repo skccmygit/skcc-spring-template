@@ -10,9 +10,10 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 import skcc.arch.app.exception.CustomException;
 import skcc.arch.app.exception.ErrorCode;
-import skcc.arch.user.controller.port.UserService;
+import skcc.arch.user.controller.port.UserServicePort;
+import skcc.arch.user.controller.request.UserCreateRequest;
 import skcc.arch.user.domain.User;
-import skcc.arch.user.domain.UserCreateRequest;
+import skcc.arch.user.domain.UserCreate;
 import skcc.arch.user.domain.UserStatus;
 
 import java.util.List;
@@ -29,19 +30,19 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class UserServiceTest {
 
     @Autowired
-    private UserService userService;
+    private UserServicePort userServicePort;
 
     @Test
     void userCreate_를_이용해_생성한다() throws Exception {
         //given
-        UserCreateRequest userCreateRequest = UserCreateRequest.builder()
+        UserCreateRequest userCreate = UserCreateRequest.builder()
                 .username("홍길동")
                 .email("abcd@sk.com")
                 .password("password")
                 .build();
 
         // when
-        User result = userService.create(userCreateRequest);
+        User result = userServicePort.signUp(userCreate);
 
         // then
         assertThat(result.getId()).isNotNull();
@@ -56,7 +57,7 @@ public class UserServiceTest {
 
 
         //when
-        String authenticate = userService.authenticate(email, rawPassword);
+        String authenticate = userServicePort.authenticate(email, rawPassword);
 
 
         //then
@@ -73,7 +74,7 @@ public class UserServiceTest {
 
 
         //when & then
-        CustomException exception = assertThrows(CustomException.class, () -> userService.authenticate(email, rawPassword));
+        CustomException exception = assertThrows(CustomException.class, () -> userServicePort.authenticate(email, rawPassword));
         assertThat(exception.getErrorCode()).isEqualTo(ErrorCode.NOT_MATCHED_PASSWORD);
     }
 
@@ -83,7 +84,7 @@ public class UserServiceTest {
         Long id = 2L;
 
         //when
-        User user = userService.getById(id);
+        User user = userServicePort.getById(id);
 
 
         //then
@@ -96,7 +97,7 @@ public class UserServiceTest {
         //given
 
         //when
-        List<User> allUsers = userService.findAllUsers();
+        List<User> allUsers = userServicePort.findAllUsers();
 
         //then
         assertThat(allUsers.size()).isGreaterThan(0);
@@ -109,7 +110,7 @@ public class UserServiceTest {
         int pageSize = 2;
         PageRequest pageRequest = PageRequest.of(1, pageSize);
         //when
-        Page<User> users = userService.findAll(pageRequest);
+        Page<User> users = userServicePort.findAll(pageRequest);
 
         //then
         assertThat(users.getContent().size()).isEqualTo(pageSize);

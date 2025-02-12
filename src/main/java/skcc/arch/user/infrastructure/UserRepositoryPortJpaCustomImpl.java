@@ -13,7 +13,7 @@ import skcc.arch.user.domain.UserRole;
 import skcc.arch.user.infrastructure.jpa.QUserEntity;
 import skcc.arch.user.infrastructure.jpa.UserEntity;
 import skcc.arch.user.infrastructure.jpa.UserRepositoryJpa;
-import skcc.arch.user.service.port.UserRepository;
+import skcc.arch.user.service.port.UserRepositoryPort;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +21,7 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 @Slf4j
-public class UserRepositoryJpaCustomImpl implements UserRepository {
+public class UserRepositoryPortJpaCustomImpl implements UserRepositoryPort {
 
     private final UserRepositoryJpa userRepositoryJpa;
     private final JPAQueryFactory queryFactory;
@@ -80,5 +80,10 @@ public class UserRepositoryJpaCustomImpl implements UserRepository {
         // 3. Page로 변환하여 반환
         return new PageImpl<>(users, pageable, total);
 
+    }
+
+    @Override
+    public User updateStatus(User user) {
+        return userRepositoryJpa.save(UserEntity.from(user)).toModel();
     }
 }

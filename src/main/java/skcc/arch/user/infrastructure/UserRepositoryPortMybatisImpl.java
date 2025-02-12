@@ -8,14 +8,14 @@ import org.springframework.stereotype.Repository;
 import skcc.arch.user.domain.User;
 import skcc.arch.user.infrastructure.mybatis.UserDto;
 import skcc.arch.user.infrastructure.mybatis.UserRepositoryMybatis;
-import skcc.arch.user.service.port.UserRepository;
+import skcc.arch.user.service.port.UserRepositoryPort;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class UserRepositoryMybatisImpl implements UserRepository {
+public class UserRepositoryPortMybatisImpl implements UserRepositoryPort {
 
     private final UserRepositoryMybatis userRepositoryMybatis;
 
@@ -72,6 +72,11 @@ public class UserRepositoryMybatisImpl implements UserRepository {
 
     @Override
     public Page<User> findAdminUsers(Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public User updateStatus(User user) {
         return null;
     }
 }

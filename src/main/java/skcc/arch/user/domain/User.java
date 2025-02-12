@@ -33,15 +33,14 @@ public class User {
     /**
      * 사용자를 생성할때만 사용
      *
-     * @param userCreateRequest
+     * @param userCreate
      * @return
      */
-    public static User from (UserCreateRequest userCreateRequest) {
-        validateRequiredFields(userCreateRequest.getUsername(), userCreateRequest.getEmail(), userCreateRequest.getPassword());
+    public static User from (UserCreate userCreate) {
         return User.builder()
-                .email(userCreateRequest.getEmail())
-                .username(userCreateRequest.getUsername())
-                .password(userCreateRequest.getPassword())
+                .email(userCreate.getEmail())
+                .username(userCreate.getUsername())
+                .password(userCreate.getPassword())
                 .role(UserRole.USER)
                 .status(UserStatus.PENDING)
                 // JPA의 경우 BaseEntity에 처리
@@ -50,16 +49,24 @@ public class User {
                 .build();
     }
 
-    private static void validateRequiredFields(String username, String email, String password) {
-        if (username == null || username.isBlank()) {
-            throw new IllegalArgumentException("Username은 필수 값입니다.");
-        }
-        if (email == null || email.isBlank()) {
-            throw new IllegalArgumentException("Email은 필수 값입니다.");
-        }
-        if (password == null || password.isBlank()) {
-            throw new IllegalArgumentException("Password는 필수 값입니다.");
-        }
-    }
+    /**
+     * 상태 값을 변경할때 사용
+     * @param requestStatus
+     * @return
+     */
+    public User updateStatus(UserStatus requestStatus) {
 
+        if (status == requestStatus) {
+            throw new IllegalStateException("status is same");
+        }
+
+        return User.builder()
+                .id(id)
+                .email(email)
+                .username(username)
+                .password(password)
+                .role(role)
+                .status(requestStatus)
+                .build();
+    }
 }

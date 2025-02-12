@@ -8,8 +8,7 @@ import org.springframework.stereotype.Service;
 import skcc.arch.app.exception.CustomException;
 import skcc.arch.app.exception.ErrorCode;
 import skcc.arch.user.domain.User;
-import skcc.arch.user.service.port.UserRepository;
-
+import skcc.arch.user.service.port.UserRepositoryPort;
 
 
 /**
@@ -23,7 +22,7 @@ public class CustomUserDetailService implements UserDetailsService {
     /**
      * 데이터 소스에서 사용자 정보를 액세스하기 위한 리포지토리 인터페이스입니다.
      */
-    private final UserRepository userRepository;
+    private final UserRepositoryPort userRepositoryPort;
 
     /**
      * 주어진 이메일을 통해 사용자 세부 정보를 로드합니다.
@@ -35,7 +34,7 @@ public class CustomUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         // 사용자를 찾을 수 없으면 사용자 정의 예외를 던집니다.
-        User myUser = userRepository.findByEmail(email)
+        User myUser = userRepositoryPort.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ELEMENT));
         return org.springframework.security.core.userdetails.User.builder()
                 .username(myUser.getEmail())

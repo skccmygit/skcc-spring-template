@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         , executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @MybatisTest
 @ContextConfiguration(classes = MyBatisTestConfig.class)
-class UserRepositoryMybatisTest {
+class UserRepositoryPortMybatisTest {
 
     @Autowired
     private UserRepositoryMybatis userRepository;
