@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import skcc.arch.code.domain.Code;
-import skcc.arch.code.domain.CodeSearchCondition;
 import skcc.arch.common.infrastructure.jpa.JpaConfig;
 
 import java.util.List;

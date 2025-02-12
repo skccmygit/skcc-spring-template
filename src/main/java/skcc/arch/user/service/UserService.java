@@ -11,9 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import skcc.arch.app.exception.CustomException;
 import skcc.arch.app.exception.ErrorCode;
 import skcc.arch.app.util.JwtUtil;
+import skcc.arch.user.controller.port.UserServicePort;
+import skcc.arch.user.controller.request.UserCreateRequest;
+import skcc.arch.user.controller.request.UserUpdateRequest;
 import skcc.arch.user.domain.User;
-import skcc.arch.user.domain.UserCreateRequest;
-import skcc.arch.user.service.port.UserRepository;
+import skcc.arch.user.domain.UserCreate;
+import skcc.arch.user.service.port.UserRepositoryPort;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,28 +26,34 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserService implements skcc.arch.user.controller.port.UserService {
+public class UserService implements UserServicePort {
 
-    private final UserRepository userRepository;
+    private final UserRepositoryPort userRepositoryPort;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
     // 회원가입 메서드
     @Override
     @Transactional
-    public User create(UserCreateRequest userCreateRequest) {
+    public User signUp(UserCreateRequest userCreateRequest) {
 
+        // 입력받은 이메일로 회원 존재 점검
         checkUserExistByEmail(userCreateRequest.getEmail());
         String encodedPassword = passwordEncoder.encode(userCreateRequest.getPassword()); // 비밀번호 암호화
-        userCreateRequest.setPassword(encodedPassword);
-        return userRepository.save(User.from(userCreateRequest));
+
+        UserCreate create = UserCreate.builder()
+                .email(userCreateRequest.getEmail())
+                .password(encodedPassword)
+                .build();
+
+        return userRepositoryPort.save(User.from(create));
     }
 
     // 인증
     @Override
     public String authenticate(String email, String rawPassword) {
 
-        User user = userRepository.findByEmail(email)
+        User user = userRepositoryPort.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ELEMENT));
         boolean matches = passwordEncoder.matches(rawPassword, user.getPassword());
         if (!matches) {
@@ -64,35 +73,47 @@ public class UserService implements skcc.arch.user.controller.port.UserService {
         return token;
     }
 
-    // 이메일로 존재여부 체크
-    private void checkUserExistByEmail(String email) {
-        Optional<User> optionalUser = userRepository.findByEmail(email);
-        if (optionalUser.isPresent()) {
-            throw new CustomException(ErrorCode.EXIST_ELEMENT);
-        }
-    }
-
     // 전체 사용자 조회
     @Override
     public List<User> findAllUsers() {
-        return userRepository.findAll();
+        return userRepositoryPort.findAll();
     }
 
     @Override
     public Page<User> findAll(Pageable pageable) {
-        return userRepository.findAll(pageable);
+        return userRepositoryPort.findAll(pageable);
     }
 
     @Override
     public User getById(Long id) {
-        return userRepository.findById(id)
+        return userRepositoryPort.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ELEMENT));
     }
 
     @Override
     public Page<User> findAdminUsers(Pageable pageable) {
         log.info("[Service] findAdminUsers : {}", pageable);
-        return userRepository.findAdminUsers(pageable);
+        return userRepositoryPort.findAdminUsers(pageable);
+    }
+
+    @Override
+    public User updateUserStatus(UserUpdateRequest userUpdateRequest) {
+
+        // 조회
+        User findUser = userRepositoryPort.findByEmail(userUpdateRequest.getEmail())
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ELEMENT));
+
+        // 상태값 없데이트
+        User updateUser = findUser.updateStatus(userUpdateRequest.getStatus());
+        return userRepositoryPort.updateStatus(updateUser);
+    }
+
+    // 이메일로 존재여부 체크
+    private void checkUserExistByEmail(String email) {
+        Optional<User> optionalUser = userRepositoryPort.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            throw new CustomException(ErrorCode.EXIST_ELEMENT);
+        }
     }
 
 }

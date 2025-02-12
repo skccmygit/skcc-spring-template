@@ -8,10 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import skcc.arch.app.dto.ApiResponse;
 import skcc.arch.app.dto.PageInfo;
+import skcc.arch.user.controller.request.UserAuthRequest;
+import skcc.arch.user.controller.request.UserCreateRequest;
+import skcc.arch.user.controller.request.UserUpdateRequest;
 import skcc.arch.user.controller.response.Token;
-import skcc.arch.user.controller.response.UserResponseDto;
+import skcc.arch.user.controller.response.UserResponse;
 import skcc.arch.user.domain.User;
-import skcc.arch.user.domain.UserCreateRequest;
 import skcc.arch.user.service.UserService;
 
 import java.util.List;
@@ -25,54 +27,59 @@ public class UserRestController {
     private final UserService userService;
 
     @PostMapping
-    public ApiResponse<UserResponseDto> createUser(@RequestBody UserCreateRequest userCreateRequest) {
-        User user = userService.create(userCreateRequest);
-        return ApiResponse.ok(UserResponseDto.fromUser(user));
+    public ApiResponse<UserResponse> signUp(@RequestBody UserCreateRequest userCreate) {
+        User user = userService.signUp(userCreate);
+        return ApiResponse.ok(UserResponse.fromUser(user));
     }
 
     // 로그인
     @PostMapping("/authenticate")
-    public ApiResponse<Token> authenticate(@RequestBody User loginRequest) {
-        String accessToken = userService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
+    public ApiResponse<Token> authenticate(@RequestBody UserAuthRequest userAuthRequest) {
+        String accessToken = userService.authenticate(userAuthRequest.getEmail(), userAuthRequest.getPassword());
         Token jwtToken = new Token(accessToken);
         return ApiResponse.ok(jwtToken);
     }
 
     @GetMapping
-    public ApiResponse<List<UserResponseDto>> searchAllUser(Pageable pageable) {
+    public ApiResponse<List<UserResponse>> searchAllUser(Pageable pageable) {
     
         Page<User> result = userService.findAll(pageable);
 
         return ApiResponse.ok(result
                 .stream()
-                .map(UserResponseDto::fromUser)
+                .map(UserResponse::fromUser)
                 .toList(), PageInfo.fromPage(result));
     }
 
     @GetMapping("/all")
-    public ApiResponse<List<UserResponseDto>> getAllUsers() {
+    public ApiResponse<List<UserResponse>> getAllUsers() {
         List<User> users = userService.findAllUsers();
         return ApiResponse.ok(users.stream()
-                .map(UserResponseDto::fromUser)
+                .map(UserResponse::fromUser)
                 .toList());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDto> getById(@PathVariable long id) {
+    public ResponseEntity<UserResponse> getById(@PathVariable long id) {
         return ResponseEntity
                 .ok()
-                .body(UserResponseDto.fromUser(userService.getById(id)));
+                .body(UserResponse.fromUser(userService.getById(id)));
     }
 
     @GetMapping("/admin")
-    public ApiResponse<List<UserResponseDto>> getAdminUsers(Pageable pageable) {
+    public ApiResponse<List<UserResponse>> getAdminUsers(Pageable pageable) {
         log.info("[Controller] : {}" , pageable);
         Page<User> result = userService.findAdminUsers(pageable);
         return ApiResponse.ok(result
                 .stream()
-                .map(UserResponseDto::fromUser)
+                .map(UserResponse::fromUser)
                 .toList(), PageInfo.fromPage(result));
     }
 
+    @PostMapping("/{id}")
+    public ApiResponse<UserResponse> updateUserStatus(@PathVariable long id, @RequestBody UserUpdateRequest userUpdateRequest) {
+        User user = userService.updateUserStatus(userUpdateRequest);
+        return ApiResponse.ok(UserResponse.fromUser(user));
+    }
 
 }

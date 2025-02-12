@@ -1,7 +1,9 @@
 package skcc.arch.user.domain;
 
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import skcc.arch.user.controller.request.UserUpdateRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -11,20 +13,20 @@ class UserTest {
     @Test
     public void UserCreate_객체로_생성() throws Exception {
         //given
-        UserCreateRequest userCreateRequest = UserCreateRequest.builder()
+        UserCreate userCreate = UserCreate.builder()
                 .username("홍길동")
                 .email("email@sk.com")
                 .password("password123")
                 .build();
 
         //when
-        User user = User.from(userCreateRequest);
+        User user = User.from(userCreate);
 
         //then
         assertThat(user.getId()).isNull();
-        assertThat(user.getUsername()).isEqualTo(userCreateRequest.getUsername());
-        assertThat(user.getEmail()).isEqualTo(userCreateRequest.getEmail());
-        assertThat(user.getPassword()).isEqualTo(userCreateRequest.getPassword());
+        assertThat(user.getUsername()).isEqualTo(userCreate.getUsername());
+        assertThat(user.getEmail()).isEqualTo(userCreate.getEmail());
+        assertThat(user.getPassword()).isEqualTo(userCreate.getPassword());
         assertThat(user.getStatus()).isEqualTo(UserStatus.PENDING);
         assertThat(user.getCreatedDate()).isNotNull();
         assertThat(user.getLastModifiedDate()).isNotNull();
@@ -33,29 +35,41 @@ class UserTest {
         
     }
 
+    @Test
+    void 사용자의_상태값을_변경한다_상태값이_다른경우() throws Exception {
+        //given
+        UserUpdateRequest userUpdateRequest = UserUpdateRequest.builder()
+                .status(UserStatus.ACTIVE)
+                .build();
+        String userName = "홍길동";
+        User originalUser = User.builder()
+                .username(userName)
+                .status(UserStatus.PENDING)
+                .build();
+
+        //when
+        User updated = originalUser.updateStatus(userUpdateRequest.getStatus());
+
+        //then
+        Assertions.assertThat(updated.getUsername()).isEqualTo(userName);
+        Assertions.assertThat(updated.getStatus()).isEqualTo(userUpdateRequest.getStatus());
+    }
 
     @Test
-    void UserCreate_필수_값이_없을_경우_에러_발생() {
-        assertThrows(IllegalArgumentException.class,
-                () -> User.from(UserCreateRequest.builder().username(null).email("email").password("password").build()));
-        assertThrows(IllegalArgumentException.class,
-                () -> User.from(UserCreateRequest.builder().username("name").email(null).password("password").build()));
-        assertThrows(IllegalArgumentException.class,
-                () -> User.from(UserCreateRequest.builder().username("name").email("email").password(null).build()));
+    void 사용자의_상태값을_변경한다_상태값이_같은경우() throws Exception {
+        //given
+        UserUpdateRequest userUpdateRequest = UserUpdateRequest.builder()
+                .status(UserStatus.ACTIVE)
+                .build();
+        String userName = "홍길동";
+        User originalUser = User.builder()
+                .username(userName)
+                .status(UserStatus.ACTIVE)
+                .build();
 
-IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> User.from(UserCreateRequest.builder().username("").email("email").password("password").build()));
+        //when & then
+        assertThrows (IllegalStateException.class, () -> originalUser.updateStatus(userUpdateRequest.getStatus()));
 
-        assertThat(exception.getMessage()).isEqualTo("Username은 필수 값입니다.");
 
-        // Case 2: Blank email
-        exception = assertThrows(IllegalArgumentException.class,
-                () -> User.from(UserCreateRequest.builder().username("홍길동").email("").password("password").build()));
-        assertThat(exception.getMessage()).isEqualTo("Email은 필수 값입니다.");
-
-        // Case 3: Null password
-        exception = assertThrows(IllegalArgumentException.class,
-                () -> User.from(UserCreateRequest.builder().username("홍길동").email("email").password("").build()));
-        assertThat(exception.getMessage()).isEqualTo("Password는 필수 값입니다.");
     }
 }

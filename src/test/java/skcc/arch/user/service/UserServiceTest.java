@@ -8,9 +8,10 @@ import skcc.arch.app.exception.CustomException;
 import skcc.arch.app.exception.ErrorCode;
 import skcc.arch.app.util.JwtUtil;
 import skcc.arch.mock.FakePasswordEncoder;
-import skcc.arch.mock.FakeUserRepository;
+import skcc.arch.mock.FakeUserRepositoryPort;
+import skcc.arch.user.controller.request.UserCreateRequest;
 import skcc.arch.user.domain.User;
-import skcc.arch.user.domain.UserCreateRequest;
+import skcc.arch.user.domain.UserCreate;
 import skcc.arch.user.domain.UserStatus;
 
 import java.util.List;
@@ -27,7 +28,7 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        FakeUserRepository fakeUserRepository = new FakeUserRepository();
+        FakeUserRepositoryPort fakeUserRepository = new FakeUserRepositoryPort();
         FakePasswordEncoder fakePasswordEncoder = new FakePasswordEncoder();
         jwtUtil = new JwtUtil("skcc-secret-key-skcc-secret-key-skcc-secret-key", 1800000);
 
@@ -47,14 +48,14 @@ class UserServiceTest {
     @Test
     void userCreate_를_이용해_생성한다() throws Exception {
         //given
-        UserCreateRequest userCreateRequest = UserCreateRequest.builder()
+        UserCreateRequest userCreate = UserCreateRequest.builder()
                 .username("홍길동")
                 .email("email@sk.com")
                 .password("password")
                 .build();
 
         // when
-        User result = userService.create(userCreateRequest);
+        User result = userService.signUp(userCreate);
 
         // then
         assertThat(result.getId()).isNotNull();
@@ -65,14 +66,14 @@ class UserServiceTest {
     @Test
     void 이미존재하는_사용자_생성시_에러발생() throws Exception {
         //given
-        UserCreateRequest userCreateRequest = UserCreateRequest.builder()
+        UserCreateRequest userCreate = UserCreateRequest.builder()
                 .username("홍길동")
                 .email("test1@sk.com")
                 .password("password")
                 .build();
 
         // when & then
-        CustomException exception = assertThrows(CustomException.class, () -> userService.create(userCreateRequest));
+        CustomException exception = assertThrows(CustomException.class, () -> userService.signUp(userCreate));
         assertThat(exception.getErrorCode()).isEqualTo(ErrorCode.EXIST_ELEMENT);
     }
 
