@@ -1,16 +1,17 @@
-package skcc.arch.code.domain;
+package skcc.arch.code.controller.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
+import skcc.arch.code.domain.CodeUpdate;
 
 
 /**
  * 코드 업데이트 요청 객체
  */
 
-@Builder
 @Getter
+@Builder
 public class CodeUpdateRequest {
 
     private final Long id;
@@ -23,4 +24,16 @@ public class CodeUpdateRequest {
     private final Long parentCodeId;
     private final String description;
     private final boolean delYn;
+
+    public CodeUpdate toModel() {
+        return CodeUpdate.builder()
+                        .id(id)
+                        .code(code)
+                        .codeName(codeName)
+                        .parentCodeId(parentCodeId)
+                        .seq(seq)
+                        .delYn(delYn)
+                        .description(description)
+                        .build();
+    }
 }

@@ -1,17 +1,15 @@
 package skcc.arch.code.domain;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
 
 @Getter
 @Builder
-@ToString
-public class CodeCreateRequest {
+public class CodeCreate {
 
     private final String code;
     private final String codeName;
     private final Long parentCodeId;
-    @Setter
-    private int seq;
+    private final int seq;
     private final String description;
-
 }

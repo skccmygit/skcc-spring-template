@@ -7,8 +7,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import skcc.arch.code.domain.Code;
-import skcc.arch.code.domain.CodeSearchCondition;
-import skcc.arch.code.service.port.CodeRepository;
+import skcc.arch.code.domain.CodeSearch;
+import skcc.arch.code.service.port.CodeRepositoryPort;
 
 import java.util.List;
 import java.util.Objects;
@@ -19,7 +19,7 @@ import static skcc.arch.code.infrastructure.jpa.QCodeEntity.codeEntity;
 
 @Repository
 @RequiredArgsConstructor
-public class CodeRepositoryJpaCustomImpl implements CodeRepository {
+public class CodeRepositoryJpaCustomImpl implements CodeRepositoryPort {
 
     private final CodeRepositoryJpa codeRepositoryJpa;
     private final JPAQueryFactory queryFactory;
@@ -49,14 +49,17 @@ public class CodeRepositoryJpaCustomImpl implements CodeRepository {
     }
 
     @Override
-    public Page<Code> findByCondition(Pageable pageable, CodeSearchCondition condition) {
+    public Page<Code> findByCondition(Pageable pageable, CodeSearch codeSearch) {
+
+        CodeSearchCondition condition = CodeSearchCondition.from(codeSearch);
         List<Code> content = getQueryResults(pageable, condition, false);
         Long totalCount = getTotalCount(condition);
         return new PageImpl<>(content, pageable, totalCount);
     }
 
     @Override
-    public Page<Code> findByConditionWithChild(Pageable pageable, CodeSearchCondition condition) {
+    public Page<Code> findByConditionWithChild(Pageable pageable, CodeSearch codeSearch) {
+        CodeSearchCondition condition = CodeSearchCondition.from(codeSearch);
         List<Code> content = getQueryResults(pageable, condition, true);
         Long totalCount = getTotalCount(condition);
         return new PageImpl<>(content, pageable, totalCount);
@@ -88,8 +91,8 @@ public class CodeRepositoryJpaCustomImpl implements CodeRepository {
     }
 
     @Override
-    public Code findByCode(CodeSearchCondition condition) {
-        CodeEntity code = codeRepositoryJpa.findByCode(condition.getCode());
+    public Code findByCode(CodeSearch codeSearch) {
+        CodeEntity code = codeRepositoryJpa.findByCode(codeSearch.getCode());
         if (Objects.isNull(code)) {
             return null;
         }
