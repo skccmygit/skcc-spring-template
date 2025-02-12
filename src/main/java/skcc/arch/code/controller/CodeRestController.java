@@ -7,12 +7,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import skcc.arch.app.dto.ApiResponse;
 import skcc.arch.app.dto.PageInfo;
-import skcc.arch.code.controller.port.CodeService;
+import skcc.arch.code.controller.port.CodeServicePort;
+import skcc.arch.code.controller.request.CodeCreateRequest;
+import skcc.arch.code.controller.request.CodeSearchRequest;
+import skcc.arch.code.controller.request.CodeUpdateRequest;
 import skcc.arch.code.controller.response.CodeResponse;
 import skcc.arch.code.domain.Code;
-import skcc.arch.code.domain.CodeCreateRequest;
-import skcc.arch.code.domain.CodeSearchCondition;
-import skcc.arch.code.domain.CodeUpdateRequest;
 
 import java.util.List;
 
@@ -21,11 +21,11 @@ import java.util.List;
 @RequestMapping("/api/codes")
 public class CodeRestController {
 
-    private final CodeService codeService;
+    private final CodeServicePort codeServicePort;
     
     @PostMapping
     public ApiResponse<CodeResponse> createCode(@RequestBody CodeCreateRequest codeCreateRequest) {
-        return ApiResponse.ok(CodeResponse.from(codeService.save(codeCreateRequest)));
+        return ApiResponse.ok(CodeResponse.from(codeServicePort.save(codeCreateRequest)));
     }
 
     // 단건 조회
@@ -34,22 +34,22 @@ public class CodeRestController {
             , @RequestParam(required = false, defaultValue = "false") boolean withChild) {
 
         if (withChild) {
-            return ApiResponse.ok(CodeResponse.from(codeService.findByIdWithChild(id)));
+            return ApiResponse.ok(CodeResponse.from(codeServicePort.findByIdWithChild(id)));
         } else {
-            return ApiResponse.ok(CodeResponse.from(codeService.findById(id)));
+            return ApiResponse.ok(CodeResponse.from(codeServicePort.findById(id)));
         }
     }
 
     // 다건 조회
     @GetMapping
-    public ApiResponse<List<CodeResponse>> getCodeList(Pageable pageable, CodeSearchCondition condition
+    public ApiResponse<List<CodeResponse>> getCodeList(Pageable pageable, CodeSearchRequest codeSearchRequest
             , @RequestParam(required = false, defaultValue = "false") boolean withChild) {
 
         Page<Code> result;
         if(withChild) {
-            result = codeService.findByConditionWithChild(pageable, condition);
+            result = codeServicePort.findByConditionWithChild(pageable, codeSearchRequest);
         }else {
-            result = codeService.findByCode(pageable, condition);
+            result = codeServicePort.findByCode(pageable, codeSearchRequest);
         }
         return ApiResponse.ok(
             result.getContent()
@@ -62,12 +62,12 @@ public class CodeRestController {
 
     @PatchMapping
     public ApiResponse<CodeResponse> updateCode(@RequestBody @Valid CodeUpdateRequest codeUpdateRequest) {
-        return ApiResponse.ok(CodeResponse.from(codeService.update(codeUpdateRequest)));
+        return ApiResponse.ok(CodeResponse.from(codeServicePort.update(codeUpdateRequest)));
     }
 
     @GetMapping("/cache/{parentCodeName}")
     public ApiResponse<CodeResponse> getCode(@PathVariable String parentCodeName) {
-        Code result = codeService.findByCode(CodeSearchCondition.builder().code(parentCodeName).build());
+        Code result = codeServicePort.findByCode(CodeSearchRequest.builder().code(parentCodeName).build());
         return ApiResponse.ok(CodeResponse.from(result));
     }
 

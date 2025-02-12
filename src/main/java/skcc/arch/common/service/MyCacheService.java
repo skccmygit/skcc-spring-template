@@ -10,7 +10,7 @@ import skcc.arch.app.cache.CacheService;
 import skcc.arch.app.cache.CaffeineCacheService;
 import skcc.arch.app.cache.RedisCacheService;
 import skcc.arch.code.domain.Code;
-import skcc.arch.code.service.port.CodeRepository;
+import skcc.arch.code.service.port.CodeRepositoryPort;
 import skcc.arch.common.constants.CacheGroup;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class MyCacheService {
 
     public static final String DELIMITER = ":";
     private final CacheService cacheService;
-    private final CodeRepository codeRepository;
+    private final CodeRepositoryPort codeRepositoryPort;
 
     @Transactional
     @EventListener(ApplicationReadyEvent.class)
@@ -100,12 +100,12 @@ public class MyCacheService {
      */
     private void loadCodeCacheData() {
         // 최상위 부모 조회
-        List<Code> parent = codeRepository.findByParentCodeId(null);
+        List<Code> parent = codeRepositoryPort.findByParentCodeId(null);
         for (Code code : parent) {
             if(this.get(CacheGroup.CODE, code.getCode(), Code.class) == null)
             {
                 // 최하위 까지 조회
-                Code nodes = codeRepository.findAllLeafNodes(code.getId());
+                Code nodes = codeRepositoryPort.findAllLeafNodes(code.getId());
                 this.put(CacheGroup.CODE, code.getCode(), nodes);
             }
         }

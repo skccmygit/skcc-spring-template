@@ -15,7 +15,7 @@ public class ExceptionDto {
 
     public ExceptionDto(CustomException e) {
         this.code = e.getErrorCode().getCode();
-        this.message = e.getErrorCode().getMessage();
+        this.message = e.getMessage();
     }
 
     public ExceptionDto(Exception e) {

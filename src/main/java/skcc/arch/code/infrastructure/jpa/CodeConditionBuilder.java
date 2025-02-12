@@ -3,7 +3,6 @@ package skcc.arch.code.infrastructure.jpa;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.util.ObjectUtils;
-import skcc.arch.code.domain.CodeSearchCondition;
 
 import static org.springframework.util.StringUtils.hasText;
 import static skcc.arch.code.infrastructure.jpa.QCodeEntity.codeEntity;

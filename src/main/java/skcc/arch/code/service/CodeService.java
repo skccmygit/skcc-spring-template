@@ -9,12 +9,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import skcc.arch.app.exception.CustomException;
 import skcc.arch.app.exception.ErrorCode;
-import skcc.arch.code.controller.port.CodeService;
+import skcc.arch.code.controller.port.CodeServicePort;
+import skcc.arch.code.controller.request.CodeCreateRequest;
+import skcc.arch.code.controller.request.CodeSearchRequest;
+import skcc.arch.code.controller.request.CodeUpdateRequest;
 import skcc.arch.code.domain.Code;
-import skcc.arch.code.domain.CodeCreateRequest;
-import skcc.arch.code.domain.CodeSearchCondition;
-import skcc.arch.code.domain.CodeUpdateRequest;
-import skcc.arch.code.service.port.CodeRepository;
+import skcc.arch.code.domain.CodeCreate;
+import skcc.arch.code.domain.CodeSearch;
+import skcc.arch.code.domain.CodeUpdate;
+import skcc.arch.code.service.port.CodeRepositoryPort;
 import skcc.arch.common.constants.CacheGroup;
 import skcc.arch.common.service.MyCacheService;
 
@@ -24,10 +27,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CodeServiceImpl implements CodeService {
+public class CodeService implements CodeServicePort {
 
     private final MyCacheService myCacheService;
-    private final CodeRepository codeRepository;
+    private final CodeRepositoryPort codeRepositoryPort;
 
     @Override
     @Transactional
@@ -35,16 +38,28 @@ public class CodeServiceImpl implements CodeService {
 
         // 존재하는 코드인지
         validateExistCode(codeCreateRequest);
+
         // 부모코드가 유효한 코드인지
         if (codeCreateRequest.getParentCodeId() != null) {
-            validateCodeId(codeCreateRequest.getParentCodeId());
+            findByCodeId(codeCreateRequest.getParentCodeId());
         }
 
         // DB에서 마지막 순번 구하기
         int inputSeq = calcNewSeq(codeCreateRequest.getSeq(), codeCreateRequest.getParentCodeId());
-        codeCreateRequest.setSeq(inputSeq);
 
-        return codeRepository.save(Code.from(codeCreateRequest));
+        CodeCreate codeCreate = CodeCreate.builder()
+                .code(codeCreateRequest.getCode())
+                .codeName(codeCreateRequest.getCodeName())
+                .parentCodeId(codeCreateRequest.getParentCodeId())
+                .seq(inputSeq)
+                .build();
+
+        Code savedCode = codeRepositoryPort.save(Code.from(codeCreate));
+
+        // 캐시 데이터 수정
+        cacheUpdate(findByParentCode(savedCode));
+
+        return savedCode;
     }
 
     /**
@@ -62,7 +77,7 @@ public class CodeServiceImpl implements CodeService {
         }else {
             inputSeq = seq;
             // 입력순서가 존재하면 + 1
-            while (codeRepository.existsCodeEntityByParentCodeIdAndSeqOrderBySeqDesc(parentCodeId, inputSeq)) {
+            while (codeRepositoryPort.existsCodeEntityByParentCodeIdAndSeqOrderBySeqDesc(parentCodeId, inputSeq)) {
                 inputSeq++;
             }
         }
@@ -71,7 +86,7 @@ public class CodeServiceImpl implements CodeService {
 
     private int getLastSeq(Long parentCodeId) {
         int lastSeq;
-        Optional<Code> result = codeRepository.findTopByParentCodeIdOrderBySeqDesc(parentCodeId);
+        Optional<Code> result = codeRepositoryPort.findTopByParentCodeIdOrderBySeqDesc(parentCodeId);
         lastSeq = result.map(Code::getSeq).orElse(0) + 1;
         return lastSeq;
     }
@@ -79,93 +94,91 @@ public class CodeServiceImpl implements CodeService {
 
     @Override
     public Code findById(Long id) {
-        return codeRepository.findById(id).orElseThrow(
+        return codeRepositoryPort.findById(id).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_ELEMENT)
         );
     }
 
     @Override
     public Code findByIdWithChild(Long id) {
-        return codeRepository.findByIdWithChild(id).orElseThrow(
+        return codeRepositoryPort.findByIdWithChild(id).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_ELEMENT)
         );
     }
 
     @Override
-    public Page<Code> findByCode(Pageable pageable, CodeSearchCondition condition) {
-        return codeRepository.findByCondition(pageable, condition);
+    public Page<Code> findByCode(Pageable pageable, CodeSearchRequest codeSearchRequest) {
+        return codeRepositoryPort.findByCondition(pageable, codeSearchRequest.toModel());
     }
 
     @Override
-    public Page<Code> findByConditionWithChild(Pageable pageable, CodeSearchCondition condition) {
-        return codeRepository.findByConditionWithChild(pageable, condition);
+    public Page<Code> findByConditionWithChild(Pageable pageable, CodeSearchRequest codeSearchRequest) {
+        return codeRepositoryPort.findByConditionWithChild(pageable, codeSearchRequest.toModel());
     }
 
     @Override
     @Transactional
     public Code update(CodeUpdateRequest codeUpdateRequest) {
 
-        // 유효성 검증
-        validateUpdateRequest(codeUpdateRequest);
+        // DTO -> CodeUpdate Model로 변경
+        CodeUpdate codeUpdate = codeUpdateRequest.toModel();
+
+        // 부모ID가 null이 아닌경우 부모객체 존재 확인
+        if (codeUpdate.getParentCodeId() != null) {
+            findByCodeId(codeUpdate.getParentCodeId());
+        }
 
         // 업데이트 대상 엔티티 조회
-        Code updateCode = codeRepository.findById(codeUpdateRequest.getId()).orElseThrow(
-                () -> new CustomException(ErrorCode.NOT_FOUND_ELEMENT)
-        );
+        Code code = findByCodeId(codeUpdate.getId());
 
         // 도메인 모델 업데이트 비즈니스 로직 수행 (하위->상위로 변경되었을 경우 하위객체의 순번은 조정하지 않는다)
-        updateCode = updateCode.update(codeUpdateRequest);
+        code = code.update(codeUpdate);
+
+        // DB 업데이트
+        Code updated = codeRepositoryPort.update(code);
 
         // 형제 순번 조정
-        reorderSequence(codeUpdateRequest.getId(), codeUpdateRequest.getSeq(), codeUpdateRequest.getParentCodeId());
+        reorderSequence(updated.getId(), updated.getSeq(), updated.getParentCodeId());
 
-        // EntityManager 수행
-        return codeRepository.update(updateCode);
+        // 캐시 데이터 수정
+        cacheUpdate(findByParentCode(updated));
+
+        return updated;
     }
 
     @Override
-    public Code findByCode(CodeSearchCondition condition) {
-        if (condition.getCode() != null) {
+    public Code findByCode(CodeSearchRequest codeSearchRequest) {
+        if (codeSearchRequest.getCode() != null) {
 
             // 캐시 조회
-            Code cachedCode = myCacheService.get(CacheGroup.CODE, condition.getCode(), Code.class);
+            Code cachedCode = myCacheService.get(CacheGroup.CODE, codeSearchRequest.getCode(), Code.class);
             if (cachedCode != null) {
                 return cachedCode;
             }
 
             // DB 조회
-            Code dbCode = codeRepository.findByCode(condition);
+            Code dbCode = codeRepositoryPort.findByCode(codeSearchRequest.toModel());
 
             // 루트 요소일 경우 캐시 추가
             if (dbCode != null && dbCode.getParentCodeId() == null) {
-                myCacheService.put(CacheGroup.CODE, condition.getCode(), dbCode);
+                myCacheService.put(CacheGroup.CODE, codeSearchRequest.getCode(), dbCode);
             }
             return dbCode;
         }
         return null;
     }
 
-    @Override
-    public List<Code> findByParentIsNull() {
-        return codeRepository.findByParentCodeId(null);
-    }
-
-    @Override
-    public Code findAllLeafNodes(Long id) {
-        return codeRepository.findAllLeafNodes(id);
-    }
-
     private void reorderSequence(Long codeId, int seq, Long parentCodeId) {
-        boolean existsed = codeRepository.existsCodeEntityByParentCodeIdAndSeqOrderBySeqDesc(parentCodeId, seq);
+        boolean existsed = codeRepositoryPort.existsCodeEntityByParentCodeIdAndSeqOrderBySeqDesc(parentCodeId, seq);
         if(existsed) {
             List<Code> childList;
             // ROOT 인 경우
             if (parentCodeId == null) {
-                childList = codeRepository.findByParentCodeId(parentCodeId);
+                childList = codeRepositoryPort.findByParentCodeId(parentCodeId);
             }
             // 부모가 있는 경우
             else {
-                Code parent = codeRepository.findByIdWithChild(parentCodeId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ELEMENT));
+                Code parent = codeRepositoryPort.findByIdWithChild(parentCodeId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ELEMENT));
                 childList = parent.getChild();
             }
             // 자식 순서 조정 (본인 제외)
@@ -189,39 +202,47 @@ public class CodeServiceImpl implements CodeService {
         for (Code code : childList) {
             if (code.getSeq() == indexSeq || code.getSeq() == seq) {
                 // 중복되지 않도록 순번 증가
-                Code updateCode = code.changeSeq(indexSeq++);
+                Code updateCode = code.changeSeq(++indexSeq);
                 // SEQ가 변경된 객체 업데이트
-                codeRepository.save(updateCode);
+                codeRepositoryPort.save(updateCode);
             }
         }
     }
 
-    private void validateUpdateRequest(CodeUpdateRequest codeUpdateRequest) {
-        // 자신의 ID와 부모의 ID는 같을 수 없음
-        if (codeUpdateRequest.getId().equals(codeUpdateRequest.getParentCodeId())) {
-            throw new IllegalStateException("자신의 ID와 부모ID는 같을 수 없습니다.");
-        }
-
-        // 부모ID가 존재하는지 확인
-        if (codeUpdateRequest.getParentCodeId() != null) {
-            validateCodeId(codeUpdateRequest.getParentCodeId());
-        }
-    }
-
-    private void validateCodeId(Long codeId) {
-        codeRepository.findById(codeId).orElseThrow(
+    private Code findByCodeId(Long codeId) {
+        return codeRepositoryPort.findById(codeId).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_ELEMENT)
         );
     }
 
     private void validateExistCode(CodeCreateRequest codeCreateRequest) {
-        CodeSearchCondition condition = CodeSearchCondition.builder()
+        CodeSearch codeSearch = CodeSearch.builder()
                 .code(codeCreateRequest.getCode())
                 .build();
-        Page<Code> result = codeRepository.findByCondition(PageRequest.of(0, 10), condition);
+
+        Page<Code> result = codeRepositoryPort.findByCondition(PageRequest.of(0, 10), codeSearch);
         if (!result.getContent().isEmpty()) {
             throw new CustomException(ErrorCode.EXIST_ELEMENT);
         }
+    }
+
+    private Code findByParentCode(Code code) {
+        if(code.getParentCodeId() == null) {
+            return code;
+        } else {
+            Code result = findByCodeId(code.getParentCodeId());
+            return findByParentCode(result);
+        }
+    }
+
+    private void cacheUpdate(Code code) {
+        CodeSearch codeSearch = CodeSearchRequest.builder()
+                .code(code.getCode())
+                .build()
+                .toModel();
+        Code result = codeRepositoryPort.findByCode(codeSearch);
+
+        myCacheService.put(CacheGroup.CODE, code.getCode(), result);
     }
 
 }

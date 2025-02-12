@@ -27,29 +27,30 @@ public class Code {
     private final LocalDateTime createdDate;
     private final LocalDateTime lastModifiedDate;
 
-    public static Code from (CodeCreateRequest codeCreateRequest) {
+    public static Code from(CodeCreate codeCreate) {
         return Code.builder()
-                .code(codeCreateRequest.getCode())
-                .codeName(codeCreateRequest.getCodeName())
-                .parentCodeId(codeCreateRequest.getParentCodeId())
-                .seq(codeCreateRequest.getSeq())
-                .description(codeCreateRequest.getDescription())
+                .code(codeCreate.getCode())
+                .codeName(codeCreate.getCodeName())
+                .parentCodeId(codeCreate.getParentCodeId())
+                .seq(codeCreate.getSeq())
+                .description(codeCreate.getDescription())
                 .delYn(false)
                 .createdDate(LocalDateTime.now())
                 .lastModifiedDate(LocalDateTime.now())
                 .build();
     }
 
-    public Code update(CodeUpdateRequest codeUpdateRequest) {
+
+    public Code update(CodeUpdate codeUpdate) {
         return Code.builder()
                 .id(id) //변경되지 않은값
                 .createdDate(createdDate)
-                .code(codeUpdateRequest.getCode())
-                .codeName(codeUpdateRequest.getCodeName())
-                .parentCodeId(codeUpdateRequest.getParentCodeId())
-                .seq(codeUpdateRequest.getSeq())
-                .description(codeUpdateRequest.getDescription())
-                .delYn(codeUpdateRequest.isDelYn())
+                .code(codeUpdate.getCode())
+                .codeName(codeUpdate.getCodeName())
+                .parentCodeId(codeUpdate.getParentCodeId())
+                .seq(codeUpdate.getSeq())
+                .description(codeUpdate.getDescription())
+                .delYn(codeUpdate.isDelYn())
                 .lastModifiedDate(LocalDateTime.now())
                 .build();
     }
