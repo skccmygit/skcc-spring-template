@@ -48,11 +48,18 @@ logging:
     root: info # 전체 로그 레벨
     skcc.arch: debug # 특정 패키지 레벨
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread][%highlight(%-5level)]%X{traceId}%X{signature} %X{depth}%msg%n" # 콘솔 로그 패턴
-#    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread][%highlight(%-5level)][%X{traceId}][%X{depth}] %cyan(%logger{0,20}.%M) - %msg%n" # 콘솔 로그 패턴
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread][%highlight(%-5level)]%X{traceId}%X{depth} %msg%n" # 콘솔 로그 패턴
+# 로그 파일 관리
+#    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread][%highlight(%-5level)]%X{traceId}%X{depth} %msg%n" # 콘솔 로그 패턴
 #  file:
 #    name: logs/app.log # 파일 로그 경로 지정
-#    file: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n" # 파일 로그 패턴
+#  logback:
+#    rollingpolicy:
+#      file-name-pattern: ${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz
+#      max-file-size: 10MB
+
+
+
 
 ## p6spy (운영환경에서는 false로)
 decorator:
