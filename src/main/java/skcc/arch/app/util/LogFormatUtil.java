@@ -9,62 +9,95 @@ public abstract class LogFormatUtil {
 
     private static final String DEPTH_PREFIX = "depth";
     private static final String PREFIX_STR = "--";
-    private static final String SIGNATURE_KEY = "signature";
     private static final ThreadLocal<Deque<Integer>> depthThreadLocal = ThreadLocal.withInitial(ArrayDeque::new);
+    private static final ThreadLocal<Deque<String>> signatureThreadLocal = ThreadLocal.withInitial(ArrayDeque::new);
 
-    // Depth 초기화 (Controller 진입 시 호출됨)
-    public static void initializeDepth() {
-        Deque<Integer> stack = depthThreadLocal.get();
-        stack.clear(); // 스택 초기화
-        stack.push(0); // 기본 Depth 1 설정
-        MDC.put(DEPTH_PREFIX, "");
+    /**
+     * 로그의 초기 깊이 및 서명을 설정합니다.
+     *
+     * @param signature 로그 서명
+     */
+    public static void initializeDepth(String signature) {
+        initializeThreadLocal(depthThreadLocal, 0);
+        initializeThreadLocal(signatureThreadLocal, signature);
+        updateMDC(0, signature);
     }
 
-    // Depth 증가 (계층 호출 시)
-    public static void incrementDepth() {
-        Deque<Integer> stack = depthThreadLocal.get();
-        int currentDepth = stack.peek(); // 현재 Depth
-        int newDepth = currentDepth + 1;
-        stack.push(newDepth); // Depth 증가시키며 스택에 저장
-        MDC.put(DEPTH_PREFIX, String.format("[%s]", PREFIX_STR.repeat(newDepth))); // MDC에 새로운 Depth 설정
+    /**
+     * 로그 깊이를 증가시키고 새로운 서명을 추가합니다.
+     *
+     * @param signature 추가할 로그 서명
+     */
+    public static void incrementDepth(String signature) {
+        int newDepth = pushToThreadLocal(depthThreadLocal, depthThreadLocal.get().peek() + 1);
+        pushToThreadLocal(signatureThreadLocal, signature);
+        updateMDC(newDepth, signature);
     }
 
-    // Depth 감소 (계층 호출 완료 시)
+    /**
+     * 로그 깊이를 감소시키고 서명을 제거합니다.
+     */
     public static void decrementDepth() {
-        Deque<Integer> stack = depthThreadLocal.get();
-        stack.pop(); // 스택에서 마지막 Depth 제거
-        if (!stack.isEmpty()) {
-            MDC.put(DEPTH_PREFIX, String.valueOf(stack.peek())); // 이전 Depth 복원
+        if (depthThreadLocal.get().size() > 1) {
+            depthThreadLocal.get().pop();
+            signatureThreadLocal.get().pop();
+            updateMDC(depthThreadLocal.get().peek(), signatureThreadLocal.get().peek());
         } else {
-            MDC.remove(DEPTH_PREFIX); // 스택이 비어있으면 MDC에서 제거
+            clearDepth();
         }
     }
 
+    /**
+     * 로그 깊이 관련 정보와 MDC 데이터를 초기화합니다.
+     */
     public static void clearDepth() {
         depthThreadLocal.remove();
+        signatureThreadLocal.remove();
         MDC.remove(DEPTH_PREFIX);
     }
 
+    /**
+     * 로그 깊이가 비어 있는지 확인합니다.
+     *
+     * @return 깊이가 비어 있으면 true, 아니면 false
+     */
     public static boolean isEmpty() {
         return depthThreadLocal.get().isEmpty();
     }
 
-    public static void formatSignature(String loggerName, String methodName) {
-        // Logger.Method로 연결 (20자리 고정된 Logger, 10자리 Method)
-        String formattedValue = String.format("[%s.%s]",
-                padLeft(loggerName, 30),  // Logger 이름 20자리로 자르거나 채움
-                padLeft(methodName, 20)); // Method 이름 10자리로 자르거나 채움
-
-        // 패딩된 값을 formattedLogger에 저장
-        MDC.put(SIGNATURE_KEY, formattedValue);
+    /**
+     * ThreadLocal을 초기화하고 기본값을 설정합니다.
+     *
+     * @param threadLocal 초기화할 ThreadLocal
+     * @param value       설정할 기본값
+     * @param <T>         타입 매개변수
+     */
+    private static <T> void initializeThreadLocal(ThreadLocal<Deque<T>> threadLocal, T value) {
+        threadLocal.get().clear();
+        threadLocal.get().push(value);
     }
 
-    // 패딩 메서드 (왼쪽으로 채움)
-    private static String padLeft(String str, int length) {
-        if (str == null) return ""; // null 처리
-        if (str.length() > length) {
-            return str.substring(0, length); // 잘라내기
-        }
-        return String.format("%" + length + "s", str); // 왼쪽으로 공백 채움
+    /**
+     * ThreadLocal에 값을 추가합니다.
+     *
+     * @param threadLocal 값을 추가할 ThreadLocal
+     * @param value       추가할 값
+     * @param <T>         타입 매개변수
+     * @return 추가된 값
+     */
+    private static <T> T pushToThreadLocal(ThreadLocal<Deque<T>> threadLocal, T value) {
+        threadLocal.get().push(value);
+        return value;
+    }
+
+    /**
+     * MDC에 로그 깊이와 서명을 업데이트합니다.
+     *
+     * @param depth     로그 깊이
+     * @param signature 로그 서명
+     */
+    private static void updateMDC(int depth, String signature) {
+        String level = PREFIX_STR.repeat(depth);
+        MDC.put(DEPTH_PREFIX, String.format("[%s%s]", level, signature));
     }
 }
