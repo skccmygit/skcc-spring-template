@@ -5,6 +5,19 @@
 
 ---
 
+## 목차
+1. [로그 구성 요소](#1-로그-구성-요소)
+   - [1.1. LogFormatAop](#11-logformataopjava)  
+   - [1.2. LogFormatUtil](#12-logformatutiljava)  
+   - [1.3. LogTraceIdFilter](#13-logtraceidfilterjava)  
+2. [로그 실행 흐름](#2-로그-사용-방법)
+3. [로그 환경 구성](#3-로그-주요-구성-applicationyml)  
+   - [3.1. 로그 레벨](#31-로깅-레벨)  
+   - [3.2. 로그 포맷](#32-로그-포맷)
+4. [로그 사용 예제](#4-로그-사용-예제)
+
+---
+
 ## 1. **로그 구성 요소**
 
 ### 1.1. **LogFormatAop.java**
@@ -34,41 +47,21 @@
 
 ---
 
-### 1.4. **application.yml (로그 설정 파일)**
-- YAML 파일을 통해 로그 패턴, 로그 레벨, 출력 방식 등을 설정합니다.
-- 설정 요소:
-    - **로그 레벨**: `INFO`, `DEBUG`, `ERROR`, `WARN` 등을 설정할 수 있으며, 특정 패키지에 대한 로그 레벨 제어 가능.
-    - **로그 패턴**: 콘솔 및 파일에 출력되는 로그 메시지의 형식을 지정.
-    - **파일 로깅**: 로그를 파일에 저장하도록 추가 설정 가능.
-
-#### 예제 로그 패턴 (application.yml):
-```yaml
-logging:
-  level:
-    root: info # 전체 로그 레벨
-    skcc.arch: debug # 특정 패키지 레벨
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread][%highlight(%-5level)]%X{traceId}%X{depth} %msg%n" # 콘솔 로그 패턴
-#  file:
-#    name: logs/app.log # 파일 로그 경로 지정
-#    file: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n" # 파일 로그 패턴
-```
-
----
-
-## 2. **로그 사용 방법**
-
-### 2.1. **로그 실행 흐름**
+## 2. **로그 실행 흐름**
 1. **HTTP 요청**이 들어오면 `LogTraceIdFilter`가 실행되어 고유 `TraceId`가 생성됩니다.
 2. `LogFormatAop`를 통해 메서드 호출 시점마다 Depth 및 시그니처를 추적하고 로그 패턴을 구성합니다.
 3. `LogFormatUtil`이 MDC와 Depth 관련 관리를 수행하며, 이를 바탕으로 정해진 로그 포맷에 따라 메시지를 출력합니다.
 4. 최종 결과는 **콘솔 로그**나 **파일 로그**로 출력됩니다.
-
 ---
 
 ## 3. **로그 주요 구성 (application.yml)**
+- YAML 파일을 통해 로그 패턴, 로그 레벨, 출력 방식 등을 설정합니다.
+- 설정 요소:
+  - **로그 레벨**: `INFO`, `DEBUG`, `ERROR`, `WARN` 등을 설정할 수 있으며, 특정 패키지에 대한 로그 레벨 제어 가능.
+  - **로그 패턴**: 콘솔 및 파일에 출력되는 로그 메시지의 형식을 지정.
+  - **파일 로깅**: 로그를 파일에 저장하도록 추가 설정 가능.
 
-### 3.1. **로깅 수준**
+### 3.1. **로깅 레벨**
 
 - 로그 레벨을 사용하여 애플리케이션 실행 중 출력할 로그의 범위를 제어합니다.
 - `application.yml`에서 전역 또는 특정 패키지의 로그 레벨을 설정할 수 있습니다.
