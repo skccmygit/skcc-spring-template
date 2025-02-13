@@ -1,15 +1,18 @@
 package skcc.arch.user.infrastructure.jpa;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import skcc.arch.common.infrastructure.jpa.BaseEntity;
-import skcc.arch.user.domain.UserRole;
 import skcc.arch.user.domain.User;
+import skcc.arch.user.domain.UserRole;
 import skcc.arch.user.domain.UserStatus;
 
 @Getter
 @Entity
 @Table(name = "users")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserEntity extends BaseEntity {
 
     @Id

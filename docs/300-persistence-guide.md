@@ -146,50 +146,52 @@ public class User {
 ```java
 import jakarta.persistence.*;
 
+@Getter
 @Entity
 @Table(name = "users")
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-public class UserEntity {
+public class UserEntity extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+   @Id
+   @GeneratedValue(strategy = GenerationType.SEQUENCE)
+   private Long id;
 
-    @Column(nullable = false, length = 50)
-    private String username;
+   private String email;
 
-    @Column(nullable = false, unique = true)
-    private String email;
+   private String password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private UserRole role;
+   private String username;
 
-    // 생성자
-    public UserEntity(Long id, String username, String email, UserRole role) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.role = role;
-    }
+   @Enumerated(EnumType.STRING)
+   private UserRole role;
 
-    // 도메인 모델로 변환
-    public User toModel() {
-        return new User(id, username, email, role);
-    }
+   @Enumerated(EnumType.STRING)
+   private UserStatus status;
+    
+   // 엔티티로 변환
+   public static UserEntity from(User user) {
+      UserEntity userEntity = new UserEntity();
+      userEntity.id = user.getId();
+      userEntity.email = user.getEmail();
+      userEntity.password = user.getPassword();
+      userEntity.username = user.getUsername();
+      userEntity.role = user.getRole();
+      userEntity.status = user.getStatus();
+      return userEntity;
+   }
 
-    // 도메인 모델에서 Entity로 변환
-    public static UserEntity fromModel(User model) {
-        return new UserEntity(
-            model.getId(),
-            model.getUsername(),
-            model.getEmail(),
-            model.getRole()
-        );
-    }
+   // 모델로 변환
+   public User toModel() {
+      return User.builder()
+              .id(id)
+              .email(email)
+              .password(password)
+              .username(username)
+              .role(role)
+              .status(status)
+              .createdDate(super.getCreatedDate())
+              .lastModifiedDate(super.getLastModifiedDate())
+              .build();
+   }
 }
 ```
 
@@ -199,13 +201,13 @@ public class UserEntity {
 ### 4.1 Repository의 철학과 역할
 - Repository는 도메인 객체(Model)의 저장소 역할을 담당하며, 도메인이 영속성 기술(JPA, MyBatis 등)에 종속되지 않도록 설계합니다.
 - 최상단에 도메인 로직에서 사용할 **Repository 인터페이스**를 정의하고, 이를 다양한 기술(JPA, MyBatis 등)을 사용하는 구현체로 구분합니다.
-- 각 구현체는 `XXXRepository(최상위 인터페이스)`를 구현하고, 실제 사용 기술(JPA 등)을 내부적으로 사용하여 구체적인 영속성을 처리합니다.
+- 각 구현체는 `XXXRepositoryPort(최상위 인터페이스)`를 구현하고, 실제 사용 기술(JPA 등)을 내부적으로 사용하여 구체적인 영속성을 처리합니다.
 
 ---
 ### 4.2 Repository 설계 원칙
 
 1. **최상위 Repository 인터페이스 분리**
-    - 최상위에 기술에 종속되지 않은 도메인 중심의 `Repository` 인터페이스를 선언합니다.
+    - 최상위에 기술에 종속되지 않은 도메인 중심의 `RepositoryPort` 인터페이스를 선언합니다.
     - 비즈니스 로직에서는 이 인터페이스를 활용하므로, 기술 변경(JPA → MyBatis 등)에 자유롭습니다.
 
 2. **기술 기반 Repository 구현 분리**
@@ -213,7 +215,7 @@ public class UserEntity {
     - JPA를 사용한다면, `XXXRepositoryJpaCustomImpl` 명명 규칙을 사용하여 구성합니다.
 
 3. **작성 방식**
-    - `XXXRepository 인터페이스`: 도메인 레이어(순수 비즈니스 로직)에서 활용.
+    - `XXXRepositoryPort 인터페이스`: 도메인 레이어(순수 비즈니스 로직)에서 활용.
     - `XXXRepositoryJpa`: JPA의 기본적인 Repository 기능 제공 (Spring Data JPA 인터페이스 활용).
     - `XXXRepositoryJpaCustomImpl`: QueryDSL과 같은 확장 기능 포함 및 JPA 커스텀 구현체.
 
@@ -224,17 +226,18 @@ public class UserEntity {
 ### 4.3 설계 예시
 
 #### 최상위 Repository 인터페이스: 기술 비의존적인 설계
+`RepostioryPort` 인터페이싀 경우 도메인 객체(Model)를 사용합니다.
 
 ```java
-public interface UserRepository {
-    
-    Optional<User> findById(Long id);
-    
-    Optional<User> findByEmail(String email);
-    
-    List<User> searchUsers(String username, String role);
-    
-    void save(User user);
+public interface UserRepositoryPort {
+   
+   Optional<User> findById(Long id);
+   Optional<User> findByEmail(String email);
+   User save(User user);
+   List<User> findAll();
+   Page<User> findAll(Pageable pageable);
+   Page<User> findAdminUsers(Pageable pageable);   
+   
 }
 ```
 
@@ -246,134 +249,217 @@ public interface UserRepositoryJpa extends JpaRepository<UserEntity, Long> {
 ```
 
 #### JPA 기반 Custom 구현체: QueryDSL 활용 및 기술 구현
+UserRepositoryJpa+`Custom`+Impl 의 경우 Jpa가 프록시 객체를 만드는 이름과의 충돌을 피하기 위해 정의 하였습니다. 
 ```java
 import jakarta.persistence.EntityManager;
 
 @Repository
 @RequiredArgsConstructor
-public class UserRepositoryJpaCustomImpl implements UserRepository {
+public class UserRepositoryJpaCustomImpl implements UserRepositoryPort {
 
-    private final UserRepositoryJpa userRepositoryJpa;
-    private final JPAQueryFactory queryFactory;
+   private final UserRepositoryJpa userRepositoryJpa;
+   private final JPAQueryFactory queryFactory;
 
-    @Override
-    public Optional<User> findById(Long id) {
-        return userRepositoryJpa.findById(id).map(UserEntity::toModel);
-    }
+   @Override
+   public Optional<User> findById(Long id) {
+      return userRepositoryJpa.findById(id).map(UserEntity::toModel);
+   }
 
-    @Override
-    public Optional<User> findByEmail(String email) {
-        return userRepositoryJpa.findByEmail(email).map(UserEntity::toModel);
-    }
+   @Override
+   public Optional<User> findByEmail(String email) {
+      return userRepositoryJpa.findByEmail(email)
+              .map(UserEntity::toModel);
+   }
 
-    @Override
-    public List<User> searchUsers(String username, String role) {
-        QUserEntity user = QUserEntity.userEntity;
-        BooleanBuilder builder = new BooleanBuilder();
+   @Override
+   public User save(User user) {
+      return userRepositoryJpa.save(UserEntity.from(user)).toModel();
+   }
 
-        if (username != null) {
-            builder.and(user.username.containsIgnoreCase(username));
-        }
+   @Override
+   public List<User> findAll() {
+      return userRepositoryJpa.findAll()
+              .stream()
+              .map(UserEntity::toModel)
+              .toList();
+   }
 
-        if (role != null) {
-            builder.and(user.role.eq(UserRole.valueOf(role)));
-        }
+   @Override
+   public Page<User> findAll(Pageable pageable) {
+      return userRepositoryJpa.findAll(pageable)
+              .map(UserEntity::toModel);
+   }
 
-        return queryFactory
-            .selectFrom(user)
-            .where(builder)
-            .fetch()
-            .stream()
-            .map(UserEntity::toModel)
-            .toList();
-    }
+   @Override
+   public Page<User> findAdminUsers(Pageable pageable) {
+      QUserEntity user = QUserEntity.userEntity;
 
-    @Override
-    public void save(User user) {
-        UserEntity entity = UserEntity.fromModel(user);
-        userRepositoryJpa.save(entity);
-    }
+      // 1. 기본 QueryDSL 쿼리 작성
+      JPAQuery<UserEntity> query = queryFactory
+              .selectFrom(user)
+              .where(user.role.eq(UserRole.ADMIN)); // role이 ADMIN인 조건
+
+      // 2. 페이징 처리
+      long total = query.stream().count(); // 전체 데이터 개수 가져오기
+      List<User> users = query
+              .offset(pageable.getOffset()) // 시작 위치
+              .limit(pageable.getPageSize()) // 페이지당 데이터 개수
+              .fetch()
+              .stream()
+              .map(UserEntity::toModel)
+              .toList();
+
+      log.info("[Repository] users.size : {}", users.size());
+      // 3. Page로 변환하여 반환
+      return new PageImpl<>(users, pageable, total);
+
+   }
+
+   @Override
+   public User updateStatus(User user) {
+      return userRepositoryJpa.save(UserEntity.from(user)).toModel();
+   }
 }
 ```
 
 ---
 ### 4.4 MyBatis 기반 Repository 구현 (예시)
-MyBatis 기반 구현체를 추가로 작성하여도 서비스 계층은 기술 변경 영향을 받지 않습니다.
+MyBatis 기반 구현체를 추가로 작성하여도 서비스 계층은 기술 변경 영향을 받지 않습니다.  
+**MyBatis 용** `UserDto`를 생성하여 사용하였습니다. 
 
 ```java
 @Mapper
-public interface UserRepositoryMyBatis {
+public interface UserRepositoryMybatis {
 
-    UserEntity findById(Long id);
-
-    UserEntity findByEmail(String email);
-
-    List<UserEntity> searchUsers(@Param("username") String username, @Param("role") String role);
-
-    void insert(UserEntity entity);
+   Optional<UserDto> findById(Long id);
+   Optional<UserDto> findByEmail(String email);
+   Long save(UserDto user);
+   List<UserDto> findAll();
+   Page<UserDto> findAll(Pageable pageable);
+   List<UserDto> findAllWithPageable(@Param("offset") long offset, @Param("pageSize") int pageSize);
+   long countAll();
 }
 ```
 
 ```java
 @Repostiory
 @RequiredArgsConstructor
-public class UserRepositoryMyBatisImpl implements UserRepository {
+public class UserRepositoryMyBatisImpl implements UserRepositoryPort {
 
-    private final UserRepositoryMyBatis userRepositoryMyBatis;
+   private final UserRepositoryMybatis userRepositoryMybatis;
 
-    @Override
-    public Optional<User> findById(Long id) {
-        return Optional.ofNullable(userRepositoryMyBatis.findById(id)).map(UserEntity::toModel);
-    }
+   @Override
+   public Optional<User> findById(Long id) {
+      return userRepositoryMybatis.findById(id).map(UserDto::toModel);
+   }
 
-    @Override
-    public Optional<User> findByEmail(String email) {
-        return Optional.ofNullable(userRepositoryMyBatis.findByEmail(email)).map(UserEntity::toModel);
-    }
+   @Override
+   public Optional<User> findByEmail(String email) {
+      return userRepositoryMybatis.findByEmail(email).map(UserDto::toModel);
+   }
 
-    @Override
-    public List<User> searchUsers(String username, String role) {
-        return userRepositoryMyBatis.searchUsers(username, role)
-            .stream()
-            .map(UserEntity::toModel)
-            .toList();
-    }
+   @Override
+   public User save(User user) {
+      UserDto userDto = UserDto.from(user);
+      Long savedCount = userRepositoryMybatis.save(userDto);
+      if(savedCount == 0) {
+         return null;
+      }
+      return userRepositoryMybatis.findById(userDto.getId()).map(UserDto::toModel)
+              .orElse(null);
 
-    @Override
-    public void save(User user) {
-        UserEntity entity = UserEntity.fromModel(user);
-        userRepositoryMyBatis.insert(entity);
-    }
+   }
+
+   @Override
+   public List<User> findAll() {
+      return userRepositoryMybatis.findAll()
+              .stream()
+              .map(UserDto::toModel)
+              .toList();
+   }
+
+   @Override
+   public Page<User> findAll(Pageable pageable) {
+
+      // MyBatis 쿼리를 호출
+      List<UserDto> userDtos = userRepositoryMybatis.findAllWithPageable(
+              pageable.getOffset(),
+              pageable.getPageSize()
+      );
+
+      // 총 데이터 개수를 가져오는 로직
+      long totalCount = userRepositoryMybatis.countAll();
+
+      // Page<User>로 변환
+      List<User> users = userDtos.stream()
+              .map(UserDto::toModel)
+              .toList();
+
+      // 반환: Page 구현체 생성
+      return new PageImpl<>(users, pageable, totalCount);
+   }
+
+   @Override
+   public Page<User> findAdminUsers(Pageable pageable) {
+      // TODO - 구현필요
+      return null;
+   }
+
+   @Override
+   public User updateStatus(User user) {
+      // TODO - 구현필요
+      return null;
+   }
 }
 ```
 
 ---
 ### 4.5 서비스 계층에서 구현
-
-- 서비스 계층에서는 기술에 종속되지 않은 `UserRepository` 인터페이스를 주입받아 사용하게 됩니다.
-- 위의 설계로 기술 변경 시 서비스 계층의 코드를 수정할 필요가 없습니다.
+서비스 계층에서는 기술에 종속되지 않은 `UserRepositoryPort` 인터페이스를 주입받아 사용하게 됩니다.  
+위의 설계로 데이터 접근 기술이 변경되더라도 서비스 계층의 코드를 수정할 필요가 없습니다.
 
 ```java
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserServicePort {
 
-    private final UserRepository userRepository;
+   private final UserRepositoryPort userRepositoryPort;
+   private final PasswordEncoder passwordEncoder;
+   private final JwtUtil jwtUtil;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+   // 회원가입 메서드
+   @Override
+   @Transactional
+   public User signUp(UserCreateRequest userCreateRequest) {
 
-    public User getUserById(Long id) {
-        return userRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("User not found"));
-    }
+      // 입력받은 이메일로 회원 존재 점검
+      checkUserExistByEmail(userCreateRequest.getEmail());
+      String encodedPassword = passwordEncoder.encode(userCreateRequest.getPassword()); // 비밀번호 암호화
 
-    public User createUser(String username, String email, String role) {
-        User user = User.create(username, email, UserRole.valueOf(role));
-        userRepository.save(user);
-        return user;
-    }
+      UserCreate create = UserCreate.builder()
+              .email(userCreateRequest.getEmail())
+              .password(encodedPassword)
+              .build();
+
+      return userRepositoryPort.save(User.from(create));
+   }
+
+   // 전체 사용자 조회
+   @Override
+   public List<User> findAllUsers() {
+      return userRepositoryPort.findAll();
+   }
+
+   @Override
+   public Page<User> findAll(Pageable pageable) {
+      return userRepositoryPort.findAll(pageable);
+   }
+
+   @Override
+   public User getById(Long id) {
+      return userRepositoryPort.findById(id)
+              .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ELEMENT));
+   }
 }
 ```
 
@@ -397,7 +483,10 @@ public class AppConfig {
      */
     @Bean
     public UserRepository userRepository() {
+        // JPA 사용
         return new UserRepositoryJpaCustomImpl(userRepositoryJpa, jpaQueryFactory);
+        
+        // MyBatis 사용
 //        return new UserRepositoryMybatisImpl(userRepositoryMybatis);
     }
 }
