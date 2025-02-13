@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @Entity
 @Table(name = "codes")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@NoArgsConstructor
-@Setter
 @Builder
 public class CodeEntity extends BaseEntity {
 
@@ -93,3 +93,5 @@ public class CodeEntity extends BaseEntity {
 
 
 }
+
+

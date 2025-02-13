@@ -42,6 +42,7 @@ public class UserService implements UserServicePort {
         String encodedPassword = passwordEncoder.encode(userCreateRequest.getPassword()); // 비밀번호 암호화
 
         UserCreate create = UserCreate.builder()
+                .username(userCreateRequest.getUsername())
                 .email(userCreateRequest.getEmail())
                 .password(encodedPassword)
                 .build();
