@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import skcc.arch.app.aop.LogFormatAop;
 import skcc.arch.app.filter.LogTraceIdFilter;
 import skcc.arch.user.infrastructure.UserRepositoryPortJpaCustomImpl;
+import skcc.arch.user.infrastructure.UserRepositoryPortMybatisImpl;
 import skcc.arch.user.infrastructure.jpa.UserRepositoryJpa;
 import skcc.arch.user.infrastructure.mybatis.UserRepositoryMybatis;
 import skcc.arch.user.service.port.UserRepositoryPort;
@@ -31,9 +32,8 @@ public class AppConfig {
     @Bean
     public UserRepositoryPort userRepositoryPort() {
         return new UserRepositoryPortJpaCustomImpl(userRepositoryJpa, jpaQueryFactory);
-//        return new UserRepositoryMybatisImpl(userRepositoryMybatis);
+//        return new UserRepositoryPortMybatisImpl(userRepositoryMybatis);
     }
-
 
     /**
      * LogTraceId 적용

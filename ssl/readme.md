@@ -13,14 +13,11 @@ keytool -import -trustcacerts -file GlobalSign.crt -keystore $env:JAVA_HOME/lib/
 
 ---
 
-- TEST_SK 인증서추가
-  keytool -import -trustcacerts -file test_by_sk.crt -keystore $env:JAVA_HOME/lib/security/cacerts -storepass changeit -alias test-sk-cert
-
-- TEST 인증서
-  keytool -import -trustcacerts -file test.crt -keystore $env:JAVA_HOME/lib/security/cacerts -storepass changeit -alias test-cert
+- TEST_SK 인증서추가 (powershell 기준)
+  keytool -import -trustcacerts -file test_by_sk.crt -keystore $env:JAVA_HOME/lib/security/cacerts -storepass changeit -alias sk-cert
 
 - 인증서확인
 keytool -list -keystore $env:JAVA_HOME/lib/security/cacerts -storepass changeit
 
 - 인증서삭제
-keytool -delete -alias test-sk-cert -keystore $env:JAVA_HOME/lib/security/cacerts -storepass changeit
+keytool -delete -alias sk-cert -keystore $env:JAVA_HOME/lib/security/cacerts -storepass changeit

@@ -3,6 +3,7 @@ package skcc.arch.app.http;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -134,6 +135,21 @@ class HttpClientTest {
         assertThat(resultData.getTitle()).isEqualTo(requestData.getTitle());
         assertThat(resultData.getBody()).isEqualTo(requestData.getBody());
         assertThat(resultData.getUserId()).isEqualTo(requestData.getUserId());
+
+    }
+
+    @Test
+    void HttpOption_잘못된값으로_생성() throws Exception {
+        //given
+        //when
+        //then
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            HttpOptions.builder().retryAttempts(0).timeout(300).build();
+        });
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            HttpOptions.builder().retryAttempts(-1).timeout(3000).build();
+        });
 
     }
 

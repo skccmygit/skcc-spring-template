@@ -13,7 +13,7 @@
 ## [파일 처리 가이드](500-file-guide.md)
 ## [캐시 사용 가이드](600-cache-guide.md)
 ## [로깅 가이드](700-log-guide.md)
-
+## [HTTP 호출 가이드](800-http-guide.md)
 
 ## 아키텍처 구성도
 ## 스프링 시큐리티
