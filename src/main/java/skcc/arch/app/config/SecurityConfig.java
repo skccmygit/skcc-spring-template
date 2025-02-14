@@ -3,6 +3,7 @@ package skcc.arch.app.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -31,9 +32,9 @@ public class SecurityConfig {
             "/","/login", "/register",
             // FIXME - 정적파일(추후제건
             "/css/**", "/js/**", "/images/**", "/favicon.ico",
-            "/**",
+//            "/**",
             // API (등록, 인증)
-            "/api/users","/api/users/authenticate"
+            "/api/users/authenticate"
     };
 
     @Bean
@@ -62,6 +63,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // 화이트리스트는 허용
                         .requestMatchers(AUTH_WHITELIST) .permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                         // 특정영역은 ADMIN 만 허용
                         .requestMatchers("/api/users/admin/**").hasRole("ADMIN")
                         // 나머지 요청은 인증 필요

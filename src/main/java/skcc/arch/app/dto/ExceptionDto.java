@@ -1,17 +1,16 @@
 package skcc.arch.app.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import skcc.arch.app.exception.CustomException;
 
 @Getter
 @Builder
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class ExceptionDto {
 
-    private final Integer code;
-    private final String message;
+    private Integer code;
+    private String message;
 
     public ExceptionDto(CustomException e) {
         this.code = e.getErrorCode().getCode();
