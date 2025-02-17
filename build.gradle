@@ -28,7 +28,7 @@ dependencies {
 
 
     // 타임리프 템플릿 엔진
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+//    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
     // Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'

@@ -29,7 +29,7 @@
 - **`skcc.arch.app.cache`**:
     - 캐시의 인터페이스를 정의하고 실제 구현할 캐시를 정의한다.   
     - CacheConfig를 통하여 의존성이 주입되도록 한다.
-- **`skcc.arch.common`**:
+- **`skcc.arch.biz.common`**:
     - 프로젝트에서 사용하는 캐시 서비스를 별도로 구성하여 사용한다. 예시 MyCacheService
 
 ### 1.2 디렉토리 예시
@@ -39,7 +39,7 @@ src/
 │ ├── CacheService.java  
 │ ├── CaffeineCacheService.java  
 │ └── RedisCacheService.java  
-└── skcc/arch/common  
+└── skcc/arch/biz/common  
 │ ├── constatns/CacheGroup.java   
 │ ├── service/MyCacheService.java  
 │ ├── controller/CacheController.java  
