@@ -1,7 +1,10 @@
 # Java 기본 코딩 가이드
+>
 > 본 코딩 가이드는 Java 코드를 작성할 때 규격성을 유지하면서 읽기 쉽고 관리하기 쉬운 코드를 작성하기 위해 기본적인 스타일과 규칙을 제공합니다.
 ---
+
 ## 목차
+
 1. [기본 스타일](#기본-스타일)
     - [라인 길이](#라인-길이)
     - [들여쓰기](#들여쓰기)
@@ -23,12 +26,15 @@
     - [TODO 주석](#todo-주석)
 
 ---
+
 ## 기본 스타일
+
 ### 라인 길이
 
 - **모든 줄은 120자 이내**로 작성한다.
-    - 만약 한 줄에서 코드나 문장이 초과될 경우, 다음 줄로 **개행**하고 논리적으로 분리한다.
-    - **연산자**는 개행 시 다음 줄의 첫 부분에 위치시킨다.
+  - 만약 한 줄에서 코드나 문장이 초과될 경우, 다음 줄로 **개행**하고 논리적으로 분리한다.
+  - **연산자**는 개행 시 다음 줄의 첫 부분에 위치시킨다.
+
       ```java
       if (longCondition && anotherCondition 
           || additionalCondition) {
@@ -41,6 +47,7 @@
 - **4칸 스페이스**를 기본 들여쓰기로 사용한다.
 - Tab 대신 **Space** 사용 권장.
 - 블록은 중괄호(`{` `}`)를 항상 사용하며, 여는 중괄호는 **같은 행**에, 닫는 중괄호는 **줄바꿈 후 작성한다**.
+
   ```java
   if (condition) {
       // 작업 수행
@@ -51,33 +58,39 @@
 
 ### 공백
 
-- 연산자(=` `, `+`, `-`, 등)의 양쪽에 한 칸의 공백을 둔다.
+- 연산자(=``, `+`, `-`, 등)의 양쪽에 한 칸의 공백을 둔다.
+
   ```java
   int value = a + b;
   ```
 
 - 매개변수 리스트 내 쉼표 뒤에는 **쉼표 + 한 칸의 공백**을 둔다.
+
   ```java
   method(arg1, arg2, arg3);
   ```
 
 - 긴 메서드 체이닝은 점(`.`) 앞에서 줄바꿈을 한다.
+
   ```java
   builder.methodOne().methodTwo()
          .methodThree();
   ```
+
 ---
 
 ## Statement 작성
+
 Java에서 `if`, `for`, `while`, `try~catch`, `switch` 등의 제어문을 작성할 때, 가독성과 유지보수를 고려하여 작성하는 방법을 정리합니다.
 
-
 ### `if`문 작성
+
 - 모든 `if` 블록은 항상 **중괄호(`{}`)**를 사용한다. 단일 행의 코드를 작성하더라도 중괄호를 생략하지 않는다.
 - 조건문은 가능하면 **명확하고 간결**하게 작성하며, 불필요한 중첩 조건을 피한다.
 - **Negation (부정)** 조건을 사용하는 대신, 가능한 긍정 조건으로 표현한다.
 
 #### 기본 형식
+
 ```java
 if (condition) {
     // 조건이 true일 경우 실행되는 코드
@@ -89,13 +102,17 @@ if (condition) {
 ```
 
 #### 예시: 부정 조건을 긍정 조건으로 변경
+
 - **권장하지 않는 방식**
+
     ```java
     if (!isValid) {
       return;
     }
     ```
+
 - **권장 방식 (긍정 조건 사용)**
+
     ```java
     if (isValid) {
       // 작업 수행
@@ -103,32 +120,43 @@ if (condition) {
       return;
     }
     ```
+
 #### 다중 조건문 사용
+
 - 다중 조건이 있는 경우, 조건은 **논리 연산자 순서**(`&&`, `||`)에 따라 명확히 구분한다.
 - 길어진 조건문은 개행을 통해 **가독성을 향상**시킨다.
+
   ```java
   if (user != null && user.isActive() && (isAdmin || hasPermission)) {
       performAction();
   }
   ```
+
 #### 한 줄의 조건 처리
+
 - 가능하면 **한 줄의 조건문**은 피하고, 블록을 명확히 작성한다.
 - **권장하지 않는 방식**:
+
     ```java
     if (condition) performAction();
     ```
+
 - **권장 방식**:
+
   ```java
   if (condition) {
       performAction();
   }
   ```
+
 ---
 
 ### `for`문 작성
+
 - 반복문은 **명확한 범위**를 지정하며, 반복 횟수를 알 수 있을 경우 **`for`문**을 사용하는 것을 권장한다.
 - 반복문의 조건식을 단순하고 명확히 작성한다.
 - 반복문의 변수(i, j 등)는 항상 **의미 있는 이름**을 사용하는 것을 권장하며, 간단한 경우에는 `i`, `j` 등의 단순 이름 사용을 허용한다.
+
     ```java
     for (int i = 0; i < items.size(); i++) {
       System.out.println(items.get(i));
@@ -136,7 +164,9 @@ if (condition) {
     ```
 
 #### 향상된 `for-each` 문
+
 - 컬렉션이나 배열을 순회할 경우, **향상된 `for`문**을 사용하는 것을 권장한다.
+
     ```java
     for (String item : items) {
       System.out.println(item);
@@ -144,8 +174,10 @@ if (condition) {
     ```
 
 #### 다중 반복문 작성
+
 - 다중 반복문은 **내부 반복문의 가독성**을 유지하도록 작성한다.
 - 중첩 반복문의 경우, 복잡도를 줄이기 위해 **메서드 분리**를 고려한다.
+
     ```java
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < columns; j++) {
@@ -155,6 +187,7 @@ if (condition) {
     ```
 
 #### 반복문에서 조건문 사용
+
 ```java
 for (String item : items) {
     if (item.startsWith("A")) {
@@ -166,10 +199,12 @@ for (String item : items) {
 ---
 
 ### `while`문 작성
+
 - 반복 횟수가 정해져 있지 않고 **조건에 따라 반복**이 결정될 때는 `while`문을 사용한다.
 - 조건문은 가능하면 간결하게 작성하고, 반복문 조건이 항상 **true로 유지되는 경우(무한 루프)** 종료 조건이 반드시 포함되도록 한다.
 
 #### 기본 형식
+
 ```java
 while (condition) {
     // 조건이 true일 동안 실행되는 코드
@@ -177,6 +212,7 @@ while (condition) {
 ```
 
 #### 예시: 조건에 따라 자원을 계속 읽는 경우
+
 ```java
 while ((line = reader.readLine()) != null) {
     System.out.println(line);
@@ -184,14 +220,18 @@ while ((line = reader.readLine()) != null) {
 ```
 
 #### 무한 루프 작성과 종료 조건 처리
+
 - 무한 루프는 반드시 종료 조건을 명확히 작성한다.
 - **권장하지 않는 방식 (종료 조건 명확하지 않음)**:
+
     ```java
     while (true) {
       // 작업 수행
     }
     ```
+
 - **권장 방식 (종료 조건 명확)**:
+
     ```java
     while (shouldContinue) {
       performAction();
@@ -204,10 +244,12 @@ while ((line = reader.readLine()) != null) {
 ---
 
 ### `do-while`문 작성
+
 - **최소 한 번 실행이 보장**되어야 할 경우 `do-while`문을 사용한다.
 - 조건은 루프의 끝에 위치하며 명확하게 작성한다.
 
 #### 기본 형식
+
 ```java
 do {
     // 실행할 코드
@@ -215,6 +257,7 @@ do {
 ```
 
 #### 예시: 사용자 입력 대기
+
 ```java
 String input;
 do {
@@ -235,6 +278,7 @@ do {
 
 - 예외가 발생한 상황을 로깅(`logging`)하거나, 사용자에게 알림을 주며, 설계된 방식으로 복구해야 한다.
 - 명확한 예외(Exception) 이름을 사용하여 필요한 예외만 **구체적으로 처리**한다.
+
     ```java
     try {
       resource.open();
@@ -244,6 +288,7 @@ do {
       throw new CustomException("An error occurred while processing the operation", e);
     }
     ```
+
 ---
 
 ### `try-with-resources` 문
@@ -255,6 +300,7 @@ do {
 #### 예시: 단일 자원 처리
 
 - 자원은 `try` 선언부에서 생성하며, 블록이 끝날 때 **자동으로 닫힌다**.
+
     ```java
     try (BufferedReader reader = new BufferedReader(new FileReader("file.txt"))) {
       String line = reader.readLine();
@@ -267,6 +313,7 @@ do {
 #### 예시: 다중 자원 처리
 
 - 여러 자원을 사용할 경우 한 줄에 콤마(`,`)로 나열한다.
+
     ```java
     try (
       Connection connection = dataSource.getConnection();
@@ -296,6 +343,7 @@ do {
 - 단, 자원의 해제 작업은 `try-with-resources`로 대체 가능하다.
 
 - 예시: `try-catch-finally` 사용
+
     ```java
     FileInputStream fileStream = null;
     try {
@@ -318,6 +366,7 @@ do {
 #### 권장: `try-with-resources`로 대체
 
 - 위 코드는 아래처럼 간결하게 표현 가능하다:
+
     ```java
     try (FileInputStream fileStream = new FileInputStream("file.txt")) {
         byte[] data = fileStream.readAllBytes();
@@ -332,12 +381,14 @@ do {
 Java의 `switch`문은 기본적으로 특정 조건에 따라 코드의 실행을 분기하는 데 사용되며, Java 14부터 **`switch` 표현식**이 추가되어 더 간결하고 명확한 코드를 작성할 수 있습니다. 본 가이드는 전통적인 `switch`문부터 최신 `switch` 표현식까지의 스타일을 다룹니다.
 
 #### 1. `switch`문의 기본 작성 규칙
+
 - **모든 `case` 블록은 중괄호 없이 `:` 뒤에 간결하고 명확하게 작성한다.**
-    - 여러 줄 코드가 필요한 경우, `break`, `return`, 또는 `throw`로 명확히 종료 처리한다.
+  - 여러 줄 코드가 필요한 경우, `break`, `return`, 또는 `throw`로 명확히 종료 처리한다.
 - `default` 블록은 반드시 추가하며, 누락된 조건 처리에 대한 방어 로직을 작성한다.
 - 값(문자열, 열거형, 숫자 등)의 범위가 명확할 경우 **`switch`**는 `if-else`보다 사용을 선호한다.
 
 #### 기본 예시
+
 ```java
 switch (day) {
     case "MONDAY":
@@ -354,17 +405,21 @@ switch (day) {
         System.out.println("Midweek blues!");
 }
 ```
+
 #### 2. `switch` 표현식(Switch Expressions)
+
 - Java 14+부터 도입된 **`switch` 표현식**은 `break` 없이 한 줄로 반환값을 처리할 수 있어 가독성이 좋아진다.
 - 화살표(`->`)를 사용하여 간략화된 구문을 제공한다.
 - 단일 `case`에서 여러 값을 분기할 수 있다.
 
 #### 특징
+
 1. **값 반환이 가능**: `switch` 표현식은 값을 **`return`, `yield`** 형태로 반환할 수 있다.
 2. `case`가 끝났을 때 **자동 종료**되므로 `break` 필요 없음.
 3. 코드가 간결하고 선언적으로 표현되며 함수형 프로그래밍 스타일을 따를 수 있다.
 
 #### 예시: 간단한 `switch` 표현식
+
 ```java
 String dayType = switch (day) {
     case "SATURDAY", "SUNDAY" -> "Weekend";
@@ -376,7 +431,9 @@ System.out.println(dayType);
 ```
 
 #### 예시: 블록 구문 사용
+
 - 여러 줄 블록으로 명확한 로직 처리 후 값 반환 시 `yield`를 사용한다.
+
     ```java
     String dayType = switch (day) {
         case "SATURDAY", "SUNDAY" -> {
@@ -396,9 +453,11 @@ System.out.println(dayType);
     ```
 
 #### 3. 패턴 매칭(Pattern Matching)과 `switch`
+
 Java 17부터는 **패턴 매칭**이 `switch`문에 도입되어 더욱 강력한 분기 처리가 가능해졌습니다. 이는 변수의 타입에 따라 분기하거나, 조건부 처리를 위한 추가적인 검사와 결합할 수 있습니다.
 
 #### 예시: `instanceof`와 연동된 `switch`
+
 ```java
 Object obj = getSomeObject();
 String result = switch (obj) {
@@ -409,8 +468,11 @@ String result = switch (obj) {
 };
 System.out.println(result);
 ```
+
 #### 예시: 조건부 패턴  
+
 조건부 패턴은 `case` 조건을 추가적으로 검사하여 더 세밀한 처리를 허용한다.  
+
 ```java
 int result = switch (number) {
     case 0 -> 0; // Base case
@@ -421,8 +483,10 @@ int result = switch (number) {
 ```
 
 #### 4. 가독성을 위한 스타일 가이드
+
 1. **단순한 `case`들은 화살표(`->`) 표현식 사용**을 권장한다.  
   단일 행 처리가 적합한 경우 사용.
+
     ```java
     String result = switch (value) {
        case 1 -> "One";
@@ -432,6 +496,7 @@ int result = switch (number) {
     ```
   
 2. **다중 조건을 처리하는 경우 `블록 처리`와 주석 사용**.
+
     ```java
     String result = switch (grade) {
        case "A" -> {
@@ -472,7 +537,9 @@ int result = switch (number) {
 | **도입 버전(최소 요구사항)** | 모든 Java 버전 지원                                             | Java 14+ (`switch` 표현식), Java 17+ (패턴 매칭) |
 
 #### 6. 권장 사용 사례
+
 1. **값 반환이 필요한 경우**: 가능한 경우 `switch` 표현식을 통해 값 반환 및 간결한 구문을 작성한다.
+
     ```java
     String status = switch (orderStatus) {
         case "PENDING" -> "Order is pending";
@@ -480,7 +547,9 @@ int result = switch (number) {
         default -> "Unknown status";
     };
     ```
+
 2. **패턴 기반 분기 처리**: 다양한 조건 및 타입을 처리해야 할 경우 `switch` 패턴을 적용한다.
+
    ```java
    String description = switch (object) {
        case String s -> "It is a string: " + s;
@@ -489,6 +558,7 @@ int result = switch (number) {
        default -> "Unknown type";
    };
    ```
+
 3. 전통적인 `switch`문은 단순한 분기 처리 또는 종속성이 있거나 다른 언어 인터페이스에서 필요로 할 경우에만 사용하고, 유지보수성이 중요한 코드에서는 `switch` 표현식을 활용한다.
 
 ---
@@ -497,6 +567,7 @@ int result = switch (number) {
 
 - 변수를 선언할 때 **명확하고 직관적인 이름**을 사용하며, 약어 사용을 지양한다.
 - 변수는 **CamelCase**를 따른다.
+
   ```java
   int itemCount = 10;
   String firstName = "John";
@@ -511,10 +582,12 @@ int result = switch (number) {
 ### 상수 (`static final`)
 
 - 상수는 반드시 **대문자 스네이크 표기법**을 따른다.
+
   ```java
   public static final int MAX_CONNECTIONS = 100;
   public static final String ERROR_MESSAGE = "An error occurred";
   ```
+
 - 상수의 값은 **변하지 않는 값**이어야 한다.
 
 ---
@@ -522,12 +595,13 @@ int result = switch (number) {
 ## 주석 작성
 
 - 코드는 **의도를 설명하기 위한 주석**을 작성한다.
-    - **Why**, **How**를 중심으로 작성하고, *What*은 최대한 코드로 표현되도록 하라.
+  - **Why**, **How**를 중심으로 작성하고, *What*은 최대한 코드로 표현되도록 하라.
 
 ### 주석 스타일
 
 1. **클래스/메서드 설명: Javadoc 사용**
     - 메서드의 역할, 매개변수 및 반환값, 예외 등을 명확히 설명한다.
+
       ```java
       /**
        * This method calculates the sum of two numbers.
@@ -544,6 +618,7 @@ int result = switch (number) {
 
 2. **라인 설명**
     - 특정 코드의 의도나 복잡한 로직을 설명하기 위해 한 줄 주석을 사용한다.
+
       ```java
       // Get user input from the command line
       Scanner scanner = new Scanner(System.in);
@@ -551,7 +626,9 @@ int result = switch (number) {
 
 3. **TODO 주석**
     - 나중에 구현해야 할 작업은 `// TODO`로 명시한다.
+
       ```java
       // TODO: Implement exception handling for null values
       ```
+
 ---
