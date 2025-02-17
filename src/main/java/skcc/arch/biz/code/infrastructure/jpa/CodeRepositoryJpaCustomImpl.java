@@ -15,7 +15,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static skcc.arch.code.infrastructure.jpa.QCodeEntity.codeEntity;
+import static skcc.arch.biz.code.infrastructure.jpa.QCodeEntity.codeEntity;
 
 @Repository
 @RequiredArgsConstructor

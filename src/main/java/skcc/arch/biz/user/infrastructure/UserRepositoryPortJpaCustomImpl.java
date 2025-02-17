@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import skcc.arch.biz.user.domain.User;
 import skcc.arch.biz.user.domain.UserRole;
-import skcc.arch.user.infrastructure.jpa.QUserEntity;
+import skcc.arch.biz.user.infrastructure.jpa.QUserEntity;
 import skcc.arch.biz.user.infrastructure.jpa.UserEntity;
 import skcc.arch.biz.user.infrastructure.jpa.UserRepositoryJpa;
 import skcc.arch.biz.user.service.port.UserRepositoryPort;

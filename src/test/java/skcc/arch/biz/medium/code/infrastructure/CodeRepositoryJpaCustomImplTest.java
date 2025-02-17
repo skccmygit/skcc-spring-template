@@ -19,7 +19,7 @@ import skcc.arch.biz.common.infrastructure.jpa.JpaConfig;
 
 import java.util.List;
 
-import static skcc.arch.code.infrastructure.jpa.QCodeEntity.codeEntity;
+import static skcc.arch.biz.code.infrastructure.jpa.QCodeEntity.codeEntity;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest

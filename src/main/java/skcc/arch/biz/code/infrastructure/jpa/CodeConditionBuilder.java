@@ -5,7 +5,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.util.ObjectUtils;
 
 import static org.springframework.util.StringUtils.hasText;
-import static skcc.arch.code.infrastructure.jpa.QCodeEntity.codeEntity;
+import static skcc.arch.biz.code.infrastructure.jpa.QCodeEntity.codeEntity;
 
 public abstract class CodeConditionBuilder {
 
