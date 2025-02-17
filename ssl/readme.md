@@ -1,23 +1,39 @@
-## 사내망 SSL 설치 필요
-## CMD %JAVA_HOME%
-## PowerShell: $env:JAVA_HOME 
+# SK 사내망일 경우 SK ROOT 인증서 설치 필요
 
-keytool -import -trustcacerts -file GlobalSign.crt -keystore $env:JAVA_HOME/lib/security/cacerts -storepass changeit -alias custom-cert
+## 실행경로별 `JAVA_HOME` 세팅 명령어
+- CMD: %JAVA_HOME%
+- PowerShell: $env:JAVA_HOME
 
-- SK 인증서 추가
-  keytool -import -trustcacerts -file sk.crt -keystore $env:JAVA_HOME/lib/security/cacerts -storepass changeit -alias sk-cert
+## 사전 설정 요소
+- 환경설정에서 `JAVA_HOME` Path 설정
+- SK Root 인증서 파일 (sk.crt)
 
-- 사내망의 경우 최종 ROOT 인증서를 keystore에 추가해줘야 함
-- java가 실행하는 keystore에 추가해줘야함 
-- java_home 확인 필수
+## 인증서 명령어
 
----
+1. 인증서 추가
+   - powerShell
+     ```bash
+     keytool -import -trustcacerts -file '인증서 파일명' -keystore $env:JAVA_HOME/lib/security/cacerts -storepass changeit -alias '인증서 별칭'
+     ```
+   - cmd
+     ```bash
+     keytool -import -trustcacerts -file '인증서 파일명' -keystore %JAVA_HOME%/lib/security/cacerts -storepass changeit -alias '인증서 별칭'
+     ```
+2. 인증서 조회
+   - powerShell
+     ```bash
+     keytool -list -keystore $env:JAVA_HOME/lib/security/cacerts -storepass changeit
+     ```
+   - cmd
+     ```bash
+     keytool -list -keystore %JAVA_HOME%/lib/security/cacerts -storepass changeit
+     ```
+3. 인증서 삭제
+- powerShell
+```bash
+ keytool -alias 인증서별칭 -delete -keystore $env:JAVA_HOME/lib/security/cacerts -storepass changeit 
+``` 
 
-- TEST_SK 인증서추가 (powershell 기준)
-  keytool -import -trustcacerts -file test_by_sk.crt -keystore $env:JAVA_HOME/lib/security/cacerts -storepass changeit -alias sk-cert
 
-- 인증서확인
-keytool -list -keystore $env:JAVA_HOME/lib/security/cacerts -storepass changeit
 
-- 인증서삭제
-keytool -delete -alias sk-cert -keystore $env:JAVA_HOME/lib/security/cacerts -storepass changeit
+

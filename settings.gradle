@@ -1,1 +1,11 @@
+// 폐쇄망
+//pluginManagement {
+//    repositories {
+//        maven {
+//            url '사내 Nexus URL'
+//        }
+//    }
+//}
+
 rootProject.name = 'thymeleaf-spring'
+
