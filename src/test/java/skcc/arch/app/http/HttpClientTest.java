@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import skcc.arch.app.dto.ApiResponse;
-import skcc.arch.user.controller.response.UserResponse;
 
 import java.util.List;
 import java.util.Map;

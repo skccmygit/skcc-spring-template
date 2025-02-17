@@ -7,11 +7,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import skcc.arch.app.aop.LogFormatAop;
 import skcc.arch.app.filter.LogTraceIdFilter;
-import skcc.arch.user.infrastructure.UserRepositoryPortJpaCustomImpl;
-import skcc.arch.user.infrastructure.UserRepositoryPortMybatisImpl;
-import skcc.arch.user.infrastructure.jpa.UserRepositoryJpa;
-import skcc.arch.user.infrastructure.mybatis.UserRepositoryMybatis;
-import skcc.arch.user.service.port.UserRepositoryPort;
+import skcc.arch.biz.user.infrastructure.UserRepositoryPortJpaCustomImpl;
+import skcc.arch.biz.user.infrastructure.jpa.UserRepositoryJpa;
+import skcc.arch.biz.user.infrastructure.mybatis.UserRepositoryMybatis;
+import skcc.arch.biz.user.service.port.UserRepositoryPort;
 
 @Configuration
 @RequiredArgsConstructor

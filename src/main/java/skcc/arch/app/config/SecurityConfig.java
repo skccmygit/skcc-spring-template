@@ -15,7 +15,7 @@ import skcc.arch.app.filter.JwtRequestFilter;
 import skcc.arch.app.handler.CustomAccessDeniedHandler;
 import skcc.arch.app.handler.CustomAuthenticationEntryPoint;
 import skcc.arch.app.util.JwtUtil;
-import skcc.arch.user.service.CustomUserDetailService;
+import skcc.arch.biz.user.service.CustomUserDetailService;
 
 
 @Configuration

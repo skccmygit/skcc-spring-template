@@ -1,17 +1,19 @@
 spring:
-# 파일
+
+### 데이터베이스 ###
+  datasource:
+    driver-class-name: org.h2.Driver
+    username: sa
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1
+#    url: jdbc:h2:tcp://localhost/~/test
+
+### 파일  ###
   servlet:
     multipart:
       max-file-size: 100MB
       max-request-size: 105MB # 전체 요청(파일 + 데이터)의 최대 크기
 
-# 데이터베이스
-  datasource:
-    driver-class-name: org.h2.Driver
-    username: sa
-    url: jdbc:h2:tcp://localhost/~/test
-#    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1
-# JPA 설정
+### JPA 설정 ###
   jpa:
     hibernate:
       ddl-auto: update
@@ -21,18 +23,20 @@ spring:
       hibernate:
 #        format_sql: true
 #        show_sql: true
-# JWT
-jwt:
-  secret: skcc-secret-key-skcc-secret-key-skcc-secret-key # 최소 32바이트 이상만 권장됨
-  expiration: 1800000 # 30분
 
-# MyBatis
+### MyBatis ###
 mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml
   configuration:
     map-underscore-to-camel-case: true # 테이블 컬럼 명이랑 DTO 필드명이랑 다를경우
 
-## 로그설정
+
+### JWT Token ###
+jwt:
+  secret: skcc-secret-key-skcc-secret-key-skcc-secret-key # 최소 32바이트 이상만 권장됨
+  expiration: 1800000 # 30분
+
+### 로깅 설정
 logging:
   level:
     root: info # 전체 로그 레벨
@@ -48,8 +52,14 @@ logging:
 #      file-name-pattern: ${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz
 #      max-file-size: 10MB
 
-## p6spy (운영환경에서는 false로)
+### JPA 로깅 라이브러리 (p6spy)
 decorator:
   datasource:
     p6spy:
       enable-logging: true
+
+
+### 캐시 저장소 (기본:caffeine)
+my:
+  cache:
+    type: caffeine

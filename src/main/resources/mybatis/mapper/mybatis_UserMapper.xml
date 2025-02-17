@@ -1,10 +1,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="skcc.arch.user.infrastructure.mybatis.UserRepositoryMybatis">
+<mapper namespace="skcc.arch.biz.user.infrastructure.mybatis.UserRepositoryMybatis">
 
     <!-- ID로 유저 조회 -->
-    <resultMap id="UserResultMap" type="skcc.arch.user.infrastructure.mybatis.UserDto">
+    <resultMap id="UserResultMap" type="skcc.arch.biz.user.infrastructure.mybatis.UserDto">
         <result property="id" column="ID"/>
         <result property="username" column="USERNAME"/>
         <result property="email" column="EMAIL"/>
@@ -13,7 +13,7 @@
         <result property="createdDate" column="created_date"/>
     </resultMap>
 
-    <select id="findById" parameterType="java.lang.Long" resultType="skcc.arch.user.infrastructure.mybatis.UserDto">
+    <select id="findById" parameterType="java.lang.Long" resultType="skcc.arch.biz.user.infrastructure.mybatis.UserDto">
         SELECT *
         FROM users
         WHERE id = #{id}
@@ -21,14 +21,14 @@
 
     <!-- EMAIL로 유저 조회 -->
     <select id="findByEmail" parameterType="java.lang.String"
-            resultType="skcc.arch.user.infrastructure.mybatis.UserDto">
+            resultType="skcc.arch.biz.user.infrastructure.mybatis.UserDto">
         SELECT *
         FROM users
         WHERE email = #{email}
     </select>
 
     <!-- 새로운 유저 삽입 -->
-    <insert id="save" parameterType="skcc.arch.user.infrastructure.mybatis.UserDto">
+    <insert id="save" parameterType="skcc.arch.biz.user.infrastructure.mybatis.UserDto">
 
         <selectKey keyProperty="id" resultType="long" order="BEFORE">
             SELECT NEXT VALUE FOR users_seq
@@ -47,13 +47,13 @@
     </insert>
 
     <!-- 모든 유저 조회 -->
-    <select id="findAll" resultType="skcc.arch.user.infrastructure.mybatis.UserDto">
+    <select id="findAll" resultType="skcc.arch.biz.user.infrastructure.mybatis.UserDto">
         SELECT *
         FROM users
     </select>
 
     <!-- 페이징 조회 쿼리 -->
-    <select id="findAllWithPageable" resultType="skcc.arch.user.infrastructure.mybatis.UserDto">
+    <select id="findAllWithPageable" resultType="skcc.arch.biz.user.infrastructure.mybatis.UserDto">
         SELECT *
         FROM users
         ORDER BY id ASC

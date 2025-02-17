@@ -10,7 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 import skcc.arch.app.util.JwtUtil;
-import skcc.arch.user.service.CustomUserDetailService;
+import skcc.arch.biz.user.service.CustomUserDetailService;
 
 import java.io.IOException;
 
