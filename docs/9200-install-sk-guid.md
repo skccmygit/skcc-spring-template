@@ -5,7 +5,7 @@
 
 ## project gradle build 시 오류
 
-![error-cert](./images/intranet-error-cert.png)
+![error-cert](images/install/intranet-error-cert.png)
 
 ### 해결방안
 >
@@ -19,7 +19,7 @@ keytool -import -trustcacerts -file '인증서파일명' -keystore $env:JAVA_HOM
 ```
 
 - 실행화면
-![cert-import](./images/intranet-error-cert-1.png)
+![cert-import](images/install/intranet-error-cert-1.png)
 
 - intellij 재시작 후 gradle build 클릭 시, 관련 jar 다운로드 됩니다.
 
@@ -35,4 +35,4 @@ openssl s_client -connect 호스트:포트 -showcerts
 ```
 
 - 위 결과값에서 SK 인증서 부분을 추출하여 CRT 파일로 만듭니다.
-![cert-export-by-openssl](./images/intranet-error-appendix-1.png)
+![cert-export-by-openssl](images/install/intranet-error-appendix-1.png)

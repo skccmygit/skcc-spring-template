@@ -30,12 +30,14 @@
 - [OpenSSL for Window](https://slproweb.com/products/Win32OpenSSL.html)
 
 ### 소스 Clone
-
+> URL은 변경될수 있습니다.
 ```bash
-git clone your-project-url-in-github
+git https://github.com/byounghoonmoon/thymeleaf-spring.git
 ```
 
 ### 참고사항
 
 - SK 망에서는 SK Root 인증서 설치가 필요합니다. [링크](./9100-install-basic-guide.md)
-- Tech VDI 내에서는 사내 Repository 세팅이 필요합니다.
+- Tech VDI 내에서는 사내 Repository 세팅이 필요합니다. [링크](./9200-install-sk-guid.md)
+- New Tech VDI 세팅 가이드 
+- 소스 실행 가이드 [링크](./9400-install-source-guide.md)
