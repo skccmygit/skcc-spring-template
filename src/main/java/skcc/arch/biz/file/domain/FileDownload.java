@@ -1,8 +1,8 @@
-package skcc.arch.biz.file.controller.response;
+package skcc.arch.biz.file.domain;
 
 import org.springframework.core.io.Resource;
 
-public record FileDownloadResponse(
+public record FileDownload(
         String fileName,
         Resource resource
 ){

@@ -12,13 +12,14 @@ import org.springframework.web.util.UriUtils;
 import skcc.arch.app.dto.ApiResponse;
 import skcc.arch.app.dto.ExceptionDto;
 import skcc.arch.biz.file.controller.port.FileServicePort;
-import skcc.arch.biz.file.controller.response.FileDownloadResponse;
+import skcc.arch.biz.file.domain.FileDownload;
 import skcc.arch.biz.file.domain.FileModel;
 import skcc.arch.biz.file.controller.request.FileDownloadRequest;
 import skcc.arch.biz.file.controller.response.FileUploadResponse;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
@@ -81,10 +82,10 @@ public class FileController {
     @PostMapping("/download")
     public ResponseEntity<Resource> downloadFile(@RequestBody FileDownloadRequest fileDownloadRequest) {
 
-        FileDownloadResponse fileDownloadResponse = fileServicePort.getFileDownload(fileDownloadRequest);
-        if (fileDownloadResponse != null) {
+        FileDownload fileDownload = fileServicePort.getFileDownload(fileDownloadRequest.toModel());
+        if (fileDownload != null) {
             // URL 인코딩된 한글 파일명
-            String encodedFileName = UriUtils.encode(fileDownloadResponse.fileName(), UTF_8);
+            String encodedFileName = UriUtils.encode(fileDownload.fileName(), UTF_8);
 
             HttpHeaders headers = new HttpHeaders();
             headers.add(CONTENT_DISPOSITION, String.format("attachment; filename=%s" , encodedFileName));
@@ -92,7 +93,7 @@ public class FileController {
 
             return ResponseEntity.ok()
                     .headers(headers)
-                    .body(fileDownloadResponse.resource());
+                    .body(fileDownload.resource());
         }
         return null;
     }

@@ -7,8 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import skcc.arch.app.exception.CustomException;
 import skcc.arch.app.exception.ErrorCode;
 import skcc.arch.biz.file.controller.port.FileServicePort;
-import skcc.arch.biz.file.controller.request.FileDownloadRequest;
-import skcc.arch.biz.file.controller.response.FileDownloadResponse;
+import skcc.arch.biz.file.domain.FileDownload;
 import skcc.arch.biz.file.domain.FileCreate;
 import skcc.arch.biz.file.domain.FileModel;
 import skcc.arch.biz.file.service.port.FileRepositoryPort;
@@ -76,12 +75,13 @@ public class FileService implements FileServicePort {
     /**
      * 파일 다운로드
      */
-    public FileDownloadResponse getFileDownload(FileDownloadRequest request) {
+    @Override
+    public FileDownload getFileDownload(FileModel fileModel) {
 
-        if(request.filePath() != null) {
-            return getDownloadFileByFilepath(request.filePath());
-        } else if(request.id() != 0) {
-            return getDownloadFileByFileId(request.id());
+        if(fileModel.getDirPath() != null && fileModel.getOrgName() != null) {
+            return getDownloadFileByFilepath(getFullPath(fileModel.getDirPath(), fileModel.getOrgName()));
+        } else if(fileModel.getId() != 0) {
+            return getDownloadFileByFileId(fileModel.getId());
         }
         return null;
     }
@@ -90,7 +90,7 @@ public class FileService implements FileServicePort {
     /**
      * 파일 경로로 다운로드
      */
-    public FileDownloadResponse getDownloadFileByFilepath(String filePath) {
+    public FileDownload getDownloadFileByFilepath(String filePath) {
 
         Path path = Paths.get(filePath);
         InputStreamResource resource;
@@ -100,21 +100,21 @@ public class FileService implements FileServicePort {
             throw new CustomException(ErrorCode.NOT_FOUND_FILE);
         }
         String fileName = path.getFileName().toString();
-        return new FileDownloadResponse(fileName, resource);
+        return new FileDownload(fileName, resource);
     }
 
     /**
      * 파일 id 정보로 파일을 찾는다.
      * 저장한 파일명은 오리지널 파일명이다
      */
-    public FileDownloadResponse getDownloadFileByFileId(long id) {
+    public FileDownload getDownloadFileByFileId(long id) {
         FileModel result = repository.findById(id);
         if (result == null) {
             throw new CustomException(ErrorCode.NOT_FOUND_FILE);
         }
         String filePath = getFullPath(result.getDirPath(), result.getEncName());
-        FileDownloadResponse downloadFileByFilepath = getDownloadFileByFilepath(filePath);
-        return new FileDownloadResponse(result.getOrgName(), downloadFileByFilepath.resource());
+        FileDownload downloadFileByFilepath = getDownloadFileByFilepath(filePath);
+        return new FileDownload(result.getOrgName(), downloadFileByFilepath.resource());
     }
 
     /**
