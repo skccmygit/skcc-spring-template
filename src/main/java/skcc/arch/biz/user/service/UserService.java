@@ -33,19 +33,11 @@ public class UserService implements UserServicePort {
     // 회원가입 메서드
     @Override
     @Transactional
-    public User signUp(UserCreate param) {
+    public User signUp(UserCreate userCreate) {
 
         // 입력받은 이메일로 회원 존재 점검
-        checkUserExistByEmail(param.getEmail());
-        String encodedPassword = passwordEncoder.encode(param.getPassword()); // 비밀번호 암호화
-
-        UserCreate create = UserCreate.builder()
-                .username(param.getUsername())
-                .email(param.getEmail())
-                .password(encodedPassword)
-                .build();
-
-        return userRepositoryPort.save(User.from(create));
+        checkUserExistByEmail(userCreate.getEmail());
+        return userRepositoryPort.save(User.from(userCreate, passwordEncoder));
     }
 
     // 인증

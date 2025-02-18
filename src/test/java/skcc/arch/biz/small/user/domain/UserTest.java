@@ -3,6 +3,7 @@ package skcc.arch.biz.small.user.domain;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import skcc.arch.biz.mock.FakePasswordEncoder;
 import skcc.arch.biz.user.controller.request.UserUpdateRequest;
 import skcc.arch.biz.user.domain.User;
 import skcc.arch.biz.user.domain.UserCreate;
@@ -23,13 +24,13 @@ class UserTest {
                 .build();
 
         //when
-        User user = User.from(userCreate);
+        User user = User.from(userCreate, new FakePasswordEncoder());
 
         //then
         assertThat(user.getId()).isNull();
         assertThat(user.getUsername()).isEqualTo(userCreate.getUsername());
         assertThat(user.getEmail()).isEqualTo(userCreate.getEmail());
-        assertThat(user.getPassword()).isEqualTo(userCreate.getPassword());
+        assertThat(user.getPassword()).isEqualTo("ENC_" +userCreate.getPassword());
         assertThat(user.getStatus()).isEqualTo(UserStatus.PENDING);
         assertThat(user.getCreatedDate()).isNotNull();
         assertThat(user.getLastModifiedDate()).isNotNull();
