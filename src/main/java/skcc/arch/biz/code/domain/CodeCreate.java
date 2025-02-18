@@ -12,4 +12,10 @@ public class CodeCreate {
     private final Long parentCodeId;
     private final int seq;
     private final String description;
+
+    public CodeSearch toSearch() {
+        return CodeSearch.builder()
+                .code(code)
+                .build();
+    }
 }

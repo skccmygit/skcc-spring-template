@@ -34,14 +34,14 @@ public class UserServiceTest {
     @Test
     void userCreate_를_이용해_생성한다() throws Exception {
         //given
-        UserCreateRequest userCreate = UserCreateRequest.builder()
+        UserCreateRequest userCreateRequest = UserCreateRequest.builder()
                 .username("홍길동")
                 .email("abcd@sk.com")
                 .password("password")
                 .build();
 
         // when
-        User result = userServicePort.signUp(userCreate);
+        User result = userServicePort.signUp(userCreateRequest.toModel());
 
         // then
         assertThat(result.getId()).isNotNull();

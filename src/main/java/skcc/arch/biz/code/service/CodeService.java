@@ -10,9 +10,6 @@ import org.springframework.stereotype.Service;
 import skcc.arch.app.exception.CustomException;
 import skcc.arch.app.exception.ErrorCode;
 import skcc.arch.biz.code.controller.port.CodeServicePort;
-import skcc.arch.biz.code.controller.request.CodeCreateRequest;
-import skcc.arch.biz.code.controller.request.CodeSearchRequest;
-import skcc.arch.biz.code.controller.request.CodeUpdateRequest;
 import skcc.arch.biz.code.domain.Code;
 import skcc.arch.biz.code.domain.CodeCreate;
 import skcc.arch.biz.code.domain.CodeSearch;
@@ -34,27 +31,27 @@ public class CodeService implements CodeServicePort {
 
     @Override
     @Transactional
-    public Code save(CodeCreateRequest codeCreateRequest) {
+    public Code save(CodeCreate codeCreate) {
 
         // 존재하는 코드인지
-        validateExistCode(codeCreateRequest);
+        validateExistCode(codeCreate.toSearch());
 
         // 부모코드가 유효한 코드인지
-        if (codeCreateRequest.getParentCodeId() != null) {
-            findByCodeId(codeCreateRequest.getParentCodeId());
+        if (codeCreate.getParentCodeId() != null) {
+            findByCodeId(codeCreate.getParentCodeId());
         }
 
         // DB에서 마지막 순번 구하기
-        int inputSeq = calcNewSeq(codeCreateRequest.getSeq(), codeCreateRequest.getParentCodeId());
+        int inputSeq = calcNewSeq(codeCreate.getSeq(), codeCreate.getParentCodeId());
 
-        CodeCreate codeCreate = CodeCreate.builder()
-                .code(codeCreateRequest.getCode())
-                .codeName(codeCreateRequest.getCodeName())
-                .parentCodeId(codeCreateRequest.getParentCodeId())
+        CodeCreate setSeqModel = CodeCreate.builder()
+                .code(codeCreate.getCode())
+                .codeName(codeCreate.getCodeName())
+                .parentCodeId(codeCreate.getParentCodeId())
                 .seq(inputSeq)
                 .build();
 
-        Code savedCode = codeRepositoryPort.save(Code.from(codeCreate));
+        Code savedCode = codeRepositoryPort.save(Code.from(setSeqModel));
 
         // 캐시 데이터 수정
         cacheUpdate(findByParentCode(savedCode));
@@ -107,21 +104,19 @@ public class CodeService implements CodeServicePort {
     }
 
     @Override
-    public Page<Code> findByCode(Pageable pageable, CodeSearchRequest codeSearchRequest) {
-        return codeRepositoryPort.findByCondition(pageable, codeSearchRequest.toModel());
+    public Page<Code> findByCode(Pageable pageable, CodeSearch codeSearch) {
+        return codeRepositoryPort.findByCondition(pageable, codeSearch);
     }
 
     @Override
-    public Page<Code> findByConditionWithChild(Pageable pageable, CodeSearchRequest codeSearchRequest) {
-        return codeRepositoryPort.findByConditionWithChild(pageable, codeSearchRequest.toModel());
+    public Page<Code> findByConditionWithChild(Pageable pageable, CodeSearch codeSearch) {
+        return codeRepositoryPort.findByConditionWithChild(pageable, codeSearch);
     }
 
     @Override
     @Transactional
-    public Code update(CodeUpdateRequest codeUpdateRequest) {
+    public Code update(CodeUpdate codeUpdate) {
 
-        // DTO -> CodeUpdate Model로 변경
-        CodeUpdate codeUpdate = codeUpdateRequest.toModel();
 
         // 부모ID가 null이 아닌경우 부모객체 존재 확인
         if (codeUpdate.getParentCodeId() != null) {
@@ -147,21 +142,21 @@ public class CodeService implements CodeServicePort {
     }
 
     @Override
-    public Code findByCode(CodeSearchRequest codeSearchRequest) {
-        if (codeSearchRequest.getCode() != null) {
+    public Code findByCode(CodeSearch codeSearch) {
+        if (codeSearch.getCode() != null) {
 
             // 캐시 조회
-            Code cachedCode = myCacheService.get(CacheGroup.CODE, codeSearchRequest.getCode(), Code.class);
+            Code cachedCode = myCacheService.get(CacheGroup.CODE, codeSearch.getCode(), Code.class);
             if (cachedCode != null) {
                 return cachedCode;
             }
 
             // DB 조회
-            Code dbCode = codeRepositoryPort.findByCode(codeSearchRequest.toModel());
+            Code dbCode = codeRepositoryPort.findByCode(codeSearch);
 
             // 루트 요소일 경우 캐시 추가
             if (dbCode != null && dbCode.getParentCodeId() == null) {
-                myCacheService.put(CacheGroup.CODE, codeSearchRequest.getCode(), dbCode);
+                myCacheService.put(CacheGroup.CODE, codeSearch.getCode(), dbCode);
             }
             return dbCode;
         }
@@ -215,11 +210,7 @@ public class CodeService implements CodeServicePort {
         );
     }
 
-    private void validateExistCode(CodeCreateRequest codeCreateRequest) {
-        CodeSearch codeSearch = CodeSearch.builder()
-                .code(codeCreateRequest.getCode())
-                .build();
-
+    private void validateExistCode(CodeSearch codeSearch) {
         Page<Code> result = codeRepositoryPort.findByCondition(PageRequest.of(0, 10), codeSearch);
         if (!result.getContent().isEmpty()) {
             throw new CustomException(ErrorCode.EXIST_ELEMENT);
@@ -236,10 +227,9 @@ public class CodeService implements CodeServicePort {
     }
 
     private void cacheUpdate(Code code) {
-        CodeSearch codeSearch = CodeSearchRequest.builder()
+        CodeSearch codeSearch = CodeSearch.builder()
                 .code(code.getCode())
-                .build()
-                .toModel();
+                .build();
         Code result = codeRepositoryPort.findByCode(codeSearch);
 
         myCacheService.put(CacheGroup.CODE, code.getCode(), result);

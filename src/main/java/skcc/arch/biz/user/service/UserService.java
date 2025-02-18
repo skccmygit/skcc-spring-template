@@ -12,8 +12,6 @@ import skcc.arch.app.exception.CustomException;
 import skcc.arch.app.exception.ErrorCode;
 import skcc.arch.app.util.JwtUtil;
 import skcc.arch.biz.user.controller.port.UserServicePort;
-import skcc.arch.biz.user.controller.request.UserCreateRequest;
-import skcc.arch.biz.user.controller.request.UserUpdateRequest;
 import skcc.arch.biz.user.domain.User;
 import skcc.arch.biz.user.domain.UserCreate;
 import skcc.arch.biz.user.service.port.UserRepositoryPort;
@@ -35,19 +33,11 @@ public class UserService implements UserServicePort {
     // 회원가입 메서드
     @Override
     @Transactional
-    public User signUp(UserCreateRequest userCreateRequest) {
+    public User signUp(UserCreate userCreate) {
 
         // 입력받은 이메일로 회원 존재 점검
-        checkUserExistByEmail(userCreateRequest.getEmail());
-        String encodedPassword = passwordEncoder.encode(userCreateRequest.getPassword()); // 비밀번호 암호화
-
-        UserCreate create = UserCreate.builder()
-                .username(userCreateRequest.getUsername())
-                .email(userCreateRequest.getEmail())
-                .password(encodedPassword)
-                .build();
-
-        return userRepositoryPort.save(User.from(create));
+        checkUserExistByEmail(userCreate.getEmail());
+        return userRepositoryPort.save(User.from(userCreate, passwordEncoder));
     }
 
     // 인증
@@ -98,14 +88,14 @@ public class UserService implements UserServicePort {
     }
 
     @Override
-    public User updateUserStatus(UserUpdateRequest userUpdateRequest) {
+    public User updateUserStatus(User user) {
 
         // 조회
-        User findUser = userRepositoryPort.findByEmail(userUpdateRequest.getEmail())
+        User findUser = userRepositoryPort.findByEmail(user.getEmail())
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ELEMENT));
 
         // 상태값 없데이트
-        User updateUser = findUser.updateStatus(userUpdateRequest.getStatus());
+        User updateUser = findUser.updateStatus(user.getStatus());
         return userRepositoryPort.updateStatus(updateUser);
     }
 

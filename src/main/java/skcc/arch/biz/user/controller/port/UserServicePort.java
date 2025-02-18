@@ -5,13 +5,14 @@ import org.springframework.data.domain.Pageable;
 import skcc.arch.biz.user.controller.request.UserCreateRequest;
 import skcc.arch.biz.user.controller.request.UserUpdateRequest;
 import skcc.arch.biz.user.domain.User;
+import skcc.arch.biz.user.domain.UserCreate;
 
 import java.util.List;
 
 public interface UserServicePort {
 
     // 회원가입 메서드
-    User signUp(UserCreateRequest userCreateRequest);
+    User signUp(UserCreate userCreate);
 
     // 로그인 처리
     String authenticate(String email, String rawPassword);
@@ -28,5 +29,5 @@ public interface UserServicePort {
     Page<User> findAdminUsers(Pageable pageable);
 
     // 사용자 상태 변경
-    User updateUserStatus(UserUpdateRequest userUpdateRequest);
+    User updateUserStatus(User user);
 }

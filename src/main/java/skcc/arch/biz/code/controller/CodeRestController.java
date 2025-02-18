@@ -25,7 +25,7 @@ public class CodeRestController {
     
     @PostMapping
     public ApiResponse<CodeResponse> createCode(@RequestBody CodeCreateRequest codeCreateRequest) {
-        return ApiResponse.ok(CodeResponse.from(codeServicePort.save(codeCreateRequest)));
+        return ApiResponse.ok(CodeResponse.from(codeServicePort.save(codeCreateRequest.toModel())));
     }
 
     // 단건 조회
@@ -47,9 +47,9 @@ public class CodeRestController {
 
         Page<Code> result;
         if(withChild) {
-            result = codeServicePort.findByConditionWithChild(pageable, codeSearchRequest);
+            result = codeServicePort.findByConditionWithChild(pageable, codeSearchRequest.toModel());
         }else {
-            result = codeServicePort.findByCode(pageable, codeSearchRequest);
+            result = codeServicePort.findByCode(pageable, codeSearchRequest.toModel());
         }
         return ApiResponse.ok(
             result.getContent()
@@ -62,12 +62,12 @@ public class CodeRestController {
 
     @PatchMapping
     public ApiResponse<CodeResponse> updateCode(@RequestBody @Valid CodeUpdateRequest codeUpdateRequest) {
-        return ApiResponse.ok(CodeResponse.from(codeServicePort.update(codeUpdateRequest)));
+        return ApiResponse.ok(CodeResponse.from(codeServicePort.update(codeUpdateRequest.toModel())));
     }
 
     @GetMapping("/cache/{parentCodeName}")
     public ApiResponse<CodeResponse> getCode(@PathVariable String parentCodeName) {
-        Code result = codeServicePort.findByCode(CodeSearchRequest.builder().code(parentCodeName).build());
+        Code result = codeServicePort.findByCode(CodeSearchRequest.builder().code(parentCodeName).build().toModel());
         return ApiResponse.ok(CodeResponse.from(result));
     }
 

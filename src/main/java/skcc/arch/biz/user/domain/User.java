@@ -2,6 +2,7 @@ package skcc.arch.biz.user.domain;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 
@@ -29,18 +30,18 @@ public class User {
         this.lastModifiedDate = lastModifiedDate;
     }
 
-
     /**
      * 사용자를 생성할때만 사용
      *
-     * @param userCreate
-     * @return
+     * @param userCreate 사용자 생성 모델
+     * @param passwordEncoder 비밀번호 생성 구현체
+     * @return 사용자 모델
      */
-    public static User from (UserCreate userCreate) {
+    public static User from (UserCreate userCreate, PasswordEncoder passwordEncoder) {
         return User.builder()
                 .email(userCreate.getEmail())
                 .username(userCreate.getUsername())
-                .password(userCreate.getPassword())
+                .password(passwordEncoder.encode(userCreate.getPassword()))
                 .role(UserRole.USER)
                 .status(UserStatus.PENDING)
                 // JPA의 경우 BaseEntity에 처리
