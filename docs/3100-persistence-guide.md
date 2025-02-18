@@ -430,18 +430,35 @@ public class UserService implements UserServicePort {
    // 회원가입 메서드
    @Override
    @Transactional
-   public User signUp(UserCreateRequest userCreateRequest) {
+   public User signUp(UserCreate userCreate) {
 
       // 입력받은 이메일로 회원 존재 점검
-      checkUserExistByEmail(userCreateRequest.getEmail());
-      String encodedPassword = passwordEncoder.encode(userCreateRequest.getPassword()); // 비밀번호 암호화
+      checkUserExistByEmail(userCreate.getEmail());
+      return userRepositoryPort.save(User.from(userCreate, passwordEncoder));
+   }
 
-      UserCreate create = UserCreate.builder()
-              .email(userCreateRequest.getEmail())
-              .password(encodedPassword)
-              .build();
+   // 인증
+   @Override
+   public String authenticate(String email, String rawPassword) {
 
-      return userRepositoryPort.save(User.from(create));
+      User user = userRepositoryPort.findByEmail(email)
+              .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ELEMENT));
+      boolean matches = passwordEncoder.matches(rawPassword, user.getPassword());
+      if (!matches) {
+         throw new CustomException(ErrorCode.NOT_MATCHED_PASSWORD);
+      }
+
+      // JWT Token 생성
+      Map<String, Object> claims = new HashMap<>();
+      claims.put("uid", user.getEmail());
+      claims.put("username", user.getUsername());
+      claims.put("email", user.getEmail());
+      claims.put("role", user.getRole());
+
+      String token = jwtUtil.generateToken(claims);
+      log.info("generated token : {}", token);
+
+      return token;
    }
 
    // 전체 사용자 조회
@@ -459,6 +476,24 @@ public class UserService implements UserServicePort {
    public User getById(Long id) {
       return userRepositoryPort.findById(id)
               .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ELEMENT));
+   }
+
+   @Override
+   public Page<User> findAdminUsers(Pageable pageable) {
+      log.info("[Service] findAdminUsers : {}", pageable);
+      return userRepositoryPort.findAdminUsers(pageable);
+   }
+
+   @Override
+   public User updateUserStatus(User user) {
+
+      // 조회
+      User findUser = userRepositoryPort.findByEmail(user.getEmail())
+              .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ELEMENT));
+
+      // 상태값 없데이트
+      User updateUser = findUser.updateStatus(user.getStatus());
+      return userRepositoryPort.updateStatus(updateUser);
    }
 }
 ```

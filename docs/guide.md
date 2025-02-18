@@ -8,13 +8,11 @@
 
 ## [Naming Rule 가이드](100-naming-rule-guide.md)
 ## [기본 코딩 가이드](200-basic-coding-guide.md)
-## [Java Spring 영속성 계층 가이드](300-persistence-guide.md)
+## [소프트웨어 아키텍처](300-software-architect-guide.md)
+## [Java Spring 영속성 계층 가이드](3100-persistence-guide)
 ## [예외 처리 가이드](400-exception-guide.md) 
 ## [파일 처리 가이드](500-file-guide.md)
 ## [캐시 사용 가이드](600-cache-guide.md)
 ## [로깅 가이드](700-log-guide.md)
 ## [HTTP 호출 가이드](800-http-guide.md)
 ## [개발환경 가이드](900-developer-environment-guide.md)
-
-## 아키텍처 구성도
-## 스프링 시큐리티

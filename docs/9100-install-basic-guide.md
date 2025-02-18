@@ -67,7 +67,7 @@
 > 주요 사용라이브러리: Lombok, QueryDSL 등 
 
 - **설정 경로**(Ctrl+Alt+S)  
-  `File > Settings > Build, Execution, Deployment > Compiler > Annotation Processors`  
+  `File > Settings > Build, Execution, Deployment > Compiler > Annotation Processors 체크`  
   ![img.png](images/install/install-ide-annotation-enable.png)
 
 ## 4. Gradle 설치 및 세팅 
