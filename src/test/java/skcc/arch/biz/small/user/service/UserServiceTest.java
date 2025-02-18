@@ -48,14 +48,14 @@ class UserServiceTest {
     @Test
     void userCreate_를_이용해_생성한다() throws Exception {
         //given
-        UserCreateRequest userCreate = UserCreateRequest.builder()
+        UserCreateRequest userCreateRequest = UserCreateRequest.builder()
                 .username("홍길동")
                 .email("email@sk.com")
                 .password("password")
                 .build();
 
         // when
-        User result = userService.signUp(userCreate);
+        User result = userService.signUp(userCreateRequest.toModel());
 
         // then
         assertThat(result.getId()).isNotNull();
@@ -66,14 +66,14 @@ class UserServiceTest {
     @Test
     void 이미존재하는_사용자_생성시_에러발생() throws Exception {
         //given
-        UserCreateRequest userCreate = UserCreateRequest.builder()
+        UserCreateRequest userCreateRequest = UserCreateRequest.builder()
                 .username("홍길동")
                 .email("test1@sk.com")
                 .password("password")
                 .build();
 
         // when & then
-        CustomException exception = assertThrows(CustomException.class, () -> userService.signUp(userCreate));
+        CustomException exception = assertThrows(CustomException.class, () -> userService.signUp(userCreateRequest.toModel()));
         assertThat(exception.getErrorCode()).isEqualTo(ErrorCode.EXIST_ELEMENT);
     }
 

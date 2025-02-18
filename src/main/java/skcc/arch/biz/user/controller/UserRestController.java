@@ -14,6 +14,7 @@ import skcc.arch.biz.user.controller.request.UserUpdateRequest;
 import skcc.arch.biz.user.controller.response.Token;
 import skcc.arch.biz.user.controller.response.UserResponse;
 import skcc.arch.biz.user.domain.User;
+import skcc.arch.biz.user.domain.UserCreate;
 import skcc.arch.biz.user.service.UserService;
 
 import java.util.List;
@@ -27,8 +28,9 @@ public class UserRestController {
     private final UserService userService;
 
     @PostMapping
-    public ApiResponse<UserResponse> signUp(@RequestBody UserCreateRequest userCreate) {
-        User user = userService.signUp(userCreate);
+    public ApiResponse<UserResponse> signUp(@RequestBody UserCreateRequest userCreateRequest) {
+
+        User user = userService.signUp(userCreateRequest.toModel());
         return ApiResponse.ok(UserResponse.fromUser(user));
     }
 
@@ -78,7 +80,7 @@ public class UserRestController {
 
     @PostMapping("/{id}")
     public ApiResponse<UserResponse> updateUserStatus(@PathVariable long id, @RequestBody UserUpdateRequest userUpdateRequest) {
-        User user = userService.updateUserStatus(userUpdateRequest);
+        User user = userService.updateUserStatus(userUpdateRequest.toModel());
         return ApiResponse.ok(UserResponse.fromUser(user));
     }
 
