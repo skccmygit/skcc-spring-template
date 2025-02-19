@@ -40,7 +40,7 @@
         - [X] clearAll
         - [X] clearCacheName
     - [X] 종류
-        - [X] 카페인 캐시(로컬)
+        - [X] caffeine 캐시(로컬)
         - [X] Redis 캐시(서버)
     - [X] 샘플 작성
 - [X] 파일
@@ -50,8 +50,10 @@
     - [X] 보안 (경로 및 파일명 암호화)
 - [X] Http 통신
   - [X] HttpClient Wrapper 유틸
-- [ ] 세션 관리
-  - [ ] stateless 상태에서의 세션 관리를 위한 Redis/Caffeine 
+- [ ] 데이터 저장소 관리 (ContextStorage)
+  - [X] stateless 상태에서의 데이터 저장을 위한 서비스
+  - [X] caffeine
+  - [ ] redis
 - [ ] MQ 연동 (Kafka)  
 - [ ] 모니터링
   - [ ] actuator 
@@ -62,6 +64,6 @@
     - [ ] Docker
     - [ ] k8s
     - [ ] CI/CD
-- [ ] 가이드
-    - [ ] 개발 환경 가이드
+- [X] 가이드
+    - [X] 개발 환경 가이드
     - [X] 개발 표준 가이드

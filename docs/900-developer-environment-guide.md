@@ -37,7 +37,7 @@ git https://github.com/byounghoonmoon/thymeleaf-spring.git
 
 ### 참고사항
 
-- 기본 설치 가이드 (gradle local install path) [링크](./9100-install-basic-guide.md)
-- SK 사내망 가이드 (SK ROOT 인증서 추가) [링크](./9200-install-sk-guide)
-- New Tech VDI 가이드 (Repository 사내 Nexus 설정)[링크](./9300-install-new-tech-vdi-guide.md)
-- 소스 실행 가이드 [링크](./9400-install-source-guide.md)
+- 기본 설치 가이드 (gradle local install path) [링크](./910-install-basic-guide)
+- SK 사내망 가이드 (SK ROOT 인증서 추가) [링크](./920-install-sk-guide)
+- New Tech VDI 가이드 (Repository 사내 Nexus 설정)[링크](./930-install-new-tech-vdi-guide)
+- 소스 실행 가이드 [링크](./940-install-source-guide)

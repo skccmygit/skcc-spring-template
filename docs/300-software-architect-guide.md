@@ -28,7 +28,7 @@
 ### 2.1 **독립성**
 - Web(controller) Layer는 ServicePort Interface와만 소통하고 Infrastructure Layer는 RepositoryPort Interface와 연결됩니다.
 - Service와 Domain Layer는 데이터 형식이나 요청 방식의 변경에도 영향받지 않습니다.
-- Spring **의존성 주입(DI)**으로 각 계층 간 결합도를 낮춤.
+- Spring **의존성 주입(DI)** 으로 각 계층 간 결합도를 낮춤.
 
 ### 2.2 **용이성**
 - Infrastructure Layer에서 JPA, MyBatis 등 구현 기술을 바꾸더라도 상위 레이어(Service, Controller)에는 영향이 없습니다.
