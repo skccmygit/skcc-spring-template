@@ -9,14 +9,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 import skcc.arch.app.dto.ApiResponse;
 import skcc.arch.app.exception.CustomException;
+import skcc.arch.app.exception.ErrorCode;
 import skcc.arch.app.util.HttpResponseUtil;
 import skcc.arch.app.util.JwtUtil;
 import skcc.arch.biz.user.service.CustomUserDetailService;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * JwtRequestFilter는 {@link OncePerRequestFilter}를 확장한 커스텀 필터로,
@@ -42,13 +45,20 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final CustomUserDetailService customUserDetailService;
     private final JwtUtil jwtUtil;
+    private final List<String> authWhitelist;
+    private final AntPathMatcher antPathMatcher;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
-        final String authorizationHeader = request.getHeader("Authorization");
+        // 요청 경로가 화이트리스트에 포함되어 있을경우 JWT Token 검증 Skip
+        if (isWhitelisted(request.getRequestURI())) {
+            chain.doFilter(request, response);
+            return;
+        }
 
+        final String authorizationHeader = request.getHeader("Authorization");
         String uid = null;
         String token = null;
 
@@ -80,9 +90,18 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 HttpResponseUtil.writeResponseBody(response,failResponse);
                 return;
             }
-
+        } else {
+            ApiResponse<Void> failResponse = ApiResponse.fail(new CustomException(ErrorCode.JWT_NOT_FOUND));
+            HttpResponseUtil.writeResponseBody(response,failResponse);
+            return;
         }
 
         chain.doFilter(request, response);
+    }
+
+    // 화이트리스트 경로 매칭 로직
+    private boolean isWhitelisted(String path) {
+        return authWhitelist.stream()
+                .anyMatch(whitelistPath -> antPathMatcher.match(whitelistPath, path));
     }
 }

@@ -11,11 +11,14 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.util.AntPathMatcher;
 import skcc.arch.app.filter.JwtRequestFilter;
 import skcc.arch.app.handler.CustomAccessDeniedHandler;
 import skcc.arch.app.handler.CustomAuthenticationEntryPoint;
 import skcc.arch.app.util.JwtUtil;
 import skcc.arch.biz.user.service.CustomUserDetailService;
+
+import java.util.List;
 
 
 @Configuration
@@ -26,13 +29,14 @@ public class SecurityConfig {
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
     private final CustomAccessDeniedHandler accessDeniedHandler;
     private final CustomUserDetailService customUserDetailService;
+    private final AntPathMatcher antPathMatcher = new AntPathMatcher();
     private final JwtUtil jwtUtil;
     private static final String[] AUTH_WHITELIST = {
             // FIXME - 타임리프(추후제거)
             "/","/login", "/register",
             // FIXME - 정적파일(추후제건
             "/css/**", "/js/**", "/images/**", "/favicon.ico",
-//            "/**",
+//            "/**", //테스트용
             // 캐시, 파일, 로그, 인증
             "/api/cache/**",
             "/api/log/**",
@@ -52,15 +56,15 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
 
+
                 // JWT 요청 필터를 UsernamePasswordAuthenticationFilter 전에 추가
-                .addFilterBefore(new JwtRequestFilter(customUserDetailService, jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtRequestFilter(customUserDetailService, jwtUtil, List.of(AUTH_WHITELIST), antPathMatcher), UsernamePasswordAuthenticationFilter.class)
 
 
                 .exceptionHandling((exceptionHandling) -> exceptionHandling
                         .authenticationEntryPoint(authenticationEntryPoint)
                         .accessDeniedHandler(accessDeniedHandler)
                 )
-
                 // 권한 규칙
                 .authorizeHttpRequests(auth -> auth
                         // 화이트리스트는 허용

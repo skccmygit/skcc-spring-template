@@ -16,11 +16,12 @@ public class LogController {
     private final LogService logService;
 
     @GetMapping("/1")
-    public void getLog1() {
+    public String getLog1() {
         String msg = "1번 로그입니당";
         log.debug("컨트롤러 호출 시작 : {}", msg);
         logService.logTest();
         log.debug("컨트롤러 호출 종료");
+        return "ok";
     }
 
     @GetMapping("/2")
