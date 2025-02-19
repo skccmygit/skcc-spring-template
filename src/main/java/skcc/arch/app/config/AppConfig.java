@@ -18,7 +18,7 @@ public class AppConfig {
 
     private final UserRepositoryJpa userRepositoryJpa;
     private final JPAQueryFactory jpaQueryFactory;
-    private final UserRepositoryMybatis userRepositoryMybatis;
+//    private final UserRepositoryMybatis userRepositoryMybatis;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {

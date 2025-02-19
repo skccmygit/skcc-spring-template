@@ -1,10 +1,15 @@
 package skcc.arch.app.util;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import skcc.arch.app.exception.CustomException;
+import skcc.arch.app.exception.ErrorCode;
 
 import java.security.Key;
 import java.util.Date;
@@ -34,25 +39,21 @@ public class JwtUtil {
     }
 
     // 토큰 검증 (서명 & 만료 시간 검사)
-    public boolean validateToken(String token) {
+    public String validateTokenAndExtractUID(String token) {
         try {
-            Jwts.parserBuilder()
+            return Jwts.parserBuilder()
                     .setSigningKey(signingKey)
                     .build()
-                    .parseClaimsJws(token);
-            return true;
-        } catch (Exception e) {
-            return false;
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
+        } catch (ExpiredJwtException e) {
+            throw new CustomException(ErrorCode.JWT_EXPIRED_TOKEN);
+        } catch (SignatureException e) {
+            throw new CustomException(ErrorCode.JWT_INVALID_SIGNATURE);
+        } catch (JwtException e) {
+            throw new CustomException(ErrorCode.JWT_INVALID);
         }
     }
 
-    // 토큰에서 사용자 고유값 추출
-    public String extractUid(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(signingKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
-    }
 }

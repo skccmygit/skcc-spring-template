@@ -88,8 +88,7 @@ class UserServiceTest {
 
         //then
         assertThat(accessToken).isNotNull();
-        assertThat(jwtUtil.extractUid(accessToken)).isEqualTo(email);
-        assertTrue(jwtUtil.validateToken(accessToken));
+        assertThat(jwtUtil.validateTokenAndExtractUID(accessToken)).isEqualTo(email);
     }
 
     @Test

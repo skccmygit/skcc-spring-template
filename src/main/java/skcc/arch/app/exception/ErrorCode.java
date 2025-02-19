@@ -20,6 +20,9 @@ public enum ErrorCode {
     UNAUTHORIZED(90003, HttpStatus.UNAUTHORIZED, "error.unauthorized"),
     ACCESS_DENIED(90004, HttpStatus.FORBIDDEN, "error.accessDenied"),
     INVALID_REQUEST(90005, HttpStatus.BAD_REQUEST, "error.invalidRequest"),
+    JWT_EXPIRED_TOKEN(90006, HttpStatus.UNAUTHORIZED, "error.jwtExpiredToken"),
+    JWT_INVALID_SIGNATURE(90007, HttpStatus.UNAUTHORIZED, "error.jwtInvalidSignature"),
+    JWT_INVALID(90008, HttpStatus.UNAUTHORIZED, "error.jwtInvalid")
     ;
 
     private final int code;
