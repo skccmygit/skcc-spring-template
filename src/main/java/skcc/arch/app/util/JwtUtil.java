@@ -55,5 +55,4 @@ public class JwtUtil {
             throw new CustomException(ErrorCode.JWT_INVALID);
         }
     }
-
 }

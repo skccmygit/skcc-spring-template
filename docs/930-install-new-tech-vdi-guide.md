@@ -8,7 +8,7 @@
 
 1. `Gradle 설치 위치`를 별도로 잡지 않은 경우 아래와 같은 오류가 발생합니다. 
     ![img.png](images/install/new-tech-vdi-error1.png)
-    IntelliJ Gradle 설치 경로 설정을 합니다. [링크](./9100-install-basic-guide.md#4-gradle-설치-및-세팅-)
+    IntelliJ Gradle 설치 경로 설정을 합니다. [링크](./910-install-basic-guide#4-gradle-설치-및-세팅-)
 2. Gradle 설치 경로 설정 후 아래와 같은 Gradle 빌드 오류가 발생합니다.  
    _Maven Repository 및 Plugin Portal 접속이 차단되어 관련 plugin 을 받지 못하여 발생 
    ![img_1.png](images/install/new-tech-vdi-error2.png)
