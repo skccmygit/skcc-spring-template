@@ -24,6 +24,14 @@ spring:
 #        format_sql: true
 #        show_sql: true
 
+  ### 메시징 - RabbitMQ
+#  rabbitmq:
+#    host: localhost             # RabbitMQ 서버 주소
+#    port: 5672                  # RabbitMQ 서버 포트 (기본값: 5672)
+#    username: guest             # RabbitMQ 로그인 ID (기본: guest)
+#    password: guest             # RabbitMQ 로그인 비밀번호 (기본: guest)
+#    virtual-host: /             # VirtualHost 설정 (기본: /)
+
 ### MyBatis ###
 mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml
@@ -41,6 +49,10 @@ logging:
   level:
     root: info # 전체 로그 레벨
     skcc.arch: debug # 특정 패키지 레벨
+    springframework:
+      boot:
+        autoconfigure: debug
+
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread][%highlight(%-5level)]%X{traceId}%X{depth} %msg%n" # 콘솔 로그 패턴
 # 로그 파일 관리
@@ -56,10 +68,11 @@ logging:
 decorator:
   datasource:
     p6spy:
-      enable-logging: true
+      enable-logging: false
 
 
 ### 캐시 저장소 (기본:caffeine)
 my:
   cache:
     type: caffeine
+
