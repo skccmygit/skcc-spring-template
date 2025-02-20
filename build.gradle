@@ -66,6 +66,9 @@ dependencies {
     // Common Lang
     implementation 'org.apache.commons:commons-lang3:3.14.0'
 
+    // message - Rabbit MQ
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+
     // Lombok
     compileOnly 'org.projectlombok:lombok'
 
