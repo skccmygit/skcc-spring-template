@@ -54,7 +54,10 @@
   - [X] stateless 상태에서의 데이터 저장을 위한 서비스
   - [X] caffeine
   - [ ] redis
-- [ ] MQ 연동 (Kafka)  
+- [ ] MQ 연동   
+  - [X] RabbitMQ
+  - [ ] Redis
+  - [ ] Kafka
 - [ ] 모니터링
   - [ ] actuator 
   - [ ] prometheus

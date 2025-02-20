@@ -7,6 +7,7 @@
 - Gradle
 - Redis & Caffeine
 - JPA & MyBatis
+- RabbitMQ
 
 ## Feature List
 - Caching
@@ -17,6 +18,7 @@
 - JPA Sample
 - MyBatis Sample
 - Http Client Wrapping Util
+- Message Queue
 
 ## Documents
 - [가이드 목록](docs/guide.md)
