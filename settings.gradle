@@ -7,5 +7,5 @@
 //    }
 //}
 
-rootProject.name = 'thymeleaf-spring'
+rootProject.name = 'skcc-spring-template'
 

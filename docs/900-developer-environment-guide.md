@@ -32,7 +32,7 @@
 ### 소스 Clone
 > URL은 변경될수 있습니다.
 ```bash
-git https://github.com/byounghoonmoon/thymeleaf-spring.git
+git https://github.com/byounghoonmoon/skcc-spring-template.git
 ```
 
 ### 참고사항

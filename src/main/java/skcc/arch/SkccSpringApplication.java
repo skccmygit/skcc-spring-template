@@ -6,11 +6,11 @@ import org.springframework.cache.annotation.EnableCaching;
 
 @SpringBootApplication
 @EnableCaching
-public class ThymeleafSpringApplication {
+public class SkccSpringApplication {
 
 
     public static void main(String[] args) {
-        SpringApplication.run(ThymeleafSpringApplication.class, args);
+        SpringApplication.run(SkccSpringApplication.class, args);
     }
 
 }

@@ -1,15 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: thymeleaf-spring-service
+  name: skcc-spring-template-service
   labels:
-    app: thymeleaf-spring
+    app: skcc-spring-template
 spec:
 #  type: LoadBalancer
   type: ClusterIP
 #  type: NodePort
   selector:
-    app: thymeleaf-spring
+    app: skcc-spring-template
   ports:
     - protocol: TCP
       port: 8080

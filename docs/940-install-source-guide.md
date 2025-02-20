@@ -15,7 +15,7 @@
 ![GIT-Bash 실행](images/source/source-down-2.png)
 
 3. git clone
-   - git repo 주소: <https://github.com/byounghoonmoon/thymeleaf-spring.git>  
+   - git repo 주소: <https://github.com/byounghoonmoon/skcc-spring-template.git>  
   **주소는 변경될 수 있습니다.**  
   ![Git-Clone-Source](images/source/source-git-clone.png)
 
@@ -51,7 +51,7 @@
             }
          }
       }
-      rootProject.name = 'thymeleaf-spring'
+      rootProject.name = 'skcc-spring-template'
       ```
 
 4. 만약, **JDK 설정이 안되었을 경우** 프로젝트 설정에서 JDK 설정(File-Project-Structure 또는 단축키[Ctrl+Alt+Shift+S])에서 세팅

@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: thymeleaf-spring
+  name: skcc-spring-template
   labels:
-    app: thymeleaf-spring
+    app: skcc-spring-template
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: thymeleaf-spring
+      app: skcc-spring-template
   template:
     metadata:
       labels:
-        app: thymeleaf-spring
+        app: skcc-spring-template
     spec:
       containers:
-        - name: thymeleaf-spring-container
-          image: passionbh/thymeleaf-spring:v.0.2
+        - name: skcc-spring-template-container
+          image: passionbh/skcc-spring-template:v.0.2
           ports:
             - containerPort: 8080

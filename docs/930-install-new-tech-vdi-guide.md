@@ -32,7 +32,7 @@
         }
      }
     }
-    rootProject.name = 'thymeleaf-spring'
+    rootProject.name = 'skcc-spring-template'
     ```
 
 ## 참고사항
