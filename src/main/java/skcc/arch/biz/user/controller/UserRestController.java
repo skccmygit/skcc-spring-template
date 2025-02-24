@@ -14,7 +14,6 @@ import skcc.arch.biz.user.controller.request.UserUpdateRequest;
 import skcc.arch.biz.user.controller.response.Token;
 import skcc.arch.biz.user.controller.response.UserResponse;
 import skcc.arch.biz.user.domain.User;
-import skcc.arch.biz.user.domain.UserCreate;
 import skcc.arch.biz.user.service.UserService;
 
 import java.util.List;
@@ -27,7 +26,7 @@ public class UserRestController {
 
     private final UserService userService;
 
-    @PostMapping
+    @PostMapping("/signup")
     public ApiResponse<UserResponse> signUp(@RequestBody UserCreateRequest userCreateRequest) {
 
         User user = userService.signUp(userCreateRequest.toModel());
@@ -62,10 +61,9 @@ public class UserRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getById(@PathVariable long id) {
-        return ResponseEntity
-                .ok()
-                .body(UserResponse.fromUser(userService.getById(id)));
+    public ApiResponse<UserResponse> getById(@PathVariable long id) {
+        return ApiResponse
+                .ok(UserResponse.fromUser(userService.getById(id)));
     }
 
     @GetMapping("/admin")

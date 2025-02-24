@@ -40,6 +40,7 @@ public class SecurityConfig {
             // 캐시, 파일, 로그, 인증
             "/api/cache/**",
             "/api/log/**",
+            "/api/users/signup",
             "/api/users/authenticate"
     };
 
@@ -68,8 +69,7 @@ public class SecurityConfig {
                 // 권한 규칙
                 .authorizeHttpRequests(auth -> auth
                         // 화이트리스트는 허용
-                        .requestMatchers(AUTH_WHITELIST) .permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                        .requestMatchers(AUTH_WHITELIST).permitAll()
                         // 특정영역은 ADMIN 만 허용
                         .requestMatchers("/api/users/admin/**").hasRole("ADMIN")
                         // 나머지 요청은 인증 필요
