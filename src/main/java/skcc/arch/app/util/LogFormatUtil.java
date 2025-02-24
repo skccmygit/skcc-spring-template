@@ -7,8 +7,10 @@ import java.util.Deque;
 
 public abstract class LogFormatUtil {
 
-    private static final String DEPTH_PREFIX = "depth";
-    private static final String PREFIX_STR = "--";
+    private static final String START_PREFIX = "-->";
+    private static final String COMPLETE_PREFIX = "<--";
+
+    private static final String DEPTH_KEY = "depth";
     private static final ThreadLocal<Deque<Integer>> depthThreadLocal = ThreadLocal.withInitial(ArrayDeque::new);
     private static final ThreadLocal<Deque<String>> signatureThreadLocal = ThreadLocal.withInitial(ArrayDeque::new);
 
@@ -20,7 +22,7 @@ public abstract class LogFormatUtil {
     public static void initializeDepth(String signature) {
         initializeThreadLocal(depthThreadLocal, 0);
         initializeThreadLocal(signatureThreadLocal, signature);
-        updateMDC(0, signature);
+        updateMDC(START_PREFIX, 0, signature);
     }
 
     /**
@@ -31,7 +33,7 @@ public abstract class LogFormatUtil {
     public static void incrementDepth(String signature) {
         int newDepth = pushToThreadLocal(depthThreadLocal, depthThreadLocal.get().peek() + 1);
         pushToThreadLocal(signatureThreadLocal, signature);
-        updateMDC(newDepth, signature);
+        updateMDC(START_PREFIX, newDepth, signature);
     }
 
     /**
@@ -41,7 +43,7 @@ public abstract class LogFormatUtil {
         if (depthThreadLocal.get().size() > 1) {
             depthThreadLocal.get().pop();
             signatureThreadLocal.get().pop();
-            updateMDC(depthThreadLocal.get().peek(), signatureThreadLocal.get().peek());
+            updateMDC(COMPLETE_PREFIX, depthThreadLocal.get().peek(), signatureThreadLocal.get().peek());
         } else {
             clearDepth();
         }
@@ -53,7 +55,7 @@ public abstract class LogFormatUtil {
     public static void clearDepth() {
         depthThreadLocal.remove();
         signatureThreadLocal.remove();
-        MDC.remove(DEPTH_PREFIX);
+        MDC.remove(DEPTH_KEY);
     }
 
     /**
@@ -96,8 +98,15 @@ public abstract class LogFormatUtil {
      * @param depth     로그 깊이
      * @param signature 로그 서명
      */
-    private static void updateMDC(int depth, String signature) {
-        String level = PREFIX_STR.repeat(depth);
-        MDC.put(DEPTH_PREFIX, String.format("[%s%s]", level, signature));
+    private static void updateMDC(String prefix, int depth, String signature) {
+        MDC.put(DEPTH_KEY, String.format("[ %s%s]", addSpace(prefix, depth), signature));
+    }
+
+    private static String addSpace(String prefix, int level) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < level; i++) {
+            sb.append( (i == level - 1) ? "|" + prefix : "| ");
+        }
+        return sb.toString();
     }
 }

@@ -197,17 +197,17 @@ public class LogRepository {
 
 ### 예제 출력 (콘솔 로그)
 ```
-2025-02-13 17:01:36 [http-nio-8080-exec-2][DEBUG][101a2d3d-6b6e-46b6-979a-ba][LogController.getLog1] 컨트롤러 호출 시작 : 1번 로그입니당
-2025-02-13 17:01:36 [http-nio-8080-exec-2][DEBUG][101a2d3d-6b6e-46b6-979a-ba][--LogService.logTest] Service 로그 호출 시작 
-2025-02-13 17:01:36 [http-nio-8080-exec-2][DEBUG][101a2d3d-6b6e-46b6-979a-ba][----LogRepository.logTest] Repository 로그 시작
-2025-02-13 17:01:36 [http-nio-8080-exec-2][DEBUG][101a2d3d-6b6e-46b6-979a-ba][----LogRepository.logTest] Repository 로그 입니다 : 100
-2025-02-13 17:01:36 [http-nio-8080-exec-2][DEBUG][101a2d3d-6b6e-46b6-979a-ba][----LogRepository.logTest] Repository 로그 종료
-2025-02-13 17:01:36 [http-nio-8080-exec-2][DEBUG][101a2d3d-6b6e-46b6-979a-ba][--LogService.logTest] Repository 재호출 
-2025-02-13 17:01:36 [http-nio-8080-exec-2][DEBUG][101a2d3d-6b6e-46b6-979a-ba][----LogRepository.logTest] Repository 로그 시작
-2025-02-13 17:01:36 [http-nio-8080-exec-2][DEBUG][101a2d3d-6b6e-46b6-979a-ba][----LogRepository.logTest] Repository 로그 입니다 : 100
-2025-02-13 17:01:36 [http-nio-8080-exec-2][DEBUG][101a2d3d-6b6e-46b6-979a-ba][----LogRepository.logTest] Repository 로그 종료
-2025-02-13 17:01:36 [http-nio-8080-exec-2][DEBUG][101a2d3d-6b6e-46b6-979a-ba][--LogService.logTest] Service 로그 호출 종료 
-2025-02-13 17:01:36 [http-nio-8080-exec-2][DEBUG][101a2d3d-6b6e-46b6-979a-ba][LogController.getLog1] 컨트롤러 호출 종료
+2025-02-24 09:13:23 [http-nio-8080-exec-6][DEBUG][1d4c05d0-28ee-4b91-8cb9-4a][ LogController.getLog1] 컨트롤러 호출 시작 : 1번 로그입니당
+2025-02-24 09:13:23 [http-nio-8080-exec-6][DEBUG][1d4c05d0-28ee-4b91-8cb9-4a][ |-->LogService.logTest] Service 로그 호출 시작 
+2025-02-24 09:13:23 [http-nio-8080-exec-6][DEBUG][1d4c05d0-28ee-4b91-8cb9-4a][ | |-->LogRepository.logTest] Repository 로그 시작
+2025-02-24 09:13:23 [http-nio-8080-exec-6][DEBUG][1d4c05d0-28ee-4b91-8cb9-4a][ | |-->LogRepository.logTest] Repository 로그 입니다 : 100
+2025-02-24 09:13:23 [http-nio-8080-exec-6][DEBUG][1d4c05d0-28ee-4b91-8cb9-4a][ | |-->LogRepository.logTest] Repository 로그 종료
+2025-02-24 09:13:23 [http-nio-8080-exec-6][DEBUG][1d4c05d0-28ee-4b91-8cb9-4a][ |<--LogService.logTest] Repository 재호출 
+2025-02-24 09:13:23 [http-nio-8080-exec-6][DEBUG][1d4c05d0-28ee-4b91-8cb9-4a][ | |-->LogRepository.logTest] Repository 로그 시작
+2025-02-24 09:13:23 [http-nio-8080-exec-6][DEBUG][1d4c05d0-28ee-4b91-8cb9-4a][ | |-->LogRepository.logTest] Repository 로그 입니다 : 100
+2025-02-24 09:13:23 [http-nio-8080-exec-6][DEBUG][1d4c05d0-28ee-4b91-8cb9-4a][ | |-->LogRepository.logTest] Repository 로그 종료
+2025-02-24 09:13:23 [http-nio-8080-exec-6][DEBUG][1d4c05d0-28ee-4b91-8cb9-4a][ |<--LogService.logTest] Service 로그 호출 종료 
+2025-02-24 09:13:23 [http-nio-8080-exec-6][DEBUG][1d4c05d0-28ee-4b91-8cb9-4a][ LogController.getLog1] 컨트롤러 호출 종료
 ```
 
 ---
