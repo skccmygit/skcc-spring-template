@@ -11,7 +11,7 @@
 >
 > SK 사내 ROOT 인증서 추가
 
-- SK ROOT 인증서 파일 디렉토리 이동 (프로젝트의 ssl 폴더의 sk.crt 파일)
+- SK ROOT 인증서 파일 디렉토리 이동 (프로젝트의 docs/ssl 폴더의 sk.crt 파일)
 - keytool 명령어로 인증서 추가
 
 ```bash

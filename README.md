@@ -10,6 +10,8 @@
 - RabbitMQ
 
 ## Feature List
+- Exception Handle (Control Advice)
+- Message resource
 - Caching
 - Spring Security
 - JWT Token Generation
