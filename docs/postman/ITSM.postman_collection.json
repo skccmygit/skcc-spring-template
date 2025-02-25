@@ -7,10 +7,10 @@
 	},
 	"item": [
 		{
-			"name": "사용자",
+			"name": "초기 세팅",
 			"item": [
 				{
-					"name": "[사용자] 가입",
+					"name": "[사용자] ADMIN 생성",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -26,7 +26,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"admin@gmail.com\",\r\n  \"username\": \"sk-admin\",\r\n  \"password\": \"admin\"\r\n}",
+							"raw": "{\r\n  \"email\": \"admin@sk.com\",\r\n  \"username\": \"sk-admin\",\r\n  \"password\": \"admin\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -50,6 +50,368 @@
 					"response": []
 				},
 				{
+					"name": "[사용자] ADMIN 변경",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//👉 url 및 쿠키 설정\r",
+									"const url = 'http://localhost:8080/api/users/authenticate';\r",
+									"const headers = {\r",
+									"    'Content-type':'application/json'\r",
+									"};\r",
+									"\r",
+									"//👉 API 양식에 맞추어 Body에 필요한 값 넣기\r",
+									"const data = {\r",
+									"    'email': 'admin@sk.com',\r",
+									"    'password': 'admin'\r",
+									"};\r",
+									"\r",
+									"//👉 Request 객체 만들기\r",
+									"const requestSettings = {\r",
+									"    url: url,\r",
+									"    method: 'POST',\r",
+									"    header: headers,\r",
+									"    body: JSON.stringify(data)\r",
+									"};\r",
+									"\r",
+									"//👉 pm.sendRequest로 API를 호출할 수 있다\r",
+									"//👉 callback을 전달해서 요청을 받았을 때 할 동작을 설정한다.\r",
+									"pm.sendRequest(requestSettings, function (err, response) {\r",
+									"    //👉 응답을 파싱해서 Collection 변수에 저장할 수 있다.\r",
+									"    let json = response.json();\r",
+									"    console.log(json) //👉 콘솔에 출력할 수도 있다.    \r",
+									"    pm.collectionVariables.set(\"admin_token\", json.data.accessToken);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin@sk.com\",\r\n    \"role\": \"USER\",\r\n    \"status\": \"ACTIVE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[사용자] USER 생성",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"admin@sk.com\",\r\n  \"username\": \"sk-admin\",\r\n  \"password\": \"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/users/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[사용자] USER 변경",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//👉 url 및 쿠키 설정\r",
+									"const url = 'http://localhost:8080/api/users/authenticate';\r",
+									"const headers = {\r",
+									"    'Content-type':'application/json'\r",
+									"};\r",
+									"\r",
+									"//👉 API 양식에 맞추어 Body에 필요한 값 넣기\r",
+									"const data = {\r",
+									"    'email': 'admin@sk.com',\r",
+									"    'password': 'admin'\r",
+									"};\r",
+									"\r",
+									"//👉 Request 객체 만들기\r",
+									"const requestSettings = {\r",
+									"    url: url,\r",
+									"    method: 'POST',\r",
+									"    header: headers,\r",
+									"    body: JSON.stringify(data)\r",
+									"};\r",
+									"\r",
+									"//👉 pm.sendRequest로 API를 호출할 수 있다\r",
+									"//👉 callback을 전달해서 요청을 받았을 때 할 동작을 설정한다.\r",
+									"pm.sendRequest(requestSettings, function (err, response) {\r",
+									"    //👉 응답을 파싱해서 Collection 변수에 저장할 수 있다.\r",
+									"    let json = response.json();\r",
+									"    console.log(json) //👉 콘솔에 출력할 수도 있다.    \r",
+									"    pm.collectionVariables.set(\"admin_token\", json.data.accessToken);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin@sk.com\",\r\n    \"role\": \"USER\",\r\n    \"status\": \"ACTIVE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "사용자",
+			"item": [
+				{
+					"name": "[사용자] 가입",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"admin@sk.com\",\r\n  \"username\": \"sk-admin\",\r\n  \"password\": \"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/users/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[사용자] 가입 [필수값누락]",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"admin@sk.com\",\r\n  \"username\": \"sk-admin\",\r\n  \"password\": \"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/users/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[사용자] 정보 변경",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ADMIN_TOKEN_INF}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin@sk.com\",\r\n    \"role\": \"USER\",\r\n    \"status\": \"ACTIVE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[사용자] 인증 [일반]",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"user@sk.com\",\r\n  \"password\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/users/authenticate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "[사용자] 전체조회",
 					"request": {
 						"auth": {
@@ -57,7 +419,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsInVpZCI6ImFkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwiZW1haWwiOiJ0ZXN0QGdtYWlsLmNvbSIsInVzZXJuYW1lIjoi7YWM7Iqk7Yq4IiwiaWF0IjoxNzM5OTIxMzk0LCJleHAiOjE3Mzk5MjMxOTR9.w-dCjSC9DEIG9iqadm2XFMU3j4H3k9sFWsmQstiQpKc",
+									"value": "{{ADMIN_TOKEN_INF}}",
 									"type": "string"
 								}
 							]
@@ -87,7 +449,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyaJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJ1aWQiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4iLCJpYXQiOjE3Mzc1OTE2MDUsImV4cCI6MTczNzc3MTYwNX0.hJ4jkWya8IYse52rdEBQ0HTGap4D3SItMztd5el6nfE",
+									"value": "{{ADMIN_TOKEN_INF}}",
 									"type": "string"
 								}
 							]
@@ -119,122 +481,12 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "[사용자] 인증 [일반]",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"test@gmail.com\",\r\n    \"password\": \"1234\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/api/users/authenticate",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"users",
-								"authenticate"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[사용자] 상태값 변경",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"test11@gmail.com\",\r\n  \"username\": \"test11\",\r\n  \"password\": \"1234\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/api/users",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"users"
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		},
 		{
 			"name": "인증",
 			"item": [
-				{
-					"name": "인증 예외",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/api/log/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"log",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
 				{
 					"name": "인증 대상, 토큰 미존재",
 					"request": {
@@ -412,7 +664,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsInVpZCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwidXNlcm5hbWUiOiLthYzsiqTtirgiLCJpYXQiOjE3Mzk1MTYyNTQsImV4cCI6MTczOTUxODA1NH0.K20YYY-SVwH_Yam9BVm8jMrxmmR-OvHVgeiMaCbecpQ",
+									"value": "{{USER_TOKEN_INF}}",
 									"type": "string"
 								}
 							]
@@ -458,7 +710,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsInVpZCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwidXNlcm5hbWUiOiLthYzsiqTtirgiLCJpYXQiOjE3Mzk1MTYyNTQsImV4cCI6MTczOTUxODA1NH0.K20YYY-SVwH_Yam9BVm8jMrxmmR-OvHVgeiMaCbecpQ",
+									"value": "{{USER_TOKEN_INF}}",
 									"type": "string"
 								}
 							]
@@ -508,7 +760,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsInVpZCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwidXNlcm5hbWUiOiLthYzsiqTtirgiLCJpYXQiOjE3Mzk1MTYyNTQsImV4cCI6MTczOTUxODA1NH0.K20YYY-SVwH_Yam9BVm8jMrxmmR-OvHVgeiMaCbecpQ",
+									"value": "{{USER_TOKEN_INF}}",
 									"type": "string"
 								}
 							]
@@ -548,7 +800,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsInVpZCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwidXNlcm5hbWUiOiLthYzsiqTtirgiLCJpYXQiOjE3Mzk1MTYyNTQsImV4cCI6MTczOTUxODA1NH0.K20YYY-SVwH_Yam9BVm8jMrxmmR-OvHVgeiMaCbecpQ",
+									"value": "{{USER_TOKEN_INF}}",
 									"type": "string"
 								}
 							]
@@ -586,6 +838,45 @@
 			"name": "코드",
 			"item": [
 				{
+					"name": "[코드] 생성",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{USER_TOKEN_INF}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"code\": \"CODE-0001\",\r\n  \"codeName\": \"코드-0001\",\r\n  \"parentCodeId\": null,\r\n  \"description\": \"임시 생성 코드\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/codes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"codes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "[코드] ID로 조회",
 					"request": {
 						"auth": {
@@ -593,7 +884,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsInVpZCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwidXNlcm5hbWUiOiLthYzsiqTtirgiLCJpYXQiOjE3Mzk1MTcyMTksImV4cCI6MTczOTUxOTAxOX0.4um23l8NuNiGfaOsbVaxoJiZ1Ff7MU-cHJOu4CY1koM",
+									"value": "{{USER_TOKEN_INF}}",
 									"type": "string"
 								}
 							]
@@ -630,7 +921,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsInVpZCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwidXNlcm5hbWUiOiLthYzsiqTtirgiLCJpYXQiOjE3Mzk1MTcyMTksImV4cCI6MTczOTUxOTAxOX0.4um23l8NuNiGfaOsbVaxoJiZ1Ff7MU-cHJOu4CY1koM",
+									"value": "{{USER_TOKEN_INF}}",
 									"type": "string"
 								}
 							]
@@ -670,7 +961,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsInVpZCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwidXNlcm5hbWUiOiLthYzsiqTtirgiLCJpYXQiOjE3Mzk1MTcyMTksImV4cCI6MTczOTUxOTAxOX0.4um23l8NuNiGfaOsbVaxoJiZ1Ff7MU-cHJOu4CY1koM",
+									"value": "{{USER_TOKEN_INF}}",
 									"type": "string"
 								}
 							]
@@ -703,45 +994,6 @@
 					"response": []
 				},
 				{
-					"name": "[코드] 생성",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"code\": \"CHILD-CHILD-0002\",\r\n  \"codeName\": \"손자\",\r\n  \"parentCodeId\": 78,\r\n  \"description\": \"최하위 자식\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/api/codes",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"codes"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "[코드] 업데이트",
 					"request": {
 						"auth": {
@@ -749,7 +1001,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsInVpZCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwidXNlcm5hbWUiOiLthYzsiqTtirgiLCJpYXQiOjE3Mzk1MTcyMTksImV4cCI6MTczOTUxOTAxOX0.4um23l8NuNiGfaOsbVaxoJiZ1Ff7MU-cHJOu4CY1koM",
+									"value": "{{USER_TOKEN_INF}}",
 									"type": "string"
 								}
 							]
@@ -765,7 +1017,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{    \r\n    \"id\": 21,\r\n    \"code\": \"CHILD_1\",\r\n    \"codeName\": \"자식_1\",\r\n    \"parentCodeId\": 12,\r\n    \"seq\": 1,\r\n    \"description\": \"자식_1_설명수정\",\r\n    \"delYn\": false\r\n}",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"code\": \"CODE-0001\",\r\n    \"codeName\": \"코드-0001\",\r\n    \"parentCodeId\": null,\r\n    \"seq\": 1,\r\n    \"description\": null,\r\n    \"delYn\": true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -800,7 +1052,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsInVpZCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwidXNlcm5hbWUiOiLthYzsiqTtirgiLCJpYXQiOjE3Mzk1MTcyMTksImV4cCI6MTczOTUxOTAxOX0.4um23l8NuNiGfaOsbVaxoJiZ1Ff7MU-cHJOu4CY1koM",
+									"value": "{{USER_TOKEN_INF}}",
 									"type": "string"
 								}
 							]
@@ -1046,7 +1298,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/sample/set/key1",
+							"raw": "http://localhost:8080/api/context/set/key1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1054,7 +1306,7 @@
 							"port": "8080",
 							"path": [
 								"api",
-								"sample",
+								"context",
 								"set",
 								"key1"
 							]
@@ -1078,7 +1330,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/sample/get/key1",
+							"raw": "http://localhost:8080/api/context/get/key1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1086,7 +1338,7 @@
 							"port": "8080",
 							"path": [
 								"api",
-								"sample",
+								"context",
 								"get",
 								"key1"
 							]
@@ -1110,7 +1362,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/sample/get/key1",
+							"raw": "http://localhost:8080/api/context/get/key1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1118,7 +1370,7 @@
 							"port": "8080",
 							"path": [
 								"api",
-								"sample",
+								"context",
 								"get",
 								"key1"
 							]
@@ -1292,6 +1544,12 @@
 					"response": []
 				}
 			]
+		}
+	],
+	"variable": [
+		{
+			"key": "admin_token",
+			"value": ""
 		}
 	]
 }
