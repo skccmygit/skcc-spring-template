@@ -57,6 +57,10 @@ public class User {
      */
     public User updateStatus(UserStatus requestStatus) {
 
+        if (requestStatus == null) {
+            throw new IllegalArgumentException("requestStatus is null");
+        }
+
         if (status == requestStatus) {
             throw new IllegalStateException("status is same");
         }

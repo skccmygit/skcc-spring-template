@@ -1,10 +1,10 @@
 package skcc.arch.biz.user.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import skcc.arch.app.dto.ApiResponse;
 import skcc.arch.app.dto.PageInfo;
@@ -27,7 +27,7 @@ public class UserRestController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ApiResponse<UserResponse> signUp(@RequestBody UserCreateRequest userCreateRequest) {
+    public ApiResponse<UserResponse> signUp(@Valid @RequestBody UserCreateRequest userCreateRequest) {
 
         User user = userService.signUp(userCreateRequest.toModel());
         return ApiResponse.ok(UserResponse.fromUser(user));
@@ -76,8 +76,8 @@ public class UserRestController {
                 .toList(), PageInfo.fromPage(result));
     }
 
-    @PostMapping("/{id}")
-    public ApiResponse<UserResponse> updateUserStatus(@PathVariable long id, @RequestBody UserUpdateRequest userUpdateRequest) {
+    @PatchMapping
+    public ApiResponse<UserResponse> updateUserStatus(@Valid @RequestBody UserUpdateRequest userUpdateRequest) {
         User user = userService.updateUserStatus(userUpdateRequest.toModel());
         return ApiResponse.ok(UserResponse.fromUser(user));
     }
