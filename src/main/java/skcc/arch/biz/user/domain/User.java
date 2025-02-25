@@ -74,4 +74,18 @@ public class User {
                 .status(requestStatus)
                 .build();
     }
+
+    /**
+     * 사용자정보 업데이트
+     */
+    public User updateUser(User updateUser, PasswordEncoder passwordEncoder) {
+        return User.builder()
+                .id(id)
+                .email(email)
+                .username(updateUser.getUsername()!=null ? updateUser.getUsername() : username)
+                .password(updateUser.getPassword()!=null ? passwordEncoder.encode(updateUser.getPassword()) : password)
+                .role(updateUser.getRole()!=null ? updateUser.getRole() : role)
+                .status(updateUser.getStatus()!=null ? updateUser.getStatus() : status)
+                .build();
+    }
 }

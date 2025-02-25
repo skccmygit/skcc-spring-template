@@ -77,8 +77,8 @@ public class UserRestController {
     }
 
     @PatchMapping
-    public ApiResponse<UserResponse> updateUserStatus(@Valid @RequestBody UserUpdateRequest userUpdateRequest) {
-        User user = userService.updateUserStatus(userUpdateRequest.toModel());
+    public ApiResponse<UserResponse> updateUser(@Valid @RequestBody UserUpdateRequest userUpdateRequest) {
+        User user = userService.updateUser(userUpdateRequest.toModel());
         return ApiResponse.ok(UserResponse.fromUser(user));
     }
 

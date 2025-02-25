@@ -99,6 +99,16 @@ public class UserService implements UserServicePort {
         return userRepositoryPort.updateStatus(updateUser);
     }
 
+    @Override
+    public User updateUser(User user) {
+        // 조회
+        User findUser = userRepositoryPort.findByEmail(user.getEmail())
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ELEMENT));
+
+        User updatedUser = findUser.updateUser(user, passwordEncoder);
+        return userRepositoryPort.save(updatedUser);
+    }
+
     // 이메일로 존재여부 체크
     private void checkUserExistByEmail(String email) {
         Optional<User> optionalUser = userRepositoryPort.findByEmail(email);

@@ -29,5 +29,9 @@ public interface UserServicePort {
     Page<User> findAdminUsers(Pageable pageable);
 
     // 사용자 상태 변경
+    @Deprecated
     User updateUserStatus(User user);
+
+    // 사용자 정보 변경
+    User updateUser(User user);
 }

@@ -74,6 +74,29 @@ class UserTest {
         //when & then
         assertThrows (IllegalStateException.class, () -> originalUser.updateStatus(userUpdateRequest.getStatus()));
 
+    }
+
+    @Test
+    void 사용자_정보중_일부만_변경() throws Exception {
+        //given
+        String newUserName = "홍길순";
+        UserUpdateRequest userUpdateRequest = UserUpdateRequest.builder()
+                .username(newUserName)
+                .build();
+
+        String userName = "홍길동";
+        User originalUser = User.builder()
+                .username(userName)
+                .status(UserStatus.PENDING)
+                .build();
+
+        //when
+        User updatedUser = originalUser.updateUser(userUpdateRequest.toModel(), new FakePasswordEncoder());
+
+        //then
+        Assertions.assertThat(updatedUser.getUsername()).isEqualTo(userUpdateRequest.getUsername());
+        Assertions.assertThat(updatedUser.getStatus()).isEqualTo(originalUser.getStatus());
+
 
     }
 }
