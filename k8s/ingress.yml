@@ -2,6 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: sample-ingress
+  namespace: dev
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1$2 # Rewrite Target 설정 (regEx 활용)
     nginx.ingress.kubernetes.io/use-regex: "true"  # 정규식 활성화

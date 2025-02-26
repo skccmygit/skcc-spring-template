@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: skcc-spring-template
+  namespace: dev
   labels:
     app: skcc-spring-template
 spec:
@@ -16,6 +17,26 @@ spec:
     spec:
       containers:
         - name: skcc-spring-template-container
-          image: passionbh/skcc-spring-template:v.0.2
+          image: skcc-spring-template:v0.1
           ports:
             - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: skcc-spring-template-servicedo
+  namespace: dev
+  labels:
+    app: skcc-spring-template
+spec:
+  #  type: LoadBalancer
+  type: ClusterIP
+  #  type: NodePort
+  selector:
+    app: skcc-spring-template
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+#      nodePort: 30080     # Minikube NodePort (외부 접근용 포트)
