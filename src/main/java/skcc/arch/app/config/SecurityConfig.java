@@ -33,6 +33,8 @@ public class SecurityConfig {
     private final JwtUtil jwtUtil;
     private static final String[] AUTH_WHITELIST = {
             // FIXME - 타임리프(추후제거)
+            "/view/**",
+            "/nuxt/**",
             "/","/login", "/register",
             // FIXME - 정적파일(추후제건
             "/css/**", "/js/**", "/images/**", "/favicon.ico",

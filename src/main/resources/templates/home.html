@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="container">
+    <header id="header"> Thymeleaf Header 영역</header>
+    <div>
+        <h2> 클라이언트에서 SSR 호출</h2>
+        <h3>사용 환경을 선택하세요</h3>
+        <div class="radio-group">
+            <label>
+                <input type="radio" name="environment" value="local" checked> 로컬
+            </label>
+            <label>
+                <input type="radio" name="environment" value="docker"> Docker
+            </label>
+        </div>
+        <button onclick="loadIframe('/nuxt/request/app/list')">request/app/list</button>
+        <button onclick="loadIframe('/nuxt/request/app/list2')">request/app/list2</button>
+        <button onclick="loadIframe('/nuxt/request/infra/list')">request/infra/list</button>
+
+        <p>컨텐츠 영역</p>
+        <div id="content">
+            <iframe id="dynamic-iframe"  scrolling="no" ></iframe>
+        </div>
+
+    </div>
+    <footer id="footer">Thymeleaf Footer 영역</footer>
+</div> <!-- /container -->
+</body>
+</html>
+
+<script>
+
+    /**
+     * Updates the source URL of an iframe element with an appended path.
+     *
+     * This function selects an iframe element with the ID 'dynamic-iframe' and sets its 'src' attribute
+     * to a new URL formed by appending the provided `path` to a predefined base URL.
+     *
+     * @param {string} path - The path to append to the base URL when updating the iframe's source.
+     */
+    const loadIframe = function (path) {
+        const iframe = document.getElementById('dynamic-iframe');
+
+        const selectedEnvironment = document.querySelector('input[name="environment"]:checked').value;
+
+        console.log("환경:" + selectedEnvironment);
+        // 환경에 따라 분기 처리
+        if (selectedEnvironment === "local") {
+            // 로컬
+            iframe.setAttribute('src', 'http://localhost:3000'+path);
+        } else if (selectedEnvironment === "docker") {
+            // 서버
+            iframe.setAttribute('src', path);
+        }
+    };
+
+    const iframe = document.getElementById('dynamic-iframe');
+    // 메시지를 수신하고 iframe 크기 조정
+    window.addEventListener('message', (event) => {
+        console.log("= 받은 데이터: ", event.data);
+
+        // 메시지 출처 확인 (보안)
+        if (event.origin !== 'http://localhost') {
+            console.log("출처 다름");
+            //return;
+        }
+
+        // iframe 높이 조정
+        if (event.data.type === 'resize') {
+            console.log("사이즈 조절: " + event.data.height)
+            iframe.style.height = event.data.height + 'px';
+        }
+    });
+</script>
+
+
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        height: 100%;
+    }
+    iframe {
+        width: 100%;
+        border: none;
+    }
+
+    #header {
+        background-color: darkgreen;
+        height: 32px;
+        text-color: white;
+        text-align: center;
+    }
+
+    #content {
+        background-color: lightgreen;
+    }
+
+    #footer {
+        background-color: darkgreen;
+        height: 32px;
+        text-color: white;
+        text-align: center;
+    }
+</style>
