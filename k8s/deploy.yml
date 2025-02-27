@@ -20,12 +20,15 @@ spec:
           image: skcc-spring-template:v0.1
           ports:
             - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: skcc-spring-template-config
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: skcc-spring-template-servicedo
+  name: skcc-spring-template-service
   namespace: dev
   labels:
     app: skcc-spring-template
