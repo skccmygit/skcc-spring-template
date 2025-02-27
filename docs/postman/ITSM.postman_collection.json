@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "faa7f57b-b701-4171-9f10-e400feacf707",
+		"_postman_id": "a6779a49-eccf-4e90-9a0b-0efddba44af1",
 		"name": "ITSM",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "8051371"
@@ -34,95 +34,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/users/signup",
-							"protocol": "http",
+							"raw": "{{domain}}/api/users/signup",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"users",
 								"signup"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[사용자] ADMIN 변경",
-					"event": [
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									"//👉 url 및 쿠키 설정\r",
-									"const url = 'http://localhost:8080/api/users/authenticate';\r",
-									"const headers = {\r",
-									"    'Content-type':'application/json'\r",
-									"};\r",
-									"\r",
-									"//👉 API 양식에 맞추어 Body에 필요한 값 넣기\r",
-									"const data = {\r",
-									"    'email': 'admin@sk.com',\r",
-									"    'password': 'admin'\r",
-									"};\r",
-									"\r",
-									"//👉 Request 객체 만들기\r",
-									"const requestSettings = {\r",
-									"    url: url,\r",
-									"    method: 'POST',\r",
-									"    header: headers,\r",
-									"    body: JSON.stringify(data)\r",
-									"};\r",
-									"\r",
-									"//👉 pm.sendRequest로 API를 호출할 수 있다\r",
-									"//👉 callback을 전달해서 요청을 받았을 때 할 동작을 설정한다.\r",
-									"pm.sendRequest(requestSettings, function (err, response) {\r",
-									"    //👉 응답을 파싱해서 Collection 변수에 저장할 수 있다.\r",
-									"    let json = response.json();\r",
-									"    console.log(json) //👉 콘솔에 출력할 수도 있다.    \r",
-									"    pm.collectionVariables.set(\"admin_token\", json.data.accessToken);\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{admin_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"admin@sk.com\",\r\n    \"role\": \"USER\",\r\n    \"status\": \"ACTIVE\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/api/users",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"users"
 							]
 						}
 					},
@@ -145,7 +64,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"admin@sk.com\",\r\n  \"username\": \"sk-admin\",\r\n  \"password\": \"admin\"\r\n}",
+							"raw": "{\r\n  \"email\": \"user@sk.com\",\r\n  \"username\": \"sk-user\",\r\n  \"password\": \"admin\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -153,12 +72,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/users/signup",
-							"protocol": "http",
+							"raw": "{{domain}}/api/users/signup",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"users",
@@ -169,40 +86,40 @@
 					"response": []
 				},
 				{
-					"name": "[사용자] USER 변경",
+					"name": "[사용자] ADMIN 변경",
 					"event": [
 						{
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"//👉 url 및 쿠키 설정\r",
-									"const url = 'http://localhost:8080/api/users/authenticate';\r",
-									"const headers = {\r",
-									"    'Content-type':'application/json'\r",
-									"};\r",
+									"// //👉 url 및 쿠키 설정\r",
+									"// const url = '{{domain}}/api/users/authenticate';\r",
+									"// const headers = {\r",
+									"//     'Content-type':'application/json'\r",
+									"// };\r",
 									"\r",
-									"//👉 API 양식에 맞추어 Body에 필요한 값 넣기\r",
-									"const data = {\r",
-									"    'email': 'admin@sk.com',\r",
-									"    'password': 'admin'\r",
-									"};\r",
+									"// //👉 API 양식에 맞추어 Body에 필요한 값 넣기\r",
+									"// const data = {\r",
+									"//     'email': 'admin@sk.com',\r",
+									"//     'password': 'admin'\r",
+									"// };\r",
 									"\r",
-									"//👉 Request 객체 만들기\r",
-									"const requestSettings = {\r",
-									"    url: url,\r",
-									"    method: 'POST',\r",
-									"    header: headers,\r",
-									"    body: JSON.stringify(data)\r",
-									"};\r",
+									"// //👉 Request 객체 만들기\r",
+									"// const requestSettings = {\r",
+									"//     url: url,\r",
+									"//     method: 'POST',\r",
+									"//     header: headers,\r",
+									"//     body: JSON.stringify(data)\r",
+									"// };\r",
 									"\r",
-									"//👉 pm.sendRequest로 API를 호출할 수 있다\r",
-									"//👉 callback을 전달해서 요청을 받았을 때 할 동작을 설정한다.\r",
-									"pm.sendRequest(requestSettings, function (err, response) {\r",
-									"    //👉 응답을 파싱해서 Collection 변수에 저장할 수 있다.\r",
-									"    let json = response.json();\r",
-									"    console.log(json) //👉 콘솔에 출력할 수도 있다.    \r",
-									"    pm.collectionVariables.set(\"admin_token\", json.data.accessToken);\r",
-									"});\r",
+									"// //👉 pm.sendRequest로 API를 호출할 수 있다\r",
+									"// //👉 callback을 전달해서 요청을 받았을 때 할 동작을 설정한다.\r",
+									"// pm.sendRequest(requestSettings, function (err, response) {\r",
+									"//     //👉 응답을 파싱해서 Collection 변수에 저장할 수 있다.\r",
+									"//     let json = response.json();\r",
+									"//     console.log(json) //👉 콘솔에 출력할 수도 있다.    \r",
+									"//     pm.collectionVariables.set(\"admin_token\", json.data.accessToken);\r",
+									"// });\r",
 									""
 								],
 								"type": "text/javascript",
@@ -216,7 +133,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{admin_token}}",
+									"value": "{{ADMIN_TOKEN_INF}}",
 									"type": "string"
 								}
 							]
@@ -225,7 +142,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"admin@sk.com\",\r\n    \"role\": \"USER\",\r\n    \"status\": \"ACTIVE\"\r\n}",
+							"raw": "{\r\n    \"email\": \"admin@sk.com\",\r\n    \"role\": \"ADMIN\",\r\n    \"status\": \"ACTIVE\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -233,12 +150,87 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/users",
-							"protocol": "http",
+							"raw": "{{domain}}/api/users",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[사용자] USER 변경",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// //👉 url 및 쿠키 설정\r",
+									"// const url = pm.collectionVariables.get('domain')+'/api/users/authenticate';\r",
+									"// const headers = {\r",
+									"//     'Content-type':'application/json'\r",
+									"// };\r",
+									"\r",
+									"// //👉 API 양식에 맞추어 Body에 필요한 값 넣기\r",
+									"// const data = {\r",
+									"//     'email': 'admin@sk.com',\r",
+									"//     'password': 'admin'\r",
+									"// };\r",
+									"\r",
+									"// //👉 Request 객체 만들기\r",
+									"// const requestSettings = {\r",
+									"//     url: url,\r",
+									"//     method: 'POST',\r",
+									"//     header: headers,\r",
+									"//     body: JSON.stringify(data)\r",
+									"// };\r",
+									"\r",
+									"// //👉 pm.sendRequest로 API를 호출할 수 있다\r",
+									"// //👉 callback을 전달해서 요청을 받았을 때 할 동작을 설정한다.\r",
+									"// pm.sendRequest(requestSettings, function (err, response) {\r",
+									"//     //👉 응답을 파싱해서 Collection 변수에 저장할 수 있다.\r",
+									"//     let json = response.json();\r",
+									"//     console.log(json) //👉 콘솔에 출력할 수도 있다.    \r",
+									"//     pm.collectionVariables.set(\"admin_token\", json.data.accessToken);\r",
+									"// });\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ADMIN_TOKEN_INF}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"user@sk.com\",\r\n    \"role\": \"USER\",\r\n    \"status\": \"ACTIVE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/users",
+							"host": [
+								"{{domain}}"
+							],
 							"path": [
 								"api",
 								"users"
@@ -277,12 +269,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/users/signup",
-							"protocol": "http",
+							"raw": "{{domain}}/api/users/signup",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"users",
@@ -309,7 +299,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"admin@sk.com\",\r\n  \"username\": \"sk-admin\",\r\n  \"password\": \"admin\"\r\n}",
+							"raw": "{\r\n  \"email\": \"admin2@sk.com\",\r\n  \"username\": \"sk-admin\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -317,12 +307,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/users/signup",
-							"protocol": "http",
+							"raw": "{{domain}}/api/users/signup",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"users",
@@ -357,12 +345,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/users",
-							"protocol": "http",
+							"raw": "{{domain}}/api/users",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"users"
@@ -388,7 +374,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"user@sk.com\",\r\n  \"password\": \"password\"\r\n}",
+							"raw": "{\r\n  \"email\": \"user@sk.com\",\r\n  \"password\": \"admin\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -396,12 +382,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/users/authenticate",
-							"protocol": "http",
+							"raw": "{{domain}}/api/users/authenticate",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"users",
@@ -427,12 +411,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/users",
-							"protocol": "http",
+							"raw": "{{domain}}/api/users",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"users"
@@ -457,12 +439,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/users/admin?page=1&size=3",
-							"protocol": "http",
+							"raw": "{{domain}}/api/users/admin?page=1&size=3",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"users",
@@ -503,12 +483,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/users/admin?page=1&size=3",
-							"protocol": "http",
+							"raw": "{{domain}}/api/users/admin?page=1&size=3",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"users",
@@ -544,12 +522,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/users/admin?page=1&size=3",
-							"protocol": "http",
+							"raw": "{{domain}}/api/users/admin?page=1&size=3",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"users",
@@ -585,12 +561,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/users/admin?page=1&size=3",
-							"protocol": "http",
+							"raw": "{{domain}}/api/users/admin?page=1&size=3",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"users",
@@ -626,12 +600,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/users/admin?page=1&size=3",
-							"protocol": "http",
+							"raw": "{{domain}}/api/users/admin?page=1&size=3",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"users",
@@ -687,12 +659,10 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/files/upload",
-							"protocol": "http",
+							"raw": "{{domain}}/api/files/upload",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"files",
@@ -736,12 +706,10 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/files/upload/multiple",
-							"protocol": "http",
+							"raw": "{{domain}}/api/files/upload/multiple",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"files",
@@ -760,7 +728,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{USER_TOKEN_INF}}",
+									"value": "{{ADMIN_TOKEN_INF}}",
 									"type": "string"
 								}
 							]
@@ -777,12 +745,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/files/download",
-							"protocol": "http",
+							"raw": "{{domain}}/api/files/download",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"files",
@@ -817,12 +783,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/files/download",
-							"protocol": "http",
+							"raw": "{{domain}}/api/files/download",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"files",
@@ -862,12 +826,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/codes",
-							"protocol": "http",
+							"raw": "{{domain}}/api/codes",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"codes"
@@ -892,12 +854,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/codes/1?withChild=false",
-							"protocol": "http",
+							"raw": "{{domain}}/api/codes/1?withChild=false",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"codes",
@@ -929,12 +889,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/codes?size=5&page=3",
-							"protocol": "http",
+							"raw": "{{domain}}/api/codes?size=5&page=3",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"codes"
@@ -969,12 +927,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/codes?code=CHILD_1&withChild=true",
-							"protocol": "http",
+							"raw": "{{domain}}/api/codes?code=CODE-0001&withChild=true",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"codes"
@@ -982,7 +938,7 @@
 							"query": [
 								{
 									"key": "code",
-									"value": "CHILD_1"
+									"value": "CODE-0001"
 								},
 								{
 									"key": "withChild",
@@ -1025,12 +981,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/codes",
-							"protocol": "http",
+							"raw": "{{domain}}/api/codes",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"codes"
@@ -1060,12 +1014,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/codes/cache/PARENT_11",
-							"protocol": "http",
+							"raw": "{{domain}}/api/codes/cache/PARENT_11",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"codes",
@@ -1092,12 +1044,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/cache/clear/code",
-							"protocol": "http",
+							"raw": "{{domain}}/api/cache/clear/code",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"cache",
@@ -1124,12 +1074,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/cache/evict/code/PARENT_1",
-							"protocol": "http",
+							"raw": "{{domain}}/api/cache/evict/code/PARENT_1",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"cache",
@@ -1162,12 +1110,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/log/1",
-							"protocol": "http",
+							"raw": "{{domain}}/api/log/1",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"log",
@@ -1207,12 +1153,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/users/authenticate",
-							"protocol": "http",
+							"raw": "{{domain}}/api/users/authenticate",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"users",
@@ -1253,12 +1197,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/users/authenticate",
-							"protocol": "http",
+							"raw": "{{domain}}/api/users/authenticate",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"users",
@@ -1298,12 +1240,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/context/set/key1",
-							"protocol": "http",
+							"raw": "{{domain}}/api/context/set/key1",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"context",
@@ -1330,12 +1270,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/context/get/key1",
-							"protocol": "http",
+							"raw": "{{domain}}/api/context/get/key1",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"context",
@@ -1362,12 +1300,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/context/get/key1",
-							"protocol": "http",
+							"raw": "{{domain}}/api/context/get/key1",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"context",
@@ -1408,12 +1344,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/messaging/pub",
-							"protocol": "http",
+							"raw": "{{domain}}/api/messaging/pub",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"messaging",
@@ -1448,12 +1382,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/messaging/pub",
-							"protocol": "http",
+							"raw": "{{domain}}/api/messaging/pub",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"messaging",
@@ -1488,12 +1420,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/messaging/pub",
-							"protocol": "http",
+							"raw": "{{domain}}/api/messaging/pub",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"messaging",
@@ -1528,12 +1458,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/messaging/subSync",
-							"protocol": "http",
+							"raw": "{{domain}}/api/messaging/subSync",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"messaging",

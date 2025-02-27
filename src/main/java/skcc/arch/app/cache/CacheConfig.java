@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,17 +14,20 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
+@Slf4j
 public class CacheConfig {
 
     @Bean
     @ConditionalOnProperty(name = "my.cache.type", havingValue = "caffeine")
     public CacheService caffeineCacheService() {
+        log.info("캐시 구현체 : CaffeineCacheService");
         return new CaffeineCacheService();
     }
 
     @Bean
     @ConditionalOnProperty(name = "my.cache.type", havingValue = "redis")
     public CacheService redisCacheService(RedisConnectionFactory connectionFactory) {
+        log.info("캐시 구현체 : RedisCacheService");
         return new RedisCacheService(getRedisTemplate(connectionFactory));
     }
 
