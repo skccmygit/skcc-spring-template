@@ -24,4 +24,3 @@
 
 ## Documents
 - [가이드 목록](docs/guide.md)
-- ...

@@ -37,6 +37,7 @@ public class SecurityConfig {
             // FIXME - 정적파일(추후제건
             "/css/**", "/js/**", "/images/**", "/favicon.ico",
 //            "/**", //테스트용
+            "/h2-console/**",
             // 캐시, 파일, 로그, 인증
             "/api/cache/**",
             "/api/log/**",
