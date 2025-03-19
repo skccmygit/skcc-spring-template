@@ -26,6 +26,7 @@ public class UserRestController {
 
     private final UserService userService;
 
+    // 가입
     @PostMapping("/signup")
     public ApiResponse<UserResponse> signUp(@Valid @RequestBody UserCreateRequest userCreateRequest) {
 

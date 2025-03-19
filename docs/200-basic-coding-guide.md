@@ -21,7 +21,9 @@
 3. [변수 선언](#변수-선언)
     - [상수 (`static final`)](#상수-static-final)
 4. [주석 작성](#주석-작성)
-    - [클래스/메서드 설명 (Javadoc)](#클래스메서드-설명-javadoc)
+    - [주석 스타일](#주석-스타일)
+    - [Code Template 및 Javadoc 사용](#code-template-및-javadoc-사용)
+    - [클래스/메서드 설명](#클래스/메서드-설명)
     - [라인 설명](#라인-설명)
     - [TODO 주석](#todo-주석)
 
@@ -594,29 +596,64 @@ int result = switch (number) {
 
 ## 주석 작성
 
-- 코드는 **의도를 설명하기 위한 주석**을 작성한다.
-  - **Why**, **How**를 중심으로 작성하고, *What*은 최대한 코드로 표현되도록 하라.
+- 코드는 **목적과 의도를 설명하기 위한 주석**을 작성한다.
+  - **Why**, **How**를 중심으로 작성하고, *What*은 최대한 코드로 표현되도록 작성
 
 ### 주석 스타일
+1. **Code Template 및 Javadoc 사용**
+    - Javadoc Plugin 설치 방법
+        - (사외망) 인텔리제이(intelliJ)의 File > Settings > Plugins 메뉴에서 'JavaDoc' 플러그인 설치
+          ![JavaDoc 플러그인 설치](images/guide/javadoc_plugin_install.png)
+        - (폐쇄망) Plugin Setting 이동 (File-Setting 또는 Ctrl+Alt+S) 하여 plugins 영역 클릭<br>
+          아래 그림의 톱니 바퀴 클릭 후 Install Plugin from Disk 선택
+          ![JavaDoc 플러그인 설치(수동)](images/guide/javadoc_plugin_install_handsOn.png)<br>
+          JavaDoc plugin zip 파일을 선택 (해당 zip 파일은 skcc-spring-template > docs > install 폴더에 위치함)
+          ![JavaDoc 플러그인 설치(수동)](images/guide/javadoc_plugin_install_handsOn2.png)<br>
 
-1. **클래스/메서드 설명: Javadoc 사용**
-    - 메서드의 역할, 매개변수 및 반환값, 예외 등을 명확히 설명한다.
+2. **클래스/메서드 설명**
+   - 클래스(class)의 주석은 신규 파일 생성 시점에 자동으로 생성 가능
+   - 인텔리제이(intelliJ)의 File > Settings > Editor > File and Code Templates 메뉴에서 class 파일을 선택하면<br>
+     파일이 생성될 때 자동으로 생성해줄 템플릿 확인 가능하며, 파일 생성시 가장 상단에는 ${PACKAGE_NAME} 치환자를 통해<br>
+     패키지명이 자동으로 들어가게 되고 Class명 상단에는#parse("File Header.java") 치환자를 통해 File Header.java 안에<br>
+     주석(Comment) 내용이 자동으로 생성
+     ![JavaDoc 클래스파일 주석 확인](images/guide/class_config.png)
+   - "File Header.java" 에 치환되는 데이터 설정은 Includes 탭으로 이동하여 다음과 같이 설정
+     ![JavaDoc 클래스파일 주석 설정](images/guide/class_config2.png)
+        - **클래스(class) 주석은 패키지명, 파일명, 작성자, 작성일, description 을 기본으로 설정 한다.**
+          ```java
+          /**
+           * packageName      : ${PACKAGE_NAME}
+           * fileName         : ${NAME}
+           * author           : ${USER}
+           * date             : ${DATE}
+           * description      :
+           */
+          ```
+        - 클래스(class) 주석 자동 생성 예시
+          ![JavaDoc 클래스파일 주석 자동 생성](images/guide/class_comment_create.png)
+   - **메서드(method) 주석은 역할, 매개변수 및 반환값, 예외 등을 명확히 설명하고 작성 한다.**
+        - Javadoc을 활용한 메소드 주석 작성 예시
+          ![JavaDoc 클래스파일 주석 자동 생성](images/guide/method_commemt_create.png)
+          메서드 선택 > 오른쪽 마우스키 클릭 > Create JavaDocs for the selected element 선택하면 해당 메서드에<br>
+          대한 주석 자동 생성
+          ![JavaDoc 클래스파일 주석 자동 생성](images/guide/method_commemt_create2.png)
+          ![JavaDoc 클래스파일 주석 자동 생성](images/guide/method_commemt_create3.png)
 
-      ```java
-      /**
-       * This method calculates the sum of two numbers.
-       *
-       * @param a first number
-       * @param b second number
-       * @return sum of the two numbers
-       * @throws IllegalArgumentException if inputs are null
-       */
-      public int calculateSum(int a, int b) {
-          return a + b;
-      }
-      ```
+          ```java
+          /**
+           * This method calculates the sum of two numbers.
+           *
+           * @param a first number
+           * @param b second number
+           * @return sum of the two numbers
+           * @throws IllegalArgumentException if inputs are null
+           */
+           public int calculateSum(int a, int b) {
+              return a + b;
+           }
+          ```
 
-2. **라인 설명**
+3. **라인 설명**
     - 특정 코드의 의도나 복잡한 로직을 설명하기 위해 한 줄 주석을 사용한다.
 
       ```java
@@ -624,7 +661,7 @@ int result = switch (number) {
       Scanner scanner = new Scanner(System.in);
       ```
 
-3. **TODO 주석**
+4. **TODO 주석**
     - 나중에 구현해야 할 작업은 `// TODO`로 명시한다.
 
       ```java

@@ -4,8 +4,13 @@ spring:
   datasource:
     driver-class-name: org.h2.Driver
     username: sa
-    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1
-#    url: jdbc:h2:tcp://localhost/~/test
+    password: sa
+#    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1
+    url: jdbc:h2:tcp://localhost/~/test
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
 
 ### 파일  ###
   servlet:
@@ -68,7 +73,7 @@ logging:
 decorator:
   datasource:
     p6spy:
-      enable-logging: false
+      enable-logging: true
 
 
 ### 캐시 저장소 (기본:caffeine)
