@@ -634,7 +634,7 @@ int result = switch (number) {
    - **메서드(method) 주석은 역할, 매개변수 및 반환값, 예외 등을 명확히 설명하고 작성 한다.**
         - Javadoc을 활용한 메소드 주석 작성 예시<br>
           ![JavaDoc 클래스파일 주석 자동 생성](images/guide/method_commemt_create.png)<br>
-          메서드 선택 > 오른쪽 마우스키 클릭 > Create JavaDocs for the selected element 선택하면 해당 메서드에 대한 주석 자동 생성<br>
+          메서드 선택 > 오른쪽 마우스키 클릭 > Generate > Create JavaDocs for the selected element 선택하면 해당 메서드에 대한 주석 자동 생성<br>
           ![JavaDoc 클래스파일 주석 자동 생성](images/guide/method_commemt_create2.png)
           ![JavaDoc 클래스파일 주석 자동 생성](images/guide/method_commemt_create3.png)
 
