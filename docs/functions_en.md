@@ -1,0 +1,72 @@
+# Feature List Definition
+
+## Required Feature List
+- [X] API Response Specification Definition
+  - [X] Error Field Definition
+- [X] Exception Handling
+    - [X] Exception DTO Definition
+    - [X] ControlAdvice Definition
+- [X] Multilingual Support (message.Properties)
+- [ ] Data Access
+    - [X] JPA
+        - [X] Audit Entity (Create, Update)
+        - [X] QueryDSL Dependency Addition
+        - [X] JPA Query Log (p6spy Implementation)
+        - [X] QueryDSL Dynamic Query Example Addition
+    - [ ] MyBatis
+        - [X] Audit Interceptor (Create, Update)
+        - [ ] Count Query Interceptor?
+- [ ] Spring Security (Authentication, Authorization)
+    - [ ] JWT Token
+        - [X] JWT Request Filter (Stateless Policy)
+        - [X] AccessToken
+        - [ ] RefreshToken
+            - [ ] Redis?
+    - [X] UserDetailService
+        - [X] MyCustomUserDetailService
+    - [X] Handlers
+        - [X] Authentication Failure
+        - [X] Authorization Failure
+- [X] Logging
+    - [X] Console Log
+        - [X] TraceId Filter Addition
+        - [X] AOP Implementation and CustomFormatting (Level and Signature)    
+- [X] Caching
+    - [X] Caching Logic Design (Interface)
+    - [X] Features
+        - [X] put
+        - [X] get
+        - [X] evict
+        - [X] clearAll
+        - [X] clearCacheName
+    - [X] Types
+        - [X] Caffeine Cache (Local)
+        - [X] Redis Cache (Server)
+    - [X] Sample Implementation
+- [X] File Handling
+    - [X] Upload (Single, Multiple)
+    - [X] Download
+    - [X] Policy (File Type, Storage Location, Encryption)
+    - [X] Security (Path and Filename Encryption)
+- [X] HTTP Communication
+  - [X] HttpClient Wrapper Utility
+- [ ] Context Storage Management
+  - [X] Service for Data Storage in Stateless State
+  - [X] Caffeine
+  - [ ] Redis
+- [ ] Message Queue Integration   
+  - [X] RabbitMQ
+  - [ ] Redis
+  - [ ] Kafka
+- [ ] Monitoring
+  - [ ] Actuator 
+  - [ ] Prometheus
+  - [ ] Grafana
+- [ ] DevOps
+    - [ ] GIT
+    - [ ] Docker
+    - [ ] k8s
+    - [ ] CI/CD
+- [X] Guides
+    - [X] Development Environment Guide
+    - [X] Development Standards Guide 
