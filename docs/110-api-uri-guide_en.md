@@ -23,7 +23,7 @@
 a web service architecture style that follows ROA (Resource Oriented Architecture).
 - It defines a series of principles on how to use objectified services through web standards such as URI and HTTP Method.
 - In other words, REST is an architecture style that completely defines how to perform what actions (Method) on what resources (Resource) based on HTTP. <br>
-![api-standard](images/guide/api_standard.png)
+![api-standard](images/guide/api_standard_en.png)
 
 --- 
 ## **2. Components**
@@ -69,7 +69,7 @@ a web service architecture style that follows ROA (Resource Oriented Architectur
 --- 
 ## **3. Basic Structure and Roles**
 - The basic structure and roles of Controller Class and Method following REST API principles are as follows.<br>
-  ![api-structure](images/guide/api_structure.png)
+  ![api-structure](images/guide/api_structure_en.png)
 - The basic format of URLs expressing REST API is as follows, and business area (service) and module division (unit service) can be redefined according to project characteristics.
   <br>**<Example>**
   ```

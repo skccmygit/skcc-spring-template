@@ -32,7 +32,7 @@
 ### Source Clone
 > URL may change.
 ```bash
-git https://github.com/byounghoonmoon/skcc-spring-template.git
+git https://github.com/skccmygit/skcc-spring-template.git
 ```
 
 ### Reference Notes
