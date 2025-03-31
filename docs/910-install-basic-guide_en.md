@@ -70,7 +70,7 @@ This feature is executed by the **Java Compiler** and typically operates during 
   `File > Settings > Build, Execution, Deployment > Compiler > Check Annotation Processors`  
   ![img.png](images/install/install-ide-annotation-enable.png)
 
-## 4. Gradle Installation and Setup 
+## 4. Gradle Installation and Setup
 >
 > We use Gradle among various Build Tools.
 > You can use the internal Wrapper Gradle, but separate installation is required in a closed network environment.

@@ -15,7 +15,7 @@
 ![GIT-Bash 실행](images/source/source-down-2.png)
 
 3. git clone
-   - git repo 주소: <https://github.com/byounghoonmoon/skcc-spring-template.git>  
+   - git repo 주소: <https://github.com/skccmygit/skcc-spring-template.git>  
   **주소는 변경될 수 있습니다.**  
   ![Git-Clone-Source](images/source/source-git-clone.png)
 

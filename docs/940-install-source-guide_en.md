@@ -15,7 +15,7 @@
 ![Run GIT-Bash](images/source/source-down-2.png)
 
 3. git clone
-   - git repo address: <https://github.com/byounghoonmoon/skcc-spring-template.git>  
+   - git repo address: <https://github.com/skccmygit/skcc-spring-template.git>  
   **Address may change.**  
   ![Git-Clone-Source](images/source/source-git-clone.png)
 
