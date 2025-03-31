@@ -23,5 +23,5 @@
 - Message Queue
 
 ## Documents
-- [가이드 목록(Korean version)](docs/guide.md)
-- [Guide List(English version)](docs/guide_en.md)
+- [가이드 목록 - (Korean version)](docs/guide.md)
+- [Guide List - (English version)](docs/guide_en.md)
