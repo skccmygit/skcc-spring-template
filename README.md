@@ -1,5 +1,5 @@
 # Description
-> Spring Boot 기반 프로젝트의 빠른 구축과 초기 세팅을 위한 템플릿 제공
+> Spring Boot 기반 프로젝트의 빠른 구축과 초기 세팅을 위한 템플릿 제공 <br>
   (Provides templates for quick construction and initial setup of Spring Boot-based projects)
 
 ## Tech Stack
